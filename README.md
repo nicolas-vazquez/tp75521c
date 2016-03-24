@@ -5,10 +5,12 @@
 
 **Steps:**
 
-1. cmake . in the AppServer root generate makefile
+1. mkdir build
 
-2. make .
+2. cd build
 
-3. sudo make install
+2. cmake ..
 
-4. Run server executable (i.e ./server)
+3. make
+
+4. ./main
