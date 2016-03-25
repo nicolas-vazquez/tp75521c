@@ -2,9 +2,11 @@
 
 # **AppServer** #
 
-**Build JSONcpp amalgamated sources"
+
+**Build JSONcpp amalgamated sources:**
 
 1. cd src/jsoncpp/
+
 2. python amalgamate.py
 
 
