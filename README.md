@@ -2,8 +2,13 @@
 
 # **AppServer** #
 
+**Build JSONcpp amalgamated sources"
 
-**Steps:**
+1. cd src/jsoncpp/
+2. python amalgamate.py
+
+
+**Build App Steps:**
 
 1. mkdir build
 
