@@ -1,14 +1,26 @@
 cmake_minimum_required (VERSION 2.6)
-project (mongoose)
+project (appServer)
 find_package (Threads)
 
+SET (CMAKE_CXX_FLAGS "-std=c++11")
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/lib/modules/")
 set (SOURCES src/mongoose/mongoose.c)
+set(LIBS_ROOT_DIR "${PROJECT_SOURCE_DIR}/lib/")
+
 
 set (MONGOOSE_CPP "${PROJECT_SOURCE_DIR}/src/mongoose")
+set(JSONCPP_ROOT_DIR "${PROJECT_SOURCE_DIR}/src/json")
+
+
+find_package(JsonCpp)
+add_subdirectory(${JSONCPP_ROOT_DIR})
+include_directories(${JSONCPP_INCLUDE_DIRS})
+
 
 include_directories ("${PROJECT_SOURCE_DIR}")
 
-SET (CMAKE_CXX_FLAGS "-std=c++11")
+
 
 set (SOURCES
     ${SOURCES}
@@ -23,7 +35,8 @@ set (SOURCES
     ${MONGOOSE_CPP}/WebController.cpp
     ${MONGOOSE_CPP}/Request.cpp
     ${MONGOOSE_CPP}/Response.cpp
-    )
+    ${MONGOOSE_CPP}/JsonResponse.cpp
+    ${MONGOOSE_CPP}/JsonController.cpp)
 
 include_directories ("${MONGOOSE_CPP}")
 
@@ -38,12 +51,12 @@ if (WIN32)
 endif (WIN32)
 
 # Compiling library
-add_library (mongoose ${SOURCES})
-target_link_libraries (mongoose ${EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+add_library (appServer ${SOURCES})
+target_link_libraries (appServer ${EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 
 # Compiling executable
 add_executable (main src/main.cpp)
-target_link_libraries (main mongoose)
+target_link_libraries (main appServer)
 
         
 
@@ -53,6 +66,6 @@ configure_file(MongooseConfig.cmake.in MongooseConfig.cmake @ONLY)
 
 install (FILES src/mongoose/mongoose.h DESTINATION "${INCLUDE_INSTALL_DIR}")
 install (DIRECTORY src/mongoose DESTINATION "${INCLUDE_INSTALL_DIR}" PATTERN "*.cpp" EXCLUDE)
-install (TARGETS mongoose DESTINATION lib EXPORT mongoose-targets)
+install (TARGETS appServer DESTINATION lib EXPORT mongoose-targets)
 install (EXPORT mongoose-targets DESTINATION "lib/cmake/mongoose" FILE MongooseTargets.cmake)
 install (FILES ${CMAKE_CURRENT_BINARY_DIR}/MongooseConfig.cmake DESTINATION "lib/cmake/mongoose")
