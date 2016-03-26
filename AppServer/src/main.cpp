@@ -21,8 +21,10 @@ int main() {
 
     signal(SIGINT, handle_signal);
 
-    AccountController accountController;
+
     Server server(8080);
+
+    AccountController accountController;
     server.registerController(&accountController);
     server.setOption("enable_directory_listing", "false");
     server.start();

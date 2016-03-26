@@ -38,7 +38,13 @@ add_library (mongoose ${SOURCES})
 target_link_libraries (mongoose ${EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 
 # Compiling executable
-add_executable (main src/main.cpp src/controllers/AccountController.cpp src/controllers/AccountController.h)
+add_executable (main src/main.cpp src/controllers/AccountController.cpp src/controllers/AccountController.h
+        src/controllers/BaseController.cpp
+        src/controllers/BaseController.h
+        src/errors/Error.h
+        src/errors/EmptyParamError.h
+        src/errors/BadJsonError.h)
+
 target_link_libraries (main mongoose)
 
 # install

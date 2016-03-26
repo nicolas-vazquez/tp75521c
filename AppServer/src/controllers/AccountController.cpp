@@ -2,24 +2,53 @@
 // Created by fedefarina on 26/03/16.
 //
 
+#include <src/errors/EmptyParamError.h>
+#include <src/errors/BadJsonError.h>
 #include "AccountController.h"
 
 void AccountController::login(Request &request, JsonResponse &response) {
-    int i;
 
-    for (i = 0; i < 12; i++) {
-        response["users"][i]["Name"] = "Bobi";
+    string data = request.getData();
+
+    Json::Value root;
+    Json::Reader reader;
+    bool parsedSuccess = reader.parse(data, root);
+
+    vector<Error *> errors;
+
+    if (not parsedSuccess) {
+        BadJsonError *badJsonError = new BadJsonError();
+        errors.push_back(badJsonError);
+        sendError(response, errors, 400);
+    } else {
+
+        string username = root.get("username", "").asString();
+        string password = root.get("password", "").asString();
+
+        if (username.empty()) {
+            EmptyParamError *emptyUserError = new EmptyParamError();
+            emptyUserError->setMessage("Empty username");
+            errors.push_back(emptyUserError);
+        }
+
+        if (password.empty()) {
+            EmptyParamError *emptyPassword = new EmptyParamError();
+            emptyPassword->setMessage("Empty password");
+            errors.push_back(emptyPassword);
+        }
+
+        if (!errors.empty()) {
+            sendError(response, errors, 400);
+        } else {
+            JsonResponse jsonResponse;
+            jsonResponse["accessToken"] = username + password;
+            sendResult(response, jsonResponse, HTTP_OK);
+        }
     }
-
-    response["timestamp"] = (int) time(NULL);
 }
 
 
 void AccountController::setup() {
-    // Example of prefix, putting all the urls into "/api"
-    setPrefix("/api");
-
-    // Hello demo
-    addRouteResponse("GET", "/", AccountController, login, JsonResponse);
-    addRouteResponse("GET", "/login", AccountController, login, JsonResponse);
+    setPrefix("/api/accounts");
+    addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
 }

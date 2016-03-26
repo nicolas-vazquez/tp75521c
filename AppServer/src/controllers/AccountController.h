@@ -6,14 +6,15 @@
 #define APPSERVER_ACCOUNTCONTROLLER_H
 
 #include <mongoose/Server.h>
-#include <mongoose/JsonController.h>
+#include "BaseController.h"
 
 using namespace std;
 using namespace Mongoose;
 
-class AccountController : public JsonController {
+class AccountController : public BaseController {
 public:
     void login(Request &request, JsonResponse &response);
+
     void setup();
 };
 
