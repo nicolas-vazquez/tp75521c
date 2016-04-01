@@ -21,7 +21,6 @@ void AccountController::login(Request &request, JsonResponse &response) {
         errors.push_back(badJsonError);
         sendError(response, errors, 400);
     } else {
-
         string username = root.get("username", "").asString();
         string password = root.get("password", "").asString();
 
