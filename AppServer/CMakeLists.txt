@@ -2,13 +2,17 @@ cmake_minimum_required(VERSION 2.6)
 project(appServer)
 find_package(Threads)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lz -pthread -lrt -std=c++11 -Wall -Wextra")
+
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/lib/modules/")
 
-set(LIBS_ROOT_DIR "${PROJECT_SOURCE_DIR}/lib")
+set(LIBS_ROOT_DIR "${PROJECT_SOURCE_DIR}/lib/")
 set(ROCKSDB_ROOT_DIR "${LIBS_ROOT_DIR}/rocksdb/")
 
-#Mongoose lib
 set(MONGOOSE_CPP "${PROJECT_SOURCE_DIR}/lib/mongoose")
+
+find_package(RocksDB)
 
 set(SOURCES
         ${SOURCES}
@@ -34,6 +38,11 @@ set(SOURCES
 include_directories("${MONGOOSE_CPP}")
 include_directories("${PROJECT_SOURCE_DIR}")
 
+include_directories(${SNAPPY_INCLUDE_DIRS})
+include_directories(${ZLIB_INCLUDE_DIRS})
+include_directories(${ROCKSDB_INCLUDE_DIRS})
+
+
 add_definitions("-DENABLE_STATS")
 add_definitions("-DNO_WEBSOCKET")
 
@@ -56,13 +65,14 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/AppServerConfig.cmake DESTINATION "lib
 #Mongoose lib End
 
 # Compiling executable
-add_executable(main src/main.cpp src/controllers/AccountController.cpp src/controllers/AccountController.h
+add_executable(main
+        src/main.cpp src/controllers/AccountController.cpp src/controllers/AccountController.h
         src/controllers/BaseController.cpp
         src/controllers/BaseController.h
         src/errors/Error.h
         src/errors/EmptyParamError.h
         src/errors/BadJsonError.h)
 
-target_link_libraries(main mongoose)
+target_link_libraries(main mongoose ${ROCKSDB_LIBRARIES})
 
 
