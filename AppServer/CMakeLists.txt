@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.6)
 project(appServer)
 find_package(Threads)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/lib/modules/")
+
+set(LIBS_ROOT_DIR "${PROJECT_SOURCE_DIR}/lib")
+set(ROCKSDB_ROOT_DIR "${LIBS_ROOT_DIR}/rocksdb/")
 
 #Mongoose lib
 set(MONGOOSE_CPP "${PROJECT_SOURCE_DIR}/lib/mongoose")
@@ -43,8 +47,8 @@ target_link_libraries(mongoose ${EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "The directory the headers are installed in")
 configure_file(AppServerConfig.cmake.in AppServerConfig.cmake @ONLY)
 
-install(FILES lib/mongoose/mongoose.h DESTINATION "${INCLUDE_INSTALL_DIR}")
-install(DIRECTORY lib/mongoose DESTINATION "${INCLUDE_INSTALL_DIR}" PATTERN "*.cpp" EXCLUDE)
+install(FILES "${LIBS_ROOT_DIR}/mongoose/mongoose.h" DESTINATION "${INCLUDE_INSTALL_DIR}")
+install(DIRECTORY "${LIBS_ROOT_DIR}/mongoose" DESTINATION "${INCLUDE_INSTALL_DIR}" PATTERN "*.cpp" EXCLUDE)
 install(TARGETS mongoose DESTINATION lib EXPORT mongoose-targets)
 install(EXPORT mongoose-targets DESTINATION "lib/cmake/mongoose" FILE AppServerTargets.cmake)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/AppServerConfig.cmake DESTINATION "lib/cmake/mongoose")
