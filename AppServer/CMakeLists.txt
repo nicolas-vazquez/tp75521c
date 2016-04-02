@@ -3,16 +3,13 @@ project(appServer)
 find_package(Threads)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lz -pthread -lrt -std=c++11 -Wall -Wextra")
-
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/lib/modules/")
 
-set(LIBS_ROOT_DIR "${PROJECT_SOURCE_DIR}/lib/")
-set(ROCKSDB_ROOT_DIR "${LIBS_ROOT_DIR}/rocksdb/")
-
-set(MONGOOSE_CPP "${PROJECT_SOURCE_DIR}/lib/mongoose")
-
 find_package(RocksDB)
+
+set(LIBS_ROOT_DIR "${PROJECT_SOURCE_DIR}/lib/")
+set(ROCKSDB_INCLUDE_DIRS "/usr/include/")
+set(MONGOOSE_CPP "${PROJECT_SOURCE_DIR}/lib/mongoose")
 
 set(SOURCES
         ${SOURCES}
@@ -34,14 +31,12 @@ set(SOURCES
         ${MONGOOSE_CPP}/WebSocket.cpp
         ${MONGOOSE_CPP}/WebSockets.cpp)
 
-
 include_directories("${MONGOOSE_CPP}")
 include_directories("${PROJECT_SOURCE_DIR}")
 
 include_directories(${SNAPPY_INCLUDE_DIRS})
 include_directories(${ZLIB_INCLUDE_DIRS})
-include_directories(${ROCKSDB_INCLUDE_DIRS})
-
+include_directories("${ROCKSDB_INCLUDE_DIRS}")
 
 add_definitions("-DENABLE_STATS")
 add_definitions("-DNO_WEBSOCKET")
@@ -74,5 +69,4 @@ add_executable(main
         src/errors/BadJsonError.h)
 
 target_link_libraries(main mongoose ${ROCKSDB_LIBRARIES})
-
 
