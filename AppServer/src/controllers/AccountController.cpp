@@ -2,9 +2,9 @@
 // Created by fedefarina on 26/03/16.
 //
 
-#include <src/errors/EmptyParamError.h>
-#include <src/errors/BadJsonError.h>
 #include "AccountController.h"
+#include "../errors/BadJsonError.h"
+#include "../errors/EmptyParamError.h"
 
 AccountController::AccountController() {
 

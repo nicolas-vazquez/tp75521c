@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <mongoose/Server.h>
-#include <src/controllers/AccountController.h>
+#include "controllers/AccountController.h"
 
 using namespace std;
 using namespace Mongoose;

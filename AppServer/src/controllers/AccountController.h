@@ -6,6 +6,7 @@
 #define APPSERVER_ACCOUNTCONTROLLER_H
 
 #include <mongoose/Server.h>
+#include <mongoose/JsonResponse.h>
 #include "BaseController.h"
 
 using namespace std;
