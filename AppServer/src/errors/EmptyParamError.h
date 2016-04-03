@@ -11,9 +11,14 @@
 class EmptyParamError : public Error {
 
 public:
+
+    EmptyParamError() { }
+
     virtual int getCode() {
         return 2;
     }
+
+    virtual ~EmptyParamError() { }
 };
 
 

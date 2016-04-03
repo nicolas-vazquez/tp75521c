@@ -6,6 +6,10 @@
 #include <src/errors/BadJsonError.h>
 #include "AccountController.h"
 
+AccountController::AccountController() {
+
+}
+
 void AccountController::login(Request &request, JsonResponse &response) {
 
     string data = request.getData();
@@ -51,3 +55,12 @@ void AccountController::setup() {
     setPrefix("/api/accounts");
     addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
 }
+
+AccountController::~AccountController() {
+
+}
+
+
+
+
+

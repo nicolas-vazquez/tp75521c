@@ -13,9 +13,15 @@ using namespace Mongoose;
 
 class AccountController : public BaseController {
 public:
+
+    AccountController();
+
     void login(Request &request, JsonResponse &response);
 
     void setup();
+
+
+    virtual ~AccountController();
 };
 
 

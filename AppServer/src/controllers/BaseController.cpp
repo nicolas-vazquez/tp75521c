@@ -4,6 +4,11 @@
 
 #include "BaseController.h"
 
+
+BaseController::BaseController() {
+
+}
+
 /*
 
 {
@@ -22,7 +27,7 @@ void BaseController::sendError(JsonResponse &response, vector<Error *> &errors, 
     setHeaders(response);
     string message;
     int code;
-    for (int i = 0; i < errors.size(); i++) {
+    for (unsigned int i = 0; i < errors.size(); i++) {
         Error *error = errors[i];
         message = error->getMessage();
         code = error->getCode();
@@ -42,6 +47,15 @@ void BaseController::sendResult(JsonResponse &response, JsonResponse &responseBo
 void BaseController::setHeaders(JsonResponse &response) {
     response.setHeader("Content-Type", "application/json; charset=utf-8");
 }
+
+BaseController::~BaseController() {
+
+}
+
+
+
+
+
 
 
 

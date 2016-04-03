@@ -21,7 +21,6 @@ int main() {
 
     signal(SIGINT, handle_signal);
 
-
     Server server(8080);
 
     AccountController accountController;

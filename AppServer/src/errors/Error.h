@@ -18,6 +18,9 @@ protected:
     string message;
 
 public:
+
+    Error() { }
+
     const string &getMessage() const {
         return message;
     }
@@ -27,6 +30,9 @@ public:
     }
 
     virtual int getCode() = 0;
+
+
+    virtual ~Error() { }
 };
 
 
