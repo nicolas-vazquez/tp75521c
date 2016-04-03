@@ -10,6 +10,9 @@ install_manifest.txt
 
 /build
 
+#Temp install folder
+/temp_install
+
 #Idea files
 /.idea
 
