@@ -11,6 +11,7 @@ set(ROOT_PATH "${${PROJECT_NAME}_SOURCE_DIR}")
 set(LIBS_PATH "${ROOT_PATH}/lib")
 # Src folder
 set(SRC_PATH "${ROOT_PATH}/src")
+set(ROCKSDB_INCLUDE_DIRS "/usr/include/")
 
 # use ISO C++11 required for RocksDB.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++11 ")
@@ -64,6 +65,8 @@ add_executable(${PROJECT_NAME}
         src/errors/Error.h
         src/errors/EmptyParamError.h
         src/errors/BadJsonError.h src/domain/Entity.cpp src/domain/Entity.h src/domain/User.cpp src/domain/User.h)
+
+include_directories("${ROCKSDB_INCLUDE_DIRS}")
 
 #Include library path for compiler
 include_directories(${LIBS_PATH})

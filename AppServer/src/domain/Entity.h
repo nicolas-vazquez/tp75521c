@@ -7,10 +7,14 @@
 
 
 #include <json/json.h>
+#include "rocksdb/db.h"
 
 using namespace Json;
+using namespace rocksdb;
 
 class Entity {
+
+    DB* db;
 
 public:
     Entity();
