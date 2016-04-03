@@ -9,7 +9,7 @@ AccountController::AccountController() {
 }
 
 
-void AccountController::login(Request &request, JsonResponse &jsonResponse) {
+void AccountController::login(Request &request, JsonResponse &response) {
 
     Json::Value body;
     bool parsed = bodyFormatHandler(request, body);
@@ -22,14 +22,24 @@ void AccountController::login(Request &request, JsonResponse &jsonResponse) {
 
         validateUserNameAndPassword(username, password, errors);
         if (!errors.empty()) {
-            sendErrors(jsonResponse, errors, 400);
+            sendErrors(response, errors, 400);
         } else {
-            jsonResponse["access-token"] = "Successful signup";
-            sendResult(jsonResponse, jsonResponse, HTTP_OK);
+            Account account(username);
+            //TODO verify credentials, only verify username this way
+            bool found = account.fetch();
+
+            JsonResponse jsonResponse;
+            if (found) {
+                jsonResponse["message"] = "Successful signup, no access token yet.";
+            } else {
+                jsonResponse["message"] = "No account found with given username.";
+            }
+
+            sendResult(response, jsonResponse, HTTP_OK);
         }
 
     } else {
-        sendBadJsonError(jsonResponse);
+        sendBadJsonError(response);
     }
 }
 
@@ -50,13 +60,19 @@ void AccountController::signup(Request &request, JsonResponse &response) {
             sendErrors(response, errors, 400);
         } else {
 
-            Account account(username);
-            //TODO: encode password before save it.
-            account.setPassword(password);
-            account.save();
-
             JsonResponse jsonResponse;
-            jsonResponse["message"] = "Successful signup";
+            Account account(username);
+            bool found = account.fetch();
+
+            if (!found) {
+                //TODO: encode password before save it.
+                account.setPassword(password);
+                account.save();
+                jsonResponse["message"] = "Successful signup";
+            } else {
+                //todo this is an error, create a new error type like UserNameAlreadyInUser
+                jsonResponse["message"] = "Username is already in use";
+            }
             sendResult(response, jsonResponse, HTTP_OK);
         }
     } else {
