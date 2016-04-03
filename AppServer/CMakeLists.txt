@@ -64,7 +64,7 @@ add_executable(${PROJECT_NAME}
         src/controllers/BaseController.h
         src/errors/Error.h
         src/errors/EmptyParamError.h
-        src/errors/BadJsonError.h src/domain/Entity.cpp src/domain/Entity.h src/domain/User.cpp src/domain/User.h)
+        src/errors/BadJsonError.h src/model/Entity.cpp src/model/Entity.h src/model/Account.cpp src/model/Account.h)
 
 include_directories("${ROCKSDB_INCLUDE_DIRS}")
 

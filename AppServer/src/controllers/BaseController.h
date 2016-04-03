@@ -8,24 +8,31 @@
 #include <mongoose/JsonController.h>
 #include <mongoose/Server.h>
 #include "../errors/Error.h"
+#include "../errors/BadJsonError.h"
 
 
 using namespace std;
+using namespace Json;
 using namespace Mongoose;
 
 class BaseController : public JsonController {
 protected:
 public:
+
     BaseController();
 
     virtual ~BaseController();
 
 protected:
-    void sendError(JsonResponse &response, vector<Error *> &errors, int responseCode);
+    void sendErrors(JsonResponse &response, vector<Error *> &errors, int responseCode);
 
     void sendResult(JsonResponse &response, JsonResponse &responseBody, int responseCode);
 
     void setHeaders(JsonResponse &response);
+
+    bool bodyFormatHandler(Request &request, Value &body);
+
+    void sendBadJsonError(JsonResponse &response);
 };
 
 

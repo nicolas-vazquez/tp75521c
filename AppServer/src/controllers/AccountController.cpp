@@ -3,59 +3,86 @@
 //
 
 #include "AccountController.h"
-#include "../errors/BadJsonError.h"
-#include "../errors/EmptyParamError.h"
 
 AccountController::AccountController() {
 
 }
 
-void AccountController::login(Request &request, JsonResponse &response) {
 
-    string data = request.getData();
+void AccountController::login(Request &request, JsonResponse &jsonResponse) {
 
-    Json::Value root;
-    Json::Reader reader;
-    bool parsedSuccess = reader.parse(data, root);
+    Json::Value body;
+    bool parsed = bodyFormatHandler(request, body);
 
     vector<Error *> errors;
 
-    if (not parsedSuccess) {
-        BadJsonError *badJsonError = new BadJsonError();
-        errors.push_back(badJsonError);
-        sendError(response, errors, 400);
-    } else {
-        string username = root.get("username", "").asString();
-        string password = root.get("password", "").asString();
+    if (parsed) {
+        string username = body.get("username", "").asString();
+        string password = body.get("password", "").asString();
 
-        if (username.empty()) {
-            EmptyParamError *emptyUserError = new EmptyParamError();
-            emptyUserError->setMessage("Empty username");
-            errors.push_back(emptyUserError);
-        }
-
-        if (password.empty()) {
-            EmptyParamError *emptyPassword = new EmptyParamError();
-            emptyPassword->setMessage("Empty password");
-            errors.push_back(emptyPassword);
-        }
-
+        validateUserNameAndPassword(username, password, errors);
         if (!errors.empty()) {
-            sendError(response, errors, 400);
+            sendErrors(jsonResponse, errors, 400);
         } else {
-            JsonResponse jsonResponse;
-            jsonResponse["accessToken"] = username + password;
-            sendResult(response, jsonResponse, HTTP_OK);
+            jsonResponse["access-token"] = "Successful signup";
+            sendResult(jsonResponse, jsonResponse, HTTP_OK);
         }
+
+    } else {
+        sendBadJsonError(jsonResponse);
     }
 }
 
+
 void AccountController::signup(Request &request, JsonResponse &response) {
 
+    Json::Value body;
+    bool parsed = bodyFormatHandler(request, body);
+
+    vector<Error *> errors;
+
+    if (parsed) {
+        string username = body.get("username", "").asString();
+        string password = body.get("password", "").asString();
+
+        validateUserNameAndPassword(username, password, errors);
+        if (!errors.empty()) {
+            sendErrors(response, errors, 400);
+        } else {
+
+            Account account(username);
+            //TODO: encode password before save it.
+            account.setPassword(password);
+            account.save();
+
+            JsonResponse jsonResponse;
+            jsonResponse["message"] = "Successful signup";
+            sendResult(response, jsonResponse, HTTP_OK);
+        }
+    } else {
+        sendBadJsonError(response);
+    }
 }
+
+void AccountController::validateUserNameAndPassword(string username, string password,
+                                                    vector<Error *> &errors) {
+    if (username.empty()) {
+        EmptyParamError *emptyUserError = new EmptyParamError();
+        emptyUserError->setMessage("Empty username");
+        errors.push_back(emptyUserError);
+    }
+
+    if (password.empty()) {
+        EmptyParamError *emptyPassword = new EmptyParamError();
+        emptyPassword->setMessage("Empty password");
+        errors.push_back(emptyPassword);
+    }
+}
+
 
 void AccountController::setup() {
     setPrefix("/api/accounts");
+    addRouteResponse("POST", "/signup", AccountController, signup, JsonResponse);
     addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
 }
 

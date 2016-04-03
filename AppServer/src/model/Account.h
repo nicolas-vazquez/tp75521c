@@ -8,7 +8,7 @@
 
 #include "Entity.h"
 
-class User : public Entity {
+class Account : public Entity {
 
 private:
     string username;
@@ -19,7 +19,7 @@ public:
 protected:
 
 public:
-    User(const string &username);
+    Account(const string &username);
 
     const string &getUsername() const;
 
@@ -29,7 +29,7 @@ public:
 
     void setPassword(const string &password);
 
-    virtual ~User();
+    virtual ~Account();
 
 protected:
 

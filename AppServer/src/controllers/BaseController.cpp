@@ -9,8 +9,21 @@ BaseController::BaseController() {
 
 }
 
-/*
+bool BaseController::bodyFormatHandler(Request &request, Value &body) {
+    string data = request.getData();
+    Json::Reader reader;
+    return reader.parse(data, body);
+}
 
+
+void BaseController::sendBadJsonError(JsonResponse &response) {
+    vector<Error *> errors;
+    BadJsonError *badJsonError = new BadJsonError();
+    errors.push_back(badJsonError);
+    sendErrors(response, errors, 400);
+}
+
+/* Errors format
 {
     "errors": [
         {
@@ -19,10 +32,9 @@ BaseController::BaseController() {
         }
     ]
 }
-  */
-
-void BaseController::sendError(JsonResponse &response, vector<Error *> &errors, int responseCode) {
-
+*/
+void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors, int responseCode) {
+    cout << "Sending error" << endl;
     response.setCode(responseCode);
     setHeaders(response);
     string message;
@@ -38,7 +50,16 @@ void BaseController::sendError(JsonResponse &response, vector<Error *> &errors, 
     errors.clear();
 }
 
+
+/* Responses format
+{
+  "data": {
+    ...
+  }
+}
+*/
 void BaseController::sendResult(JsonResponse &response, JsonResponse &responseBody, int responseCode) {
+    cout << "Sending result" << endl;
     response.setCode(responseCode);
     response["data"] = responseBody;
     setHeaders(response);
@@ -51,6 +72,7 @@ void BaseController::setHeaders(JsonResponse &response) {
 BaseController::~BaseController() {
 
 }
+
 
 
 

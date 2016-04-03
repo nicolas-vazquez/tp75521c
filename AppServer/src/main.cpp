@@ -21,7 +21,7 @@ int main() {
 
     signal(SIGINT, handle_signal);
 
-    Server server(8080);
+    Server server(8083);
 
     AccountController accountController;
     server.registerController(&accountController);

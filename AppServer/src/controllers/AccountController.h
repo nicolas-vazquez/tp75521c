@@ -8,6 +8,9 @@
 #include <mongoose/Server.h>
 #include <mongoose/JsonResponse.h>
 #include "BaseController.h"
+#include "../model/Account.h"
+#include "../errors/BadJsonError.h"
+#include "../errors/EmptyParamError.h"
 
 using namespace std;
 using namespace Mongoose;
@@ -17,11 +20,13 @@ public:
 
     AccountController();
 
+    void setup();
+
     void signup(Request &request, JsonResponse &response);
 
     void login(Request &request, JsonResponse &response);
 
-    void setup();
+    void validateUserNameAndPassword(string username, string password, vector<Error *> &errors);
 
     virtual ~AccountController();
 };
