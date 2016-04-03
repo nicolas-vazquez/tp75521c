@@ -50,6 +50,9 @@ void AccountController::login(Request &request, JsonResponse &response) {
     }
 }
 
+void AccountController::signup(Request &request, JsonResponse &response) {
+
+}
 
 void AccountController::setup() {
     setPrefix("/api/accounts");
@@ -59,6 +62,9 @@ void AccountController::setup() {
 AccountController::~AccountController() {
 
 }
+
+
+
 
 
 

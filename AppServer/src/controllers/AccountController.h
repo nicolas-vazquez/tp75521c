@@ -17,10 +17,11 @@ public:
 
     AccountController();
 
+    void signup(Request &request, JsonResponse &response);
+
     void login(Request &request, JsonResponse &response);
 
     void setup();
-
 
     virtual ~AccountController();
 };

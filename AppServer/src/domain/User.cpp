@@ -4,6 +4,9 @@
 
 #include "User.h"
 
+User::User(const string &username) : username(username) {
+
+}
 
 Value User::toJSON() {
     Value value;
@@ -31,15 +34,17 @@ const string &User::getUsername() const {
     return username;
 }
 
-void User::setUsername(const string &username) {
-    this->username = username;
-}
-
 const string &User::getPassword() const {
     return password;
 }
 
 void User::setPassword(const string &password) {
-    User::password = password;
+    this->password = password;
 }
+
+User::~User() {
+
+}
+
+
 

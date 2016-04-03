@@ -18,21 +18,27 @@ public:
 
 protected:
 
+public:
+    User(const string &username);
+
+    const string &getUsername() const;
+
+    const string &getPassword() const;
+
+    virtual Value toJSON() override;
+
+    void setPassword(const string &password);
+
+    virtual ~User();
+
+protected:
+
     virtual void fromJSON(Value value) override;
 
     virtual string primaryKeyValue() override;
 
-    virtual Value toJSON() override;
-
     virtual string getName() override;
 
-    void setPassword(const string &password);
-
-    const string &getPassword() const;
-
-    void setUsername(const string &username);
-
-    const string &getUsername() const;
 };
 
 
