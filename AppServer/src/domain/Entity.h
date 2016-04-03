@@ -9,23 +9,30 @@
 #include <json/json.h>
 #include "rocksdb/db.h"
 
+using namespace std;
 using namespace Json;
 using namespace rocksdb;
 
 class Entity {
 
-    DB* db;
+    DB *db;
+    string id;
 
 public:
     Entity();
 
     void fetch();
 
-    void save();
+    bool save();
 
     virtual Value toJSON() = 0;
 
     virtual void fromJSON() = 0;
+
+    /**
+     * Works as key prefix in key,value rocksdb usage.
+     */
+    virtual string getName() = 0;
 
     virtual ~Entity();
 };

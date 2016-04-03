@@ -1,5 +1,8 @@
 #!/bin/bash
 
+root_dir=`pwd`
+install_dir="$pwd/temp_install"
+
 # Remove old libraries, ensure use right versions
 echo "Search and remove old libs"
 find / -type f -name "librocksdb.a" -exec rm {} \;
@@ -27,32 +30,31 @@ cd rocksdb-master && \
 make shared_lib && \
 sudo install -d /usr/include && \
 sudo cp -r include/rocksdb /usr/include && \
-sudo install -m755 -D librocksdb.so /usr/lib/librocksdb.so && \
+sudo install -m755 -D librocksdb.so.4.6 /usr/lib/librocksdb.so.4.6 && \
 sudo install -D -m644 LICENSE "/usr/share/licenses/$pkgname/LICENSE" && \
-cd .. && \
 
-#echo "Installing jsoncpp"
-#wget https://github.com/open-source-parsers/jsoncpp/archive/0.y.z.zip && \
-#unzip 0.y.z.zip && \
-#cd jsoncpp-0.y.z && \
-#python amalgamate.py && \
-#cd dist && \
-#gcc -c jsoncpp.cpp && \
-#ar rvs libjsoncpp.a jsoncpp.o && \
-#sudo cp libjsoncpp.a /usr/lib && \
-#cd ../.. && \
-#
-#echo "Installing mongose-cpp"
-#wget https://github.com/Gregwar/mongoose-cpp/archive/master.zip && \
-#unzip master.zip && \
-#cd mongoose-cpp-master && \
-#cmake . && \
-#make install && \
-cd ../.. && \
+cd $install_dir
+echo "Installing jsoncpp"
+wget https://github.com/open-source-parsers/jsoncpp/archive/0.y.z.zip && \
+unzip 0.y.z.zip && \
+cd jsoncpp-0.y.z && \
+python amalgamate.py && \
+cd dist && \
+gcc -c jsoncpp.cpp && \
+ar rvs libjsoncpp.a jsoncpp.o && \
+sudo cp libjsoncpp.a /usr/lib && \
+
+cd $install_dir
+echo "Installing mongose-cpp"
+wget https://github.com/Gregwar/mongoose-cpp/archive/master.zip && \
+unzip master.zip && \
+cd mongoose-cpp-master && \
+cmake . && \
+make install && \
+
+cd $root_dir
 rm -rf temp_install
-#
-#
-echo "Make and install"
 
+echo "Make and install"
 mkdir -p build && cd build \
 cmake .. && make

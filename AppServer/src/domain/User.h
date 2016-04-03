@@ -10,6 +10,25 @@
 
 class User : public Entity {
 
+private:
+    string username;
+    string password;
+
+public:
+
+    virtual void fromJSON() override;
+
+    virtual Value toJSON() override;
+
+    virtual string getName() override;
+
+    void setPassword(const string &password);
+
+    const string &getPassword() const;
+
+    void setUsername(const string &username);
+
+    const string &getUsername() const;
 };
 
 
