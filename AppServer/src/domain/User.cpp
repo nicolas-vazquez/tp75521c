@@ -12,9 +12,14 @@ Value User::toJSON() {
     return value;
 }
 
+void User::fromJSON(Value value) {
+    this->username = value.get("username", "").asString();
+    this->password = value.get("password", "").asString();
+}
 
-void User::fromJSON() {
 
+string User::primaryKeyValue() {
+    return username;
 }
 
 

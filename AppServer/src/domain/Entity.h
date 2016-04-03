@@ -15,19 +15,27 @@ using namespace rocksdb;
 
 class Entity {
 
+private:
     DB *db;
-    string id;
+
+protected:
+
+    virtual void fromJSON(Value value) = 0;
 
 public:
+
     Entity();
 
-    void fetch();
+    bool fetch();
 
     bool save();
 
     virtual Value toJSON() = 0;
 
-    virtual void fromJSON() = 0;
+    /**
+     * Returns this entity primary key
+     */
+    virtual string primaryKeyValue() = 0;
 
     /**
      * Works as key prefix in key,value rocksdb usage.

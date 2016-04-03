@@ -16,7 +16,11 @@ private:
 
 public:
 
-    virtual void fromJSON() override;
+protected:
+
+    virtual void fromJSON(Value value) override;
+
+    virtual string primaryKeyValue() override;
 
     virtual Value toJSON() override;
 

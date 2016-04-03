@@ -18,12 +18,14 @@ Entity::Entity() {
     assert(s.ok());
 }
 
-void Entity::fetch() {
-
+bool Entity::fetch() {
+    string value;
+    Status s = db->Get(ReadOptions(), getName() + primaryKeyValue(), &value);
+    return s.ok();
 }
 
 bool Entity::save() {
-    Status s = db->Put(WriteOptions(), getName() + id, toJSON().toStyledString());
+    Status s = db->Put(WriteOptions(), getName() + primaryKeyValue(), toJSON().toStyledString());
     return s.ok();
 }
 
