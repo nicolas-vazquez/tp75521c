@@ -33,6 +33,7 @@ foreach (LIB ${LIBS_NAMES})
 endforeach (LIB ${LIBS_NAMES})
 
 set(MONGOOSE_CPP "${PROJECT_SOURCE_DIR}/lib/mongoose")
+set(SHA256_CPP "${PROJECT_SOURCE_DIR}/lib/sha256")
 
 set(SOURCES
         ${SOURCES}
@@ -51,7 +52,9 @@ set(SOURCES
         ${MONGOOSE_CPP}/JsonResponse.cpp
         ${MONGOOSE_CPP}/JsonController.cpp
         ${MONGOOSE_CPP}/WebSocket.cpp
-        ${MONGOOSE_CPP}/WebSockets.cpp)
+        ${MONGOOSE_CPP}/WebSockets.cpp
+        ${SHA256_CPP}/sha256.h
+        ${SHA256_CPP}/sha256.cpp src/errors/UsernameAlreadyInUseError.h)
 
 include_directories("${MONGOOSE_CPP}")
 

@@ -21,7 +21,11 @@ Entity::Entity() {
 bool Entity::fetch() {
     string value;
     Status s = db->Get(ReadOptions(), getName() + primaryKeyValue(), &value);
-    return s.ok();
+    bool fetched = s.ok();
+    if(fetched){
+        fromJSON(value);
+    }
+    return fetched;
 }
 
 bool Entity::save() {

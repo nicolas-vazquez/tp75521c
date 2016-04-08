@@ -27,7 +27,7 @@ string Account::primaryKeyValue() {
 
 
 string Account::getName() {
-    return "account";
+    return "account/";
 }
 
 const string &Account::getUsername() const {

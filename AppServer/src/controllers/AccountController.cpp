@@ -3,6 +3,7 @@
 //
 
 #include "AccountController.h"
+#include "../errors/UsernameAlreadyInUseError.h"
 
 AccountController::AccountController() {
 
@@ -25,12 +26,16 @@ void AccountController::login(Request &request, JsonResponse &response) {
             sendErrors(response, errors, 400);
         } else {
             Account account(username);
-            //TODO verify credentials, only verify username this way
             bool found = account.fetch();
 
             JsonResponse jsonResponse;
             if (found) {
-                jsonResponse["message"] = "Successful signup, no access token yet.";
+                if (account.getPassword() != encodePassword(password)) {
+                    jsonResponse["message"] = "Wrong credentials.";
+                } else {
+                    jsonResponse["message"] = "Successful signup.";
+                    jsonResponse["accessToken"] = generateToken(username, password);
+                }
             } else {
                 jsonResponse["message"] = "No account found with given username.";
             }
@@ -43,6 +48,13 @@ void AccountController::login(Request &request, JsonResponse &response) {
     }
 }
 
+string AccountController::encodePassword(const string &password) const {
+    return sha256(password);
+}
+
+string AccountController::generateToken(const string &username, const string &password) const {
+    return sha256(username + password);
+}
 
 void AccountController::signup(Request &request, JsonResponse &response) {
 
@@ -59,21 +71,24 @@ void AccountController::signup(Request &request, JsonResponse &response) {
         if (!errors.empty()) {
             sendErrors(response, errors, 400);
         } else {
-
             JsonResponse jsonResponse;
             Account account(username);
             bool found = account.fetch();
 
             if (!found) {
-                //TODO: encode password before save it.
-                account.setPassword(password);
+                const string &encodedPassword = encodePassword(password);
+                account.setPassword(encodedPassword);
                 account.save();
                 jsonResponse["message"] = "Successful signup";
             } else {
-                //todo this is an error, create a new error type like UserNameAlreadyInUser
-                jsonResponse["message"] = "Username is already in use";
+                errors.push_back(new UsernameAlreadyInUseError());
             }
-            sendResult(response, jsonResponse, HTTP_OK);
+
+            if (errors.empty()) {
+                sendResult(response, jsonResponse, HTTP_OK);
+            } else {
+                sendErrors(response, errors, 400);
+            }
         }
     } else {
         sendBadJsonError(response);
