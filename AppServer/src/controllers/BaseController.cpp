@@ -3,6 +3,7 @@
 //
 
 #include "BaseController.h"
+#include "../utils/Logger.h"
 
 
 BaseController::BaseController() {
@@ -34,6 +35,7 @@ void BaseController::sendBadJsonError(JsonResponse &response) {
 }
 */
 void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors, int responseCode) {
+    Logger::error(response.asString());
     cout << "Sending error" << endl;
     response.setCode(responseCode);
     setHeaders(response);
@@ -59,6 +61,7 @@ void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors,
 }
 */
 void BaseController::sendResult(JsonResponse &response, JsonResponse &responseBody, int responseCode) {
+    Logger::info(response.asString());
     cout << "Sending result" << endl;
     response.setCode(responseCode);
     response["data"] = responseBody;
