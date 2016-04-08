@@ -54,7 +54,7 @@ set(SOURCES
         ${MONGOOSE_CPP}/WebSocket.cpp
         ${MONGOOSE_CPP}/WebSockets.cpp
         ${SHA256_CPP}/sha256.h
-        ${SHA256_CPP}/sha256.cpp src/errors/UsernameAlreadyInUseError.h)
+        ${SHA256_CPP}/sha256.cpp src/errors/UsernameAlreadyInUseError.h src/model/Token.cpp src/model/Token.h)
 
 include_directories("${MONGOOSE_CPP}")
 

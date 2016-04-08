@@ -4,6 +4,7 @@
 
 #include "AccountController.h"
 #include "../errors/UsernameAlreadyInUseError.h"
+#include "../model/Token.h"
 
 AccountController::AccountController() {
 
@@ -34,7 +35,12 @@ void AccountController::login(Request &request, JsonResponse &response) {
                     jsonResponse["message"] = "Wrong credentials.";
                 } else {
                     jsonResponse["message"] = "Successful signup.";
-                    jsonResponse["accessToken"] = generateToken(username, password);
+                    const string &accessToken = generateToken(username, password);
+                    Token token;
+                    token.setToken(accessToken);
+                    token.setUsername(username);
+                    token.save();
+                    jsonResponse["accessToken"] = accessToken;
                 }
             } else {
                 jsonResponse["message"] = "No account found with given username.";
