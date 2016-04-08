@@ -38,7 +38,7 @@ void Token::setToken(const string &token) {
 }
 
 const string &Token::getUsername() const {
-    return <#initializer#>;
+    return username;
 }
 
 void Token::setUsername(const string &username) {
