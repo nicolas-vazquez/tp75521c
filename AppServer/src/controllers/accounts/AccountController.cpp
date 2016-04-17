@@ -5,6 +5,7 @@
 #include "AccountController.h"
 #include "../../errors/UsernameAlreadyInUseError.h"
 #include "../../model/Token.h"
+#include "../../errors/UnauthorizedError.h"
 
 AccountController::AccountController() {
 
@@ -32,7 +33,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
             JsonResponse jsonResponse;
             if (found) {
                 if (account.getPassword() != encodePassword(password)) {
-                    jsonResponse["message"] = "Wrong credentials.";
+                    errors.push_back(new UnauthorizedError());
                 } else {
                     jsonResponse["message"] = "Successful signup.";
                     const string &accessToken = generateToken(username, password);
@@ -43,10 +44,15 @@ void AccountController::login(Request &request, JsonResponse &response) {
                     jsonResponse["accessToken"] = accessToken;
                 }
             } else {
-                jsonResponse["message"] = "No account found with given username.";
+                errors.push_back(new UnauthorizedError());
             }
 
-            sendResult(response, jsonResponse, HTTP_OK);
+            if (errors.empty()) {
+                sendResult(response, jsonResponse, HTTP_OK);
+            } else {
+                sendErrors(response, errors, 401);
+            }
+
         }
 
     } else {
@@ -59,7 +65,7 @@ string AccountController::encodePassword(const string &password) const {
 }
 
 string AccountController::generateToken(const string &username, const string &password) const {
-    return sha256(username + password);
+    return sha256(password);
 }
 
 void AccountController::signup(Request &request, JsonResponse &response) {
