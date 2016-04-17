@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <mongoose/Server.h>
-#include "controllers/AccountController.h"
+#include "controllers/accounts/AccountController.h"
+#include "controllers/matchs/MatchsController.h"
 
 using namespace std;
 using namespace Mongoose;
@@ -25,6 +26,10 @@ int main() {
 
     AccountController accountController;
     server.registerController(&accountController);
+
+    MatchsController matchsController;
+    server.registerController(&accountController);
+
     server.setOption("enable_directory_listing", "false");
     server.start();
 

@@ -33,6 +33,8 @@ protected:
     bool bodyFormatHandler(Request &request, Value &body);
 
     void sendBadJsonError(JsonResponse &response);
+
+    bool tokenAuthenticate(Request &request, Value &body);
 };
 
 

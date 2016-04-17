@@ -19,6 +19,11 @@ public:
     virtual int getCode() {
         return 3;
     }
+
+
+    virtual ~BadJsonError() {
+
+    }
 };
 
 

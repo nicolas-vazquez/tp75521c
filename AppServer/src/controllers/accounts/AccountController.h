@@ -8,10 +8,10 @@
 #include <sha256/sha256.h>
 #include <mongoose/Server.h>
 #include <mongoose/JsonResponse.h>
-#include "BaseController.h"
-#include "../model/Account.h"
-#include "../errors/BadJsonError.h"
-#include "../errors/EmptyParamError.h"
+#include "../BaseController.h"
+#include "../../model/Account.h"
+#include "../../errors/BadJsonError.h"
+#include "../../errors/EmptyParamError.h"
 
 using namespace std;
 using namespace Mongoose;

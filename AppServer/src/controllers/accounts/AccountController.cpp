@@ -3,8 +3,8 @@
 //
 
 #include "AccountController.h"
-#include "../errors/UsernameAlreadyInUseError.h"
-#include "../model/Token.h"
+#include "../../errors/UsernameAlreadyInUseError.h"
+#include "../../model/Token.h"
 
 AccountController::AccountController() {
 

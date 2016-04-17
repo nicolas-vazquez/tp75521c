@@ -54,7 +54,10 @@ set(SOURCES
         ${MONGOOSE_CPP}/WebSocket.cpp
         ${MONGOOSE_CPP}/WebSockets.cpp
         ${SHA256_CPP}/sha256.h
+        ${SHA256_CPP}/sha256.cpp src/errors/UsernameAlreadyInUseError.h src/model/Token.cpp src/model/Token.h src/controllers/matchs/MatchsController.cpp src/controllers/matchs/MatchsController.h src/errors/UnauthorizedError.h)
         ${SHA256_CPP}/sha256.cpp src/errors/UsernameAlreadyInUseError.h src/model/Token.cpp src/model/Token.h src/utils/Logger.h src/utils/LockFile.h src/utils/Logger.cpp src/utils/LockFile.cpp)
+
+
 
 include_directories("${MONGOOSE_CPP}")
 
@@ -62,7 +65,7 @@ include_directories("${MONGOOSE_CPP}")
 message(STATUS "*** Generating executable ***")
 add_executable(${PROJECT_NAME}
         ${SOURCES}
-        src/main.cpp src/controllers/AccountController.cpp src/controllers/AccountController.h
+        src/main.cpp src/controllers/accounts/AccountController.cpp src/controllers/accounts/AccountController.h
         src/controllers/BaseController.cpp
         src/controllers/BaseController.h
         src/errors/Error.h

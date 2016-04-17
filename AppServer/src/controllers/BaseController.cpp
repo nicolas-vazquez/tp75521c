@@ -16,6 +16,10 @@ bool BaseController::bodyFormatHandler(Request &request, Value &body) {
     return reader.parse(data, body);
 }
 
+bool BaseController::tokenAuthenticate(Request &request, Value &body) {
+
+
+}
 
 void BaseController::sendBadJsonError(JsonResponse &response) {
     vector<Error *> errors;
