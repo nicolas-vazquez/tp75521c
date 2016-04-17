@@ -33,6 +33,6 @@ void MatchsController::setup() {
     addRouteResponse("GET", "/", MatchsController, getMatches, JsonResponse);
 }
 
-virtual MatchsController::~MatchsController() {
+MatchsController::~MatchsController() {
 
 }

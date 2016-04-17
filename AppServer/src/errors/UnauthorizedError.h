@@ -18,7 +18,7 @@ public:
         return 5;
     }
 
-    virtual ~UsernameAlreadyInUseError() {
+    virtual ~UnauthorizedError() {
 
     }
 };
