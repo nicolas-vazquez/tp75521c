@@ -28,13 +28,14 @@ int main() {
     server.registerController(&accountController);
 
     MatchsController matchsController;
-    server.registerController(&accountController);
+    server.registerController(&matchsController);
 
     server.setOption("enable_directory_listing", "false");
     server.start();
 
     cout << "Server started, routes:" << endl;
     accountController.dumpRoutes();
+    matchsController.dumpRoutes();
 
     while (running) {
         sleep(10);
