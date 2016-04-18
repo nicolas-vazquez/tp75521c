@@ -5,7 +5,6 @@
 #ifndef APPSERVER_USER_H
 #define APPSERVER_USER_H
 
-
 #include "Entity.h"
 
 class Account : public Entity {
@@ -14,9 +13,8 @@ private:
     string username;
     string password;
 
-public:
-
-protected:
+    vector<string> keptAccounts;
+    vector<string> tossedAccounts;
 
 public:
     Account(const string &username);
@@ -28,6 +26,10 @@ public:
     virtual Value toJSON() override;
 
     void setPassword(const string &password);
+
+    void addKeepAccount(const string &keptAccount);
+
+    void addTossAccount(const string &tossedAccount);
 
     virtual ~Account();
 

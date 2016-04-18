@@ -3,7 +3,7 @@
 //
 
 #include "MatchsController.h"
-#include "../../model/Token.h"
+#include "../../model/AccessToken.h"
 #include "../../errors/UnauthorizedError.h"
 
 MatchsController::MatchsController() {
@@ -14,7 +14,7 @@ void MatchsController::getMatches(Request &request, JsonResponse &response) {
 
     string tokenHeader = request.getHeaderKeyValue("Authorization");
 
-    Token token;
+    AccessToken token;
     token.setToken(tokenHeader);
 
     bool found = token.fetch();

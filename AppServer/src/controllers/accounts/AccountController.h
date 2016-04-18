@@ -31,7 +31,11 @@ public:
 
     void login(Request &request, JsonResponse &response);
 
-    void validateUserNameAndPassword(string username, string password, vector<Error *> &errors);
+    void like(Request &request, JsonResponse &response);
+
+    void dislike(Request &request, JsonResponse &response);
+
+    void validateAccount(string username, string password, vector<Error *> &errors);
 
     virtual ~AccountController();
 };

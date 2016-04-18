@@ -4,13 +4,12 @@
 
 #include "AccountController.h"
 #include "../../errors/UsernameAlreadyInUseError.h"
-#include "../../model/Token.h"
+#include "../../model/AccessToken.h"
 #include "../../errors/UnauthorizedError.h"
 
 AccountController::AccountController() {
 
 }
-
 
 void AccountController::login(Request &request, JsonResponse &response) {
 
@@ -23,7 +22,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
         string username = body.get("username", "").asString();
         string password = body.get("password", "").asString();
 
-        validateUserNameAndPassword(username, password, errors);
+        validateAccount(username, password, errors);
         if (!errors.empty()) {
             sendErrors(response, errors, 400);
         } else {
@@ -35,9 +34,9 @@ void AccountController::login(Request &request, JsonResponse &response) {
                 if (account.getPassword() != encodePassword(password)) {
                     errors.push_back(new UnauthorizedError());
                 } else {
-                    jsonResponse["message"] = "Successful signup.";
+                    jsonResponse["message"] = "Successful login.";
                     const string &accessToken = generateToken(username, password);
-                    Token token;
+                    AccessToken token;
                     token.setToken(accessToken);
                     token.setUsername(username);
                     token.save();
@@ -79,7 +78,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
         string username = body.get("username", "").asString();
         string password = body.get("password", "").asString();
 
-        validateUserNameAndPassword(username, password, errors);
+        validateAccount(username, password, errors);
         if (!errors.empty()) {
             sendErrors(response, errors, 400);
         } else {
@@ -107,8 +106,57 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     }
 }
 
-void AccountController::validateUserNameAndPassword(string username, string password,
-                                                    vector<Error *> &errors) {
+void AccountController::like(Request &request, JsonResponse &response) {
+    Json::Value body;
+    bool parsed = bodyFormatHandler(request, body);
+    vector<Error *> errors;
+
+    if (parsed) {
+        string keptAccount = body.get("keptAccount", "").asString();
+        string accessToken = body.get("accessToken", "").asString();
+        AccessToken token;
+        token.setToken(accessToken);
+        if (token.fetch()) {
+            Account account(token.getUsername());
+            if (account.fetch()) {
+                account.addKeepAccount(keptAccount);
+                account.save();
+            }
+        } else {
+            errors.push_back(new UnauthorizedError());
+        }
+    } else {
+        sendBadJsonError(response);
+    }
+}
+
+void AccountController::dislike(Request &request, JsonResponse &response) {
+    Json::Value body;
+    bool parsed = bodyFormatHandler(request, body);
+    vector<Error *> errors;
+
+    if (parsed) {
+        string tossedAccount = body.get("tossedAccount", "").asString();
+        string accessToken = body.get("accessToken", "").asString();
+        AccessToken token;
+        token.setToken(accessToken);
+        if (token.fetch()) {
+            Account account(token.getUsername());
+            if (account.fetch()) {
+                account.addTossAccount(tossedAccount);
+                account.save();
+            }
+        } else {
+            errors.push_back(new UnauthorizedError());
+        }
+    } else {
+        sendBadJsonError(response);
+    }
+
+}
+
+void AccountController::validateAccount(string username, string password,
+                                        vector<Error *> &errors) {
     if (username.empty()) {
         EmptyParamError *emptyUserError = new EmptyParamError();
         emptyUserError->setMessage("Empty username");
@@ -122,21 +170,14 @@ void AccountController::validateUserNameAndPassword(string username, string pass
     }
 }
 
-
 void AccountController::setup() {
     setPrefix("/api/accounts");
     addRouteResponse("POST", "/signup", AccountController, signup, JsonResponse);
     addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
+    addRouteResponse("PUT", "/like", AccountController, like, JsonResponse);
+    addRouteResponse("PUT", "/dislike", AccountController, dislike, JsonResponse);
 }
 
 AccountController::~AccountController() {
 
 }
-
-
-
-
-
-
-
-

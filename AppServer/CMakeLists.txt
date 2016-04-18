@@ -56,7 +56,7 @@ set(SOURCES
         ${MONGOOSE_CPP}/WebSockets.cpp
         ${SHA256_CPP}/sha256.cpp
         src/errors/UsernameAlreadyInUseError.h
-        src/model/Token.cpp
+        src/model/AccessToken.cpp
         src/controllers/matchs/MatchsController.cpp
         src/errors/UnauthorizedError.h
         src/utils/Logger.h src/utils/LockFile.h

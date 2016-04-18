@@ -9,7 +9,7 @@
 #include "Entity.h"
 
 
-class Token : public Entity {
+class AccessToken : public Entity {
 
 private:
     string token;
@@ -17,7 +17,7 @@ private:
 
 public:
 
-    Token();
+    AccessToken();
 
     const string &getToken() const;
 
@@ -29,7 +29,7 @@ public:
 
     string primaryKeyValue() override;
 
-    virtual ~Token();
+    virtual ~AccessToken();
 
 protected:
 
