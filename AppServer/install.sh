@@ -35,6 +35,7 @@ make shared_lib && \
 sudo install -d /usr/include && \
 sudo cp -r include/rocksdb /usr/include && \
 sudo install -m755 -D librocksdb.so.4.4.1 /usr/lib/librocksdb.so.4.4 && \
+sudo install -m755 -D librocksdb.so.4.4.1 /usr/lib/librocksdb.so && \
 sudo install -D -m644 LICENSE "/usr/share/licenses/$pkgname/LICENSE" && \
 
 
