@@ -17,13 +17,21 @@ using namespace Mongoose;
 
 class BaseController : public JsonController {
 protected:
+
+    vector<string> *routeParams;
+
 public:
+
+    virtual Response *process(Request &request) override;
+
+    virtual bool handles(string method, string url) override;
 
     BaseController();
 
     virtual ~BaseController();
 
 protected:
+
     void sendErrors(JsonResponse &response, vector<Error *> &errors, int responseCode);
 
     void sendResult(JsonResponse &response, JsonResponse &responseBody, int responseCode);
@@ -35,6 +43,10 @@ protected:
     void sendBadJsonError(JsonResponse &response);
 
     bool tokenAuthenticate(Request &request, Value &body);
+
+private:
+
+    void replaceRouteParams(string &key, string requestUrl) const;
 };
 
 

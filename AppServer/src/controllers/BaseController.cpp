@@ -2,12 +2,13 @@
 // Created by fedefarina on 26/03/16.
 //
 
+#include <regex>
 #include "BaseController.h"
 #include "../utils/Logger.h"
 
 
 BaseController::BaseController() {
-
+    routeParams = new vector<string>();
 }
 
 bool BaseController::bodyFormatHandler(Request &request, Value &body) {
@@ -15,6 +16,70 @@ bool BaseController::bodyFormatHandler(Request &request, Value &body) {
     Json::Reader reader;
     return reader.parse(data, body);
 }
+
+
+bool BaseController::handles(string method, string url) {
+
+    bool handle = false;
+    string incomingKey = method + ":" + url;
+
+    map<string, RequestHandlerBase *>::iterator it;
+    for (it = routes.begin(); it != routes.end(); it++) {
+        string key = it->first;
+
+        replaceRouteParams(key, incomingKey);
+
+        if (regex_match(incomingKey, regex(key))) {
+            handle = true;
+            break;
+        }
+    }
+
+    return handle;
+}
+
+
+Response *BaseController::process(Request &request) {
+    Response *response = NULL;
+
+    map<string, RequestHandlerBase *>::iterator it;
+    for (it = routes.begin(); it != routes.end(); it++) {
+        string key = it->first;
+
+
+        string requestKey = request.getMethod() + ":" + request.getUrl();
+
+        replaceRouteParams(key, requestKey);
+
+        if (regex_match(requestKey, regex(key))) {
+            response = it->second->process(request);
+            break;
+        }
+    }
+
+    return response;
+}
+
+void BaseController::replaceRouteParams(string &key, string requestUrl) const {
+
+    unsigned long firstPos = key.find("{");
+    unsigned long secondPos = key.find("}");
+
+    //Replace {param} with .*
+    while (firstPos != string::npos && secondPos != string::npos) {
+
+        //@Fede Due to a mongoose cpp "double url check" issue we have to run this method twice, so we validate that we are in first one
+        if (routeParams->empty()) {
+            string value = requestUrl.substr(firstPos, secondPos);
+            routeParams->push_back(value);
+        }
+
+        key = key.replace(firstPos, secondPos, ".*");
+        firstPos = key.find("{");
+        secondPos = key.find("}");
+    }
+}
+
 
 bool BaseController::tokenAuthenticate(Request &request, Value &body) {
 
@@ -77,7 +142,7 @@ void BaseController::setHeaders(JsonResponse &response) {
 }
 
 BaseController::~BaseController() {
-
+    delete routeParams;
 }
 
 
