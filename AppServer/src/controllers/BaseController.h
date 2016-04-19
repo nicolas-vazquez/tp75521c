@@ -18,7 +18,7 @@ using namespace Mongoose;
 class BaseController : public JsonController {
 protected:
 
-    vector<string> *routeParams;
+    map<string, string> *routeParams;
 
 public:
 

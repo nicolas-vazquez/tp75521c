@@ -109,7 +109,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
-    string keptAccount = routeParams->at(0);
+    string keptAccount = routeParams->at("id");
 
     string accessToken = request.getHeaderKeyValue("Authorization");
     AccessToken token;
@@ -130,7 +130,7 @@ void AccountController::like(Request &request, JsonResponse &response) {
 void AccountController::dislike(Request &request, JsonResponse &response) {
 
     vector<Error *> errors;
-    string tossedAccount = routeParams->at(0);
+    string tossedAccount = routeParams->at("id");
 
     string accessToken = request.getHeaderKeyValue("Authorization");
     AccessToken token;
