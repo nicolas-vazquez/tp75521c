@@ -107,53 +107,46 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 }
 
 void AccountController::like(Request &request, JsonResponse &response) {
-    Json::Value body;
-    bool parsed = bodyFormatHandler(request, body);
     vector<Error *> errors;
 
-    if (parsed) {
-        string keptAccount = body.get("keptAccount", "").asString();
-        string accessToken = body.get("accessToken", "").asString();
-        AccessToken token;
-        token.setToken(accessToken);
-        if (token.fetch()) {
-            Account account(token.getUsername());
-            if (account.fetch()) {
-                account.addKeepAccount(keptAccount);
-                account.save();
-            }
-        } else {
-            errors.push_back(new UnauthorizedError());
+    string keptAccount = routeParams->at(0);
+
+    string accessToken = request.getHeaderKeyValue("Authorization");
+    AccessToken token;
+    token.setToken(accessToken);
+
+    if (token.fetch()) {
+        Account account(token.getUsername());
+        if (account.fetch()) {
+            account.addKeepAccount(keptAccount);
+            account.save();
         }
     } else {
-        sendBadJsonError(response);
+        errors.push_back(new UnauthorizedError());
     }
+
 }
 
 void AccountController::dislike(Request &request, JsonResponse &response) {
-    Json::Value body;
-    bool parsed = bodyFormatHandler(request, body);
-    vector<Error *> errors;
 
-    if (parsed) {
-        string tossedAccount = body.get("tossedAccount", "").asString();
-        string accessToken = body.get("accessToken", "").asString();
-        AccessToken token;
-        token.setToken(accessToken);
-        if (token.fetch()) {
-            Account account(token.getUsername());
-            if (account.fetch()) {
-                account.addTossAccount(tossedAccount);
-                account.save();
-            }
-        } else {
-            errors.push_back(new UnauthorizedError());
+    vector<Error *> errors;
+    string tossedAccount = routeParams->at(0);
+
+    string accessToken = request.getHeaderKeyValue("Authorization");
+    AccessToken token;
+    token.setToken(accessToken);
+
+    if (token.fetch()) {
+        Account account(token.getUsername());
+        if (account.fetch()) {
+            account.addTossAccount(tossedAccount);
+            account.save();
         }
     } else {
-        sendBadJsonError(response);
+        errors.push_back(new UnauthorizedError());
     }
-
 }
+
 
 void AccountController::validateAccount(string username, string password,
                                         vector<Error *> &errors) {
@@ -174,8 +167,8 @@ void AccountController::setup() {
     setPrefix("/api/accounts");
     addRouteResponse("POST", "/signup", AccountController, signup, JsonResponse);
     addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
-    addRouteResponse("PUT", "/like", AccountController, like, JsonResponse);
-    addRouteResponse("PUT", "/dislike", AccountController, dislike, JsonResponse);
+    addRouteResponse("PUT", "/like/{id}", AccountController, like, JsonResponse);
+    addRouteResponse("PUT", "/dislike/{id}", AccountController, dislike, JsonResponse);
 }
 
 AccountController::~AccountController() {
