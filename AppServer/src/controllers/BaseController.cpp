@@ -25,11 +25,8 @@ bool BaseController::handles(string method, string url) {
 
     map<string, RequestHandlerBase *>::iterator it;
     for (it = routes.begin(); it != routes.end(); it++) {
-        string key = it->first;
-
-        replaceRouteParams(key, incomingKey);
-
-        if (regex_match(incomingKey, regex(key))) {
+        string replacedKey = replaceRouteParams(it->first);
+        if (regex_match(incomingKey, regex(replacedKey))) {
             handle = true;
             break;
         }
@@ -40,55 +37,56 @@ bool BaseController::handles(string method, string url) {
 
 
 Response *BaseController::process(Request &request) {
-    cout << "Process" << endl;
     Response *response = NULL;
 
     map<string, RequestHandlerBase *>::iterator it;
     for (it = routes.begin(); it != routes.end(); it++) {
         string key = it->first;
 
+        string currentRequest = request.getMethod() + ":" + request.getUrl();
+        string regexKey = replaceRouteParams(key);
 
-        string requestKey = request.getMethod() + ":" + request.getUrl();
+        if (regex_match(currentRequest, regex(regexKey))) {
 
-        replaceRouteParams(key, requestKey);
+            routeParams->clear();
+            //Get map key
+            unsigned long firstPos = key.find("{");
+            unsigned long secondPos = key.find("}");
 
-        if (regex_match(requestKey, regex(key))) {
+            string mapKey = key.substr(firstPos + 1, secondPos - firstPos - 1);
+
+            //Get map value
+            string requestTail = currentRequest.substr(firstPos);
+            unsigned long incomingRequestValueEnd = requestTail.find("/");
+            string value = currentRequest.substr(firstPos, incomingRequestValueEnd);
+
+            routeParams->insert(std::pair<string, string>(mapKey, value));
+
             response = it->second->process(request);
             break;
         }
 
-        routeParams->clear();
+
     }
 
     return response;
 }
 
+//@Fede Due to a mongoose cpp "double url check" issue we have to run this method twice, so we validate that we are in first one
+string BaseController::replaceRouteParams(string key) const {
 
-void BaseController::replaceRouteParams(string &key, string requestUrl) const {
-
-    unsigned long firstPos = key.find("{");
-    unsigned long secondPos = key.find("}");
+    string replacedKey = key;
+    unsigned long firstPos = replacedKey.find("{");
+    unsigned long secondPos = replacedKey.find("}");
 
     //Replace {param} with .*
     while (firstPos != string::npos && secondPos != string::npos) {
-
-        //@Fede Due to a mongoose cpp "double url check" issue we have to run this method twice, so we validate that we are in first one
-        if (routeParams->empty()) {
-            string requestTail = requestUrl.substr(firstPos);
-            unsigned long incominRequestValueEnd = requestTail.find("/");
-            if (incominRequestValueEnd != string::npos) {
-                string mapKey = key.substr(firstPos + 1, secondPos - firstPos - 1);
-                string value = requestUrl.substr(firstPos, incominRequestValueEnd);
-                routeParams->insert(std::pair<string, string>(mapKey, value));
-                cout << "MapKey:" << mapKey << endl;
-                cout << "MapValue:" << value << endl;
-            }
-        }
-
-        key = key.replace(firstPos, secondPos - firstPos + 1, ".*");
-        firstPos = key.find("{");
-        secondPos = key.find("}");
+        replacedKey = replacedKey.replace(firstPos, secondPos - firstPos + 1, ".*");
+        firstPos = replacedKey.find("{");
+        secondPos = replacedKey.find("}");
     }
+
+    return replacedKey;
 }
 
 

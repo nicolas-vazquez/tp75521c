@@ -46,7 +46,7 @@ protected:
 
 private:
 
-    void replaceRouteParams(string &key, string requestUrl) const;
+    string replaceRouteParams(string key) const;
 };
 
 
