@@ -48,19 +48,10 @@ Response *BaseController::process(Request &request) {
 
         if (regex_match(currentRequest, regex(regexKey))) {
 
-            routeParams->clear();
-            //Get map key
-            unsigned long firstPos = key.find("{");
-            unsigned long secondPos = key.find("}");
-
-            string mapKey = key.substr(firstPos + 1, secondPos - firstPos - 1);
-
-            //Get map value
-            string requestTail = currentRequest.substr(firstPos);
-            unsigned long incomingRequestValueEnd = requestTail.find("/");
-            string value = currentRequest.substr(firstPos, incomingRequestValueEnd);
-
-            routeParams->insert(std::pair<string, string>(mapKey, value));
+            //Only search for route params in regex keys
+            if (regexKey.find(".*") != string::npos) {
+                parseRouteParams(key, currentRequest);
+            }
 
             response = it->second->process(request);
             break;
@@ -70,6 +61,22 @@ Response *BaseController::process(Request &request) {
     }
 
     return response;
+}
+
+void BaseController::parseRouteParams(const string &key, const string &currentRequest) const {
+    routeParams->clear();
+    //Get map key
+    unsigned long firstPos = key.find("{");
+    unsigned long secondPos = key.find("}");
+
+    string mapKey = key.substr(firstPos + 1, secondPos - firstPos - 1);
+
+    //Get map value
+    string requestTail = currentRequest.substr(firstPos);
+    unsigned long incomingRequestValueEnd = requestTail.find("/");
+    string value = currentRequest.substr(firstPos, incomingRequestValueEnd);
+
+    routeParams->insert(std::pair<string, string>(mapKey, value));
 }
 
 //@Fede Due to a mongoose cpp "double url check" issue we have to run this method twice, so we validate that we are in first one
@@ -113,7 +120,7 @@ void BaseController::sendBadJsonError(JsonResponse &response) {
 }
 */
 void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors, int responseCode) {
-    Logger::error(response.asString());
+    //Logger::error(response.asString());
     cout << "Sending error" << endl;
     response.setCode(responseCode);
     setHeaders(response);
@@ -139,7 +146,7 @@ void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors,
 }
 */
 void BaseController::sendResult(JsonResponse &response, JsonResponse &responseBody, int responseCode) {
-    Logger::info(response.asString());
+    //Logger::info(response.asString());
     cout << "Sending result" << endl;
     response.setCode(responseCode);
     response["data"] = responseBody;

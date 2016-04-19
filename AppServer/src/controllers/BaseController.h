@@ -47,6 +47,8 @@ protected:
 private:
 
     string replaceRouteParams(string key) const;
+
+    void parseRouteParams(const string &key, const string &currentRequest) const;
 };
 
 
