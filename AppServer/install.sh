@@ -15,6 +15,7 @@ echo "Search end"
 
 # Instalación de dependencias y herramientas
 echo "Installing tools and dependencies"
+apt-get update\
 apt-get install -y --assume-yes --force-yes\
 libsnappy-dev \
 zlib1g-dev \
