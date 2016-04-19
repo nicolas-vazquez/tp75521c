@@ -167,8 +167,8 @@ void AccountController::setup() {
     setPrefix("/api/accounts");
     addRouteResponse("POST", "/signup", AccountController, signup, JsonResponse);
     addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
-    addRouteResponse("PUT", "/like/{id}", AccountController, like, JsonResponse);
-    addRouteResponse("PUT", "/dislike/{id}", AccountController, dislike, JsonResponse);
+    addRouteResponse("PUT", "/{id}/like", AccountController, like, JsonResponse);
+    addRouteResponse("PUT", "/{id}/dislike", AccountController, dislike, JsonResponse);
 }
 
 AccountController::~AccountController() {
