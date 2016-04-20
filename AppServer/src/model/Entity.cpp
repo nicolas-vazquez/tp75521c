@@ -22,8 +22,12 @@ bool Entity::fetch() {
     string value;
     Status s = db->Get(ReadOptions(), getName() + primaryKeyValue(), &value);
     bool fetched = s.ok();
-    if(fetched){
-        fromJSON(value);
+
+    if (fetched) {
+        Json::Reader reader;
+        Value json;
+        reader.parse(value, json);
+        fromJSON(json);
     }
     return fetched;
 }

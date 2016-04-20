@@ -61,7 +61,8 @@ set(SOURCES
         src/errors/UnauthorizedError.h
         src/utils/FileLogger.h src/utils/LockFile.h
         src/utils/FileLogger.cpp
-        src/utils/LockFile.cpp)
+        src/utils/LockFile.cpp
+        )
 
 
 include_directories("${MONGOOSE_CPP}")

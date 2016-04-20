@@ -78,6 +78,10 @@ namespace Mongoose {
         prefix = prefix_;
     }
 
+    string Controller::getPrefix() const {
+        return prefix;
+    }
+
     void Controller::registerRoute(string httpMethod, string route, RequestHandlerBase *handler) {
         string key = httpMethod + ":" + prefix + route;
         routes[key] = handler;

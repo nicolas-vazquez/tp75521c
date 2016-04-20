@@ -33,6 +33,8 @@ int main() {
     MatchsController matchsController;
     server.registerController(&matchsController);
 
+
+
     server.setOption("enable_directory_listing", "false");
     server.start();
 

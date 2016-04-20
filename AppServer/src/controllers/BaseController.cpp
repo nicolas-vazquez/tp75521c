@@ -5,6 +5,8 @@
 #include <regex>
 #include "BaseController.h"
 #include "../utils/FileLogger.h"
+#include "../model/AccessToken.h"
+#include "../errors/UnauthorizedError.h"
 
 
 BaseController::BaseController() {
@@ -16,7 +18,6 @@ bool BaseController::bodyFormatHandler(Request &request, Value &body) {
     Json::Reader reader;
     return reader.parse(data, body);
 }
-
 
 bool BaseController::handles(string method, string url) {
 
@@ -101,9 +102,20 @@ string BaseController::replaceRouteParams(string key) const {
 }
 
 
-bool BaseController::tokenAuthenticate(Request &request, Value &body) {
+bool BaseController::tokenAuthenticate(Request &request) {
 
+    string tokenHeader = request.getHeaderKeyValue("Authorization");
 
+    AccessToken token;
+    token.setToken(tokenHeader);
+    bool authenticated = token.fetch();
+
+    if (token.fetch()) {
+        string userName = token.getUsername();
+        request.setUser(userName);
+    }
+
+    return authenticated;
 }
 
 void BaseController::sendBadJsonError(JsonResponse &response) {
@@ -112,6 +124,16 @@ void BaseController::sendBadJsonError(JsonResponse &response) {
     errors.push_back(badJsonError);
     sendErrors(response, errors, 400);
 }
+
+
+JsonResponse & BaseController::sendUnauthorizedResponse(JsonResponse &response) {
+    vector<Error *> errors;
+    UnauthorizedError *unauthorizedError = new UnauthorizedError();
+    errors.push_back(unauthorizedError);
+    sendErrors(response, errors, 401);
+    return response;
+}
+
 
 /* Errors format
 {
@@ -161,9 +183,19 @@ void BaseController::setHeaders(JsonResponse &response) {
     response.setHeader("Content-Type", "application/json; charset=utf-8");
 }
 
+
+bool BaseController::requireAuthentication(string method, string url) {
+    return true;
+}
+
 BaseController::~BaseController() {
     delete routeParams;
 }
+
+
+
+
+
 
 
 

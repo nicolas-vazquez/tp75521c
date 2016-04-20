@@ -22,7 +22,7 @@ namespace Mongoose
              */
             JsonController(int gcDivisor = 100);
 
-            /**
+        virtual /**
              * Pre process the request, this will set the content type to text/html
              * and ping the user session
              *

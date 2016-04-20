@@ -6,12 +6,15 @@
 #include "../../errors/UsernameAlreadyInUseError.h"
 #include "../../model/AccessToken.h"
 #include "../../errors/UnauthorizedError.h"
+#include "../../utils/FileLogger.h"
 
 AccountController::AccountController() {
 
 }
 
 void AccountController::login(Request &request, JsonResponse &response) {
+
+    FileLogger::info("Prueba");
 
     Json::Value body;
     bool parsed = bodyFormatHandler(request, body);
@@ -29,25 +32,25 @@ void AccountController::login(Request &request, JsonResponse &response) {
             Account account(username);
             bool found = account.fetch();
 
-            JsonResponse jsonResponse;
+            JsonResponse responseBody;
             if (found) {
                 if (account.getPassword() != encodePassword(password)) {
                     errors.push_back(new UnauthorizedError());
                 } else {
-                    jsonResponse["message"] = "Successful login.";
+                    responseBody["message"] = "Successful login.";
                     const string &accessToken = generateToken(username, password);
                     AccessToken token;
                     token.setToken(accessToken);
                     token.setUsername(username);
                     token.save();
-                    jsonResponse["accessToken"] = accessToken;
+                    responseBody["accessToken"] = accessToken;
                 }
             } else {
                 errors.push_back(new UnauthorizedError());
             }
 
             if (errors.empty()) {
-                sendResult(response, jsonResponse, HTTP_OK);
+                sendResult(response, responseBody, HTTP_OK);
             } else {
                 sendErrors(response, errors, 401);
             }
@@ -109,20 +112,26 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
-    string keptAccount = routeParams->at("id");
+    bool found = tokenAuthenticate(request);
 
-    string accessToken = request.getHeaderKeyValue("Authorization");
-    AccessToken token;
-    token.setToken(accessToken);
-
-    if (token.fetch()) {
+    if (found) {
+        string keptAccount = routeParams->at("id");
+        AccessToken token;
+        token.setToken(request.getHeaderKeyValue("Authorization"));
         Account account(token.getUsername());
+
         if (account.fetch()) {
             account.addKeepAccount(keptAccount);
             account.save();
+            JsonResponse responseBody;
+            responseBody["message"] = "Like successful";
+            sendResult(response, responseBody, HTTP_OK);
+        } else {
+            sendErrors(response, errors, 400);
         }
     } else {
         errors.push_back(new UnauthorizedError());
+        sendErrors(response, errors, 401);
     }
 
 }
@@ -130,21 +139,26 @@ void AccountController::like(Request &request, JsonResponse &response) {
 void AccountController::dislike(Request &request, JsonResponse &response) {
 
     vector<Error *> errors;
-    string tossedAccount = routeParams->at("id");
 
-    string accessToken = request.getHeaderKeyValue("Authorization");
-    AccessToken token;
-    token.setToken(accessToken);
+    bool found = tokenAuthenticate(request);
 
-    if (token.fetch()) {
+    if (found) {
+        string tossedAccount = routeParams->at("id");
+        AccessToken token;
+        token.setToken(request.getHeaderKeyValue("Authorization"));
         Account account(token.getUsername());
         if (account.fetch()) {
             account.addTossAccount(tossedAccount);
             account.save();
+            JsonResponse responseBody;
+            responseBody["message"] = "Dislike successful";
+            sendResult(response, responseBody, HTTP_OK);
         }
     } else {
         errors.push_back(new UnauthorizedError());
+        sendErrors(response, errors, 401);
     }
+
 }
 
 
@@ -170,6 +184,15 @@ void AccountController::setup() {
     addRouteResponse("PUT", "/{id}/like", AccountController, like, JsonResponse);
     addRouteResponse("PUT", "/{id}/dislike", AccountController, dislike, JsonResponse);
 }
+
+
+bool AccountController::requireAuthentication(string method, string url) {
+    if ((!method.compare("POST") && !url.compare(getPrefix() + "/login"))
+        || (!method.compare("POST") && !url.compare(getPrefix() + "/signup"))) {
+        return false;
+    }
+}
+
 
 AccountController::~AccountController() {
 

@@ -9,6 +9,7 @@
 #include <mongoose/Server.h>
 #include "../errors/Error.h"
 #include "../errors/BadJsonError.h"
+#include "../model/AccessToken.h"
 
 
 using namespace std;
@@ -16,15 +17,20 @@ using namespace Json;
 using namespace Mongoose;
 
 class BaseController : public JsonController {
-protected:
 
-    map<string, string> *routeParams;
 
 public:
+    map<string, string> *routeParams;
 
     virtual Response *process(Request &request) override;
 
     virtual bool handles(string method, string url) override;
+
+    virtual bool requireAuthentication(string method, string url);
+
+    bool tokenAuthenticate(Request &request);
+
+    virtual JsonResponse & sendUnauthorizedResponse(JsonResponse &response);
 
     BaseController();
 
@@ -42,13 +48,13 @@ protected:
 
     void sendBadJsonError(JsonResponse &response);
 
-    bool tokenAuthenticate(Request &request, Value &body);
-
 private:
 
     string replaceRouteParams(string key) const;
 
     void parseRouteParams(const string &key, const string &currentRequest) const;
+
+
 };
 
 

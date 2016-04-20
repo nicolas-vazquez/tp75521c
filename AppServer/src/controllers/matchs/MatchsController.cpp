@@ -12,6 +12,7 @@ MatchsController::MatchsController() {
 
 void MatchsController::getMatches(Request &request, JsonResponse &response) {
 
+    //fixme
     string tokenHeader = request.getHeaderKeyValue("Authorization");
 
     AccessToken token;
