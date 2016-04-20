@@ -4,6 +4,7 @@
 #include <mongoose/Server.h>
 #include "controllers/accounts/AccountController.h"
 #include "controllers/matchs/MatchsController.h"
+#include "utils/FileLogger.h"
 
 using namespace std;
 using namespace Mongoose;
@@ -21,6 +22,8 @@ int main() {
     srand(time(NULL));
 
     signal(SIGINT, handle_signal);
+
+    FileLogger::initialize("server.out", FileLogger::LOG_DEBUG);
 
     Server server(8083);
 
@@ -40,6 +43,8 @@ int main() {
     while (running) {
         sleep(10);
     }
+
+    FileLogger::destroy();
 
     server.stop();
     return EXIT_SUCCESS;

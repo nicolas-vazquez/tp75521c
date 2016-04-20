@@ -4,7 +4,7 @@
 
 #include <regex>
 #include "BaseController.h"
-#include "../utils/Logger.h"
+#include "../utils/FileLogger.h"
 
 
 BaseController::BaseController() {
@@ -37,13 +37,17 @@ bool BaseController::handles(string method, string url) {
 
 
 Response *BaseController::process(Request &request) {
+
+    string currentRequest = request.getMethod() + ":" + request.getUrl();
+    FileLogger::info("Processing request: " + currentRequest);
+
     Response *response = NULL;
 
     map<string, RequestHandlerBase *>::iterator it;
     for (it = routes.begin(); it != routes.end(); it++) {
         string key = it->first;
 
-        string currentRequest = request.getMethod() + ":" + request.getUrl();
+
         string regexKey = replaceRouteParams(key);
 
         if (regex_match(currentRequest, regex(regexKey))) {
@@ -120,8 +124,9 @@ void BaseController::sendBadJsonError(JsonResponse &response) {
 }
 */
 void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors, int responseCode) {
-    //Logger::error(response.asString());
-    cout << "Sending error" << endl;
+    ostringstream s;
+    s << "Error processing request with code: " << responseCode;
+    FileLogger::error(s.str());
     response.setCode(responseCode);
     setHeaders(response);
     string message;
@@ -146,8 +151,7 @@ void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors,
 }
 */
 void BaseController::sendResult(JsonResponse &response, JsonResponse &responseBody, int responseCode) {
-    //Logger::info(response.asString());
-    cout << "Sending result" << endl;
+    FileLogger::info(response.asString());
     response.setCode(responseCode);
     response["data"] = responseBody;
     setHeaders(response);

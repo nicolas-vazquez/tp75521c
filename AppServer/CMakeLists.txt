@@ -59,8 +59,8 @@ set(SOURCES
         src/model/AccessToken.cpp
         src/controllers/matchs/MatchsController.cpp
         src/errors/UnauthorizedError.h
-        src/utils/Logger.h src/utils/LockFile.h
-        src/utils/Logger.cpp
+        src/utils/FileLogger.h src/utils/LockFile.h
+        src/utils/FileLogger.cpp
         src/utils/LockFile.cpp)
 
 

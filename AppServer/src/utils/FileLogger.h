@@ -1,5 +1,5 @@
-#ifndef APPSERVER_LOGGER_H
-#define APPSERVER_LOGGER_H
+#ifndef APPSERVER_FileLogger_H
+#define APPSERVER_FileLogger_H
 
 #include <iostream>
 #include <fstream>
@@ -8,16 +8,16 @@
 #include <iomanip>
 #include "LockFile.h"
 
-class Logger {
+class FileLogger {
 
 private:
     LockFile _output;
     unsigned short int _logLevel;
     struct tm* _currentTime;
-    static Logger* _logger;
+    static FileLogger* _logger;
 
-    Logger(const char* filename) : _output(filename), _logLevel(Logger::LOG_NOTICE), _currentTime(NULL) {};
-    virtual ~Logger() {
+    FileLogger(const char* filename) : _output(filename), _logLevel(LOG_NOTICE), _currentTime(NULL) {};
+    virtual ~FileLogger() {
         //delete _output;
     };
 
@@ -36,7 +36,7 @@ public:
     static void initialize(const char* filename, unsigned short int logLevel) {
         // TODO: Ptr Error check
         if (!_logger) {
-            _logger = new Logger(filename);
+            _logger = new FileLogger(filename);
             _logger->_logLevel = logLevel;
         }
     };
@@ -77,4 +77,4 @@ public:
 
 };
 
-#endif //APPSERVER_LOGGER_H
+#endif //APPSERVER_FileLogger_H

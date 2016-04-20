@@ -1,9 +1,9 @@
 #include <iostream>
-#include "Logger.h"
+#include "FileLogger.h"
 
-Logger* Logger::_logger = NULL;
+FileLogger* FileLogger::_logger = NULL;
 
-void Logger::log(const std::string& msg, unsigned short int logLevel) {
+void FileLogger::log(const std::string& msg, unsigned short int logLevel) {
 	if (logLevel >= _logger->_logLevel) {
 		time_t timer;
 		time(&timer);
@@ -25,42 +25,42 @@ void Logger::log(const std::string& msg, unsigned short int logLevel) {
 	}
 }
 
-std::string Logger::prependCaller(const std::string& msg, const std::string& caller) {
+std::string FileLogger::prependCaller(const std::string& msg, const std::string& caller) {
 	return "[ " + caller + " ] " + msg;
 }
 
-void Logger::log(const std::string& msg, unsigned short int logLevel, const std::string& caller) {
+void FileLogger::log(const std::string& msg, unsigned short int logLevel, const std::string& caller) {
 	log( prependCaller(msg, caller), LOG_DEBUG );
 }
 
-void Logger::debug(const std::string& msg) {
+void FileLogger::debug(const std::string& msg) {
 	log( msg, LOG_DEBUG );
 }
 
-void Logger::debug(const std::string& msg, const std::string& caller) {
+void FileLogger::debug(const std::string& msg, const std::string& caller) {
 	log( msg, LOG_NOTICE, caller );
 }
 
-void Logger::info(const std::string &msg) {
+void FileLogger::info(const std::string &msg) {
 	log( msg, LOG_NOTICE );
 }
 
-void Logger::info(const std::string &msg, const std::string &caller) {
+void FileLogger::info(const std::string &msg, const std::string &caller) {
 	log( msg, LOG_WARNING, caller );
 }
 
-void Logger::warn(const std::string& msg) {
+void FileLogger::warn(const std::string& msg) {
 	log( msg, LOG_WARNING );
 }
 
-void Logger::warn(const std::string& msg, const std::string& caller) {
+void FileLogger::warn(const std::string& msg, const std::string& caller) {
 	log( msg, LOG_WARNING, caller );
 }
 
-void Logger::error(const std::string& msg) {
+void FileLogger::error(const std::string& msg) {
 	log( msg, LOG_CRITICAL );
 }
 
-void Logger::error(const std::string& msg, const std::string& caller) {
+void FileLogger::error(const std::string& msg, const std::string& caller) {
 	log( msg, LOG_CRITICAL, caller );
 }
