@@ -14,8 +14,6 @@ AccountController::AccountController() {
 
 void AccountController::login(Request &request, JsonResponse &response) {
 
-    FileLogger::info("Prueba");
-
     Json::Value body;
     bool parsed = bodyFormatHandler(request, body);
 

@@ -5,6 +5,7 @@
 #include "controllers/accounts/AccountController.h"
 #include "controllers/matchs/MatchsController.h"
 #include "utils/FileLogger.h"
+#include "db/Database.h"
 
 using namespace std;
 using namespace Mongoose;
@@ -34,7 +35,6 @@ int main() {
     server.registerController(&matchsController);
 
 
-
     server.setOption("enable_directory_listing", "false");
     server.start();
 
@@ -46,6 +46,7 @@ int main() {
         sleep(10);
     }
 
+    Database::destroy();
     FileLogger::destroy();
 
     server.stop();

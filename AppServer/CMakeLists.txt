@@ -62,7 +62,7 @@ set(SOURCES
         src/utils/FileLogger.h src/utils/LockFile.h
         src/utils/FileLogger.cpp
         src/utils/LockFile.cpp
-        )
+        src/db/Database.cpp src/db/Database.h)
 
 
 include_directories("${MONGOOSE_CPP}")

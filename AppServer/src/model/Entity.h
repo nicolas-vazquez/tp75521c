@@ -7,16 +7,11 @@
 
 
 #include <json/json.h>
-#include "rocksdb/db.h"
 
 using namespace std;
 using namespace Json;
-using namespace rocksdb;
 
 class Entity {
-
-private:
-    DB *db;
 
 protected:
 
