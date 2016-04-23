@@ -101,21 +101,22 @@ string BaseController::replaceRouteParams(string key) const {
     return replacedKey;
 }
 
-
 bool BaseController::tokenAuthenticate(Request &request) {
-
     string tokenHeader = request.getHeaderKeyValue("Authorization");
 
     AccessToken token;
     token.setToken(tokenHeader);
-    bool authenticated = token.fetch();
 
     if (token.fetch()) {
         string userName = token.getUsername();
-        request.setUser(userName);
+        Account account(userName);
+        if (account.fetch()) {
+            request.setUser(account);
+            return true;
+        }
     }
 
-    return authenticated;
+    return false;
 }
 
 void BaseController::sendBadJsonError(JsonResponse &response) {

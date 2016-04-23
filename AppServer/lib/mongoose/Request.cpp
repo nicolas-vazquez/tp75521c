@@ -283,11 +283,11 @@ namespace Mongoose {
         }
     }
 
-    const string &Request::getUser() const {
+    Account& Request::getUser() const {
         return user;
     }
 
-    void Request::setUser(const string &user) {
+    void Request::setUser(Account &user) {
         this->user = user;
     }
 }

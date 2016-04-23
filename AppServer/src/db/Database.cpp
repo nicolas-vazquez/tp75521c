@@ -13,7 +13,6 @@ Database *Database::getInstance() {
     return s_instance;
 }
 
-
 Database::Database() {
     Options options;
     // Optimize RocksDB. This is the easiest way to get RocksDB to perform well
@@ -27,12 +26,10 @@ Database::Database() {
     this->db = db;
 }
 
-
 void Database::destroy() {
-    if (s_instance == NULL)
+    if (s_instance != NULL)
         delete (s_instance);
 }
-
 
 DB *Database::getDb() const {
     return db;

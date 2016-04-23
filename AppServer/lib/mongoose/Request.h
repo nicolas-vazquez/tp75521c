@@ -12,6 +12,7 @@
 #include <mongoose.h>
 #include "UploadFile.h"
 #include "Response.h"
+#include "../../src/model/Account.h"
 
 using namespace std;
 
@@ -94,9 +95,9 @@ namespace Mongoose {
 
         string getData();
 
-        const string & getUser() const;
+        Account& getUser() const;
 
-        void setUser(const string &user);
+        void setUser(Account& user);
 
 #ifdef ENABLE_REGEX_URL
         smatch getMatches();
@@ -114,7 +115,7 @@ namespace Mongoose {
         string method;
         string url;
         string data;
-        string user;
+        Account user;
         struct mg_connection *connection;
     };
 }
