@@ -95,9 +95,9 @@ namespace Mongoose {
 
         string getData();
 
-        Account& getUser() const;
+        const Account & getUser() const;
 
-        void setUser(Account& user);
+        void setUserName(string& userName);
 
 #ifdef ENABLE_REGEX_URL
         smatch getMatches();

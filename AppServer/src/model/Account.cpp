@@ -4,6 +4,10 @@
 
 #include "Account.h"
 
+Account::Account() {
+
+}
+
 Account::Account(const string &username) : username(username) {
 
 }
@@ -40,6 +44,9 @@ string Account::getName() {
     return "account/";
 }
 
+
+
+
 const string &Account::getUsername() const {
     return username;
 }
@@ -63,4 +70,8 @@ void Account::addTossAccount(const string &tossedAccount) {
 Account::~Account() {
     this->keptAccounts.clear();
     this->tossedAccounts.clear();
+}
+
+void Account::setUsername(const string &username) {
+    Account::username = username;
 }

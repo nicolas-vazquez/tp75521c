@@ -140,11 +140,8 @@ namespace Mongoose {
 
         // Looking on the query string
         dataField = connection->query_string;
-        if (dataField != NULL && mg_get_var(connection, key.c_str(), dummy, 1) != -1) {
-            return true;
-        }
 
-        return false;
+        return dataField != NULL && mg_get_var(connection, key.c_str(), dummy, 1) != -1;
     }
 
     map<string, string> Request::getAllVariable() {
@@ -283,11 +280,15 @@ namespace Mongoose {
         }
     }
 
-    Account& Request::getUser() const {
+
+    const Account &Request::getUser() const {
         return user;
     }
 
-    void Request::setUser(Account &user) {
-        this->user = user;
+    void Request::setUserName(string &userName) {
+        user.setUsername(userName);
+        bool fetched = user.fetch();
+        if (!fetched)
+            throw std::domain_error("Username doest not exist anymore");
     }
 }

@@ -17,7 +17,11 @@ private:
     vector<string> tossedAccounts;
 
 public:
+    Account();
+
     Account(const string &username);
+
+    void setUsername(const string &username);
 
     const string &getUsername() const;
 
@@ -40,7 +44,6 @@ protected:
     virtual string primaryKeyValue() override;
 
     virtual string getName() override;
-
 };
 
 

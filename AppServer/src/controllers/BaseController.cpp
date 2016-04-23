@@ -107,17 +107,19 @@ bool BaseController::tokenAuthenticate(Request &request) {
     AccessToken token;
     token.setToken(tokenHeader);
 
-    if (token.fetch()) {
-        string userName = token.getUsername();
-        Account account(userName);
-        if (account.fetch()) {
-            request.setUser(account);
+    try {
+        if (token.fetch()) {
+            string userName = token.getUsername();
+            request.setUserName(userName);
             return true;
         }
+    } catch (std::domain_error &e) {
+        //Username not found
+        FileLogger::error((string(e.what())));
+        return false;
     }
-
-    return false;
 }
+
 
 void BaseController::sendBadJsonError(JsonResponse &response) {
     vector<Error *> errors;
@@ -127,7 +129,7 @@ void BaseController::sendBadJsonError(JsonResponse &response) {
 }
 
 
-JsonResponse & BaseController::sendUnauthorizedResponse(JsonResponse &response) {
+JsonResponse &BaseController::sendUnauthorizedResponse(JsonResponse &response) {
     vector<Error *> errors;
     UnauthorizedError *unauthorizedError = new UnauthorizedError();
     errors.push_back(unauthorizedError);
