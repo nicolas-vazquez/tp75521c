@@ -44,8 +44,9 @@ string Account::getName() {
     return "account/";
 }
 
-
-
+void Account::setUsername(const string &username) {
+    Account::username = username;
+}
 
 const string &Account::getUsername() const {
     return username;
@@ -72,6 +73,3 @@ Account::~Account() {
     this->tossedAccounts.clear();
 }
 
-void Account::setUsername(const string &username) {
-    Account::username = username;
-}

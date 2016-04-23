@@ -28,18 +28,6 @@ static void mg_strlcpy(register char *dst, register const char *src, size_t n) {
     *dst = '\0';
 }
 
-/*
-static int mg_strcasecmp(const char *s1, const char *s2) {
-  int diff;
-
-  do {
-    diff = lowercase(s1++) - lowercase(s2++);
-  } while (diff == 0 && s1[-1] != '\0');
-
-  return diff;
-}
-*/
-
 static const char *mg_strcasestr(const char *big_str, const char *small_str) {
     int i, big_len = strlen(big_str), small_len = strlen(small_str);
 
@@ -114,19 +102,6 @@ namespace Mongoose {
     string Request::getData() {
         return data;
     }
-
-#ifdef ENABLE_REGEX_URL
-    smatch Request::getMatches()
-    {
-        return matches;
-    }
-
-    bool Request::match(string pattern)
-    {
-        key = method + ":" + url;
-        return regex_match(key, matches, regex(pattern));
-    }
-#endif
 
     void Request::writeResponse(Response *response) {
         string data = response->getData();
@@ -290,5 +265,13 @@ namespace Mongoose {
         bool fetched = user.fetch();
         if (!fetched)
             throw std::domain_error("Username doest not exist anymore");
+    }
+
+    const Value &Request::getBody() const {
+        return body;
+    }
+
+    void Request::setBody(const Value &body) {
+        Request::body = body;
     }
 }

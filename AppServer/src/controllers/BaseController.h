@@ -30,7 +30,9 @@ public:
 
     bool tokenAuthenticate(Request &request);
 
-    virtual JsonResponse & sendUnauthorizedResponse(JsonResponse &response);
+    JsonResponse &sendUnauthorizedResponse(JsonResponse &response);
+
+    JsonResponse &sendBadJsonError(JsonResponse &response);
 
     BaseController();
 
@@ -43,10 +45,6 @@ protected:
     void sendResult(JsonResponse &response, JsonResponse &responseBody, int responseCode);
 
     void setHeaders(JsonResponse &response);
-
-    bool bodyFormatHandler(Request &request, Value &body);
-
-    void sendBadJsonError(JsonResponse &response);
 
 private:
 

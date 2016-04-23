@@ -13,8 +13,10 @@
 #include "UploadFile.h"
 #include "Response.h"
 #include "../../src/model/Account.h"
+#include <json/json.h>
 
 using namespace std;
+using namespace Json;
 
 /**
  * Request is a wrapper for the clients requests
@@ -95,14 +97,14 @@ namespace Mongoose {
 
         string getData();
 
-        const Account & getUser() const;
+        const Account &getUser() const;
 
-        void setUserName(string& userName);
+        void setUserName(string &userName);
 
-#ifdef ENABLE_REGEX_URL
-        smatch getMatches();
-        bool match(string pattern);
-#endif
+
+        const Value & getBody() const;
+
+        void setBody(const Value &body);
 
         bool readVariable(const char *data, string key, string &output);
 
@@ -115,6 +117,9 @@ namespace Mongoose {
         string method;
         string url;
         string data;
+        //Json body
+        Value body;
+        //Authenticated user
         Account user;
         struct mg_connection *connection;
     };

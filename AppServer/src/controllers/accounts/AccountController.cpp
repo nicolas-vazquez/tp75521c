@@ -14,12 +14,10 @@ AccountController::AccountController() {
 
 void AccountController::login(Request &request, JsonResponse &response) {
 
-    Json::Value body;
+
     vector<Error *> errors;
 
-    if (!bodyFormatHandler(request, body)) {
-        return sendBadJsonError(response);
-    }
+    Json::Value body = request.getBody();
 
     string username = body.get("username", "").asString();
     string password = body.get("password", "").asString();
@@ -65,12 +63,9 @@ string AccountController::generateToken(const string &username, const string &pa
 
 void AccountController::signup(Request &request, JsonResponse &response) {
 
-    Json::Value body;
     vector<Error *> errors;
 
-    if (!bodyFormatHandler(request, body)) {
-        return sendBadJsonError(response);
-    }
+    Json::Value body = request.getBody();
 
     string username = body.get("username", "").asString();
     string password = body.get("password", "").asString();

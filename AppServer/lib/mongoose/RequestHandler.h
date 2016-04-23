@@ -28,11 +28,28 @@ namespace Mongoose {
 
             try {
 
+                //Authentication midleware
                 if (controller->requireAuthentication(request.getMethod(), request.getUrl())) {
                     bool validToken = controller->tokenAuthenticate(request);
                     if (!validToken) {
                         return &controller->sendUnauthorizedResponse(*response);
                     }
+                }
+
+                //Json body format midleware
+                string data = request.getData();
+                if (!data.empty()) {
+                    string data = request.getData();
+                    Json::Reader reader;
+                    Value body;
+                    bool validBody = reader.parse(data, body);
+                    if (validBody) {
+                        request.setBody(body);
+                    } else {
+                        return &controller->sendBadJsonError(*response);
+                    }
+                }else{
+                    return &controller->sendBadJsonError(*response);
                 }
 
                 controller->preProcess(request, *response);

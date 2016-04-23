@@ -13,12 +13,6 @@ BaseController::BaseController() {
     routeParams = new map<string, string>();
 }
 
-bool BaseController::bodyFormatHandler(Request &request, Value &body) {
-    string data = request.getData();
-    Json::Reader reader;
-    return reader.parse(data, body);
-}
-
 bool BaseController::handles(string method, string url) {
 
     bool handle = false;
@@ -121,11 +115,12 @@ bool BaseController::tokenAuthenticate(Request &request) {
 }
 
 
-void BaseController::sendBadJsonError(JsonResponse &response) {
+JsonResponse &BaseController::sendBadJsonError(JsonResponse &response) {
     vector<Error *> errors;
     BadJsonError *badJsonError = new BadJsonError();
     errors.push_back(badJsonError);
     sendErrors(response, errors, 400);
+    return response;
 }
 
 
