@@ -52,6 +52,9 @@ ar rvs libjsoncpp.a jsoncpp.o && \
 sudo cp libjsoncpp.a /usr/lib && \
 
 
+
+
+
 cd $install_dir
 # Last release does not have cmake enabled, so we install it from master.
 echo "Installing mongose-cpp"
@@ -62,15 +65,7 @@ cd mongoose-cpp-master && \
 cmake . && \
 make install && \
 
-
-cd $install_dir
-# Last release does not have gmock, so we install it from master.
-wget https://github.com/google/googletest/archive/master.zip && \
-echo "Installing gtest"
-unzip master.zip && \
-cd googletest-master && \
-cmake -DBUILD_GMOCK=ON . && \
-make install && \
+apt-get install libcppunit-doc libcppunit-dev
 
 cd $root_dir
 rm -rf temp_install

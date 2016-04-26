@@ -9,17 +9,21 @@ project(${PROJECT_NAME} C CXX)
 set(ROOT_PATH "${${PROJECT_NAME}_SOURCE_DIR}")
 # Libs headers folder
 set(LIBS_PATH "${ROOT_PATH}/lib")
-# Src folder
+# SRC folder
 set(SRC_PATH "${ROOT_PATH}/src")
 set(ROCKSDB_INCLUDE_DIRS "/usr/include/")
+set (CPPUNIT_ROOT_DIR "${ROOT_PATH}/lib/cppunit/")
+
+# Tests SRC folder
+set(TEST_PATH "${ROOT_PATH}/test/")
+
 
 # - use ISO C++11 required for RocksDB
 #  pthread is required by gtest.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++11 ")
 
-
 # Nombres de las librerías a usar en el proyecto
-set(LIBS_NAMES rocksdb z snappy bz2 jsoncpp mongoose gtest)
+set(LIBS_NAMES rocksdb z snappy bz2 jsoncpp mongoose cppunit)
 
 # Chequeo la existencia de todas las librerias agregadas
 message(STATUS "*** Check for libs existence ***")
@@ -66,6 +70,7 @@ set(SOURCES
 
 
 include_directories("${MONGOOSE_CPP}")
+include_directories("${CPPUNIT_ROOT_DIR}")
 
 # Compiling executable
 message(STATUS "*** Generating executable ***")
@@ -85,4 +90,13 @@ include_directories("${ROCKSDB_INCLUDE_DIRS}")
 #Include library path for compiler
 include_directories(${LIBS_PATH})
 target_link_libraries(${PROJECT_NAME} ${LIBS_NAMES})
+
+# Tests
+enable_testing()
+add_subdirectory(${TEST_PATH})
+
+
+
+
+
 
