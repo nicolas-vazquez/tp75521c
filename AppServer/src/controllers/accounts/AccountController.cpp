@@ -14,7 +14,6 @@ AccountController::AccountController() {
 
 void AccountController::login(Request &request, JsonResponse &response) {
 
-
     vector<Error *> errors;
 
     Json::Value body = request.getBody();
@@ -27,7 +26,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
         return sendErrors(response, errors, 400);
     }
 
-    Account account(username);
+    Account account(generateUserId(username));
     JsonResponse responseBody;
 
     if (account.fetch()) {
@@ -38,7 +37,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
             const string &accessToken = generateToken(username, password);
             AccessToken token;
             token.setToken(accessToken);
-            token.setUsername(username);
+            token.setUserId(generateUserId(username));
             token.save();
             responseBody["accessToken"] = accessToken;
         }
@@ -58,7 +57,7 @@ string AccountController::encodePassword(const string &password) const {
 }
 
 string AccountController::generateToken(const string &username, const string &password) const {
-    return sha256(password);
+    return sha256(username + password);
 }
 
 void AccountController::signup(Request &request, JsonResponse &response) {
@@ -76,11 +75,12 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     }
 
     JsonResponse jsonResponse;
-    Account account(username);
+    Account account(generateUserId(username));
 
     if (!account.fetch()) {
         const string &encodedPassword = encodePassword(password);
         account.setPassword(encodedPassword);
+        account.setUsername(username);
         account.save();
         jsonResponse["message"] = "Successful signup";
     } else {
@@ -92,6 +92,11 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     } else {
         sendErrors(response, errors, 400);
     }
+}
+
+string AccountController::generateUserId(const string &username) const {
+    cout << sha256(username) << endl;
+    return sha256(username);
 }
 
 void AccountController::like(Request &request, JsonResponse &response) {

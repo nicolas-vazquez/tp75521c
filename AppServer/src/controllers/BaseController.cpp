@@ -103,8 +103,8 @@ bool BaseController::tokenAuthenticate(Request &request) {
 
     try {
         if (token.fetch()) {
-            string userName = token.getUsername();
-            request.setUserName(userName);
+            string userId = token.getUserId();
+            request.setUserId(userId);
             return true;
         }
     } catch (std::domain_error &e) {

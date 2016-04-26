@@ -21,6 +21,8 @@ private:
 public:
     virtual bool requireAuthentication(string method, string url) override;
 
+    string generateUserId(const string &username) const;
+
     string generateToken(const string &username, const string &password) const;
 
     string encodePassword(const string &password) const;

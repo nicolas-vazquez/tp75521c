@@ -5,15 +5,13 @@
 #ifndef APPSERVER_TOKEN_H
 #define APPSERVER_TOKEN_H
 
-
 #include "Entity.h"
-
 
 class AccessToken : public Entity {
 
 private:
+    string _id;
     string token;
-    string username;
 
 public:
 
@@ -23,9 +21,9 @@ public:
 
     void setToken(const string &token);
 
-    const string &getUsername() const;
+    const string &getUserId() const;
 
-    void setUsername(const string &username);
+    void setUserId(const string &username);
 
     string primaryKeyValue() override;
 

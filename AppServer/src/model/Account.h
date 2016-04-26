@@ -6,10 +6,12 @@
 #define APPSERVER_USER_H
 
 #include "Entity.h"
+#include "../utils/Utils.h"
 
 class Account : public Entity {
 
 private:
+    string userId;
     string username;
     string password;
 
@@ -27,7 +29,11 @@ public:
 
     const string &getPassword() const;
 
+    const string &getUserId() const;
+
     virtual Value toJSON() override;
+
+    void setUserId(const string &id);
 
     void setPassword(const string &password);
 

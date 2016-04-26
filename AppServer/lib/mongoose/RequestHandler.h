@@ -38,18 +38,19 @@ namespace Mongoose {
 
                 //Json body format midleware
                 string data = request.getData();
-                if (!data.empty()) {
-                    string data = request.getData();
-                    Json::Reader reader;
-                    Value body;
-                    bool validBody = reader.parse(data, body);
-                    if (validBody) {
-                        request.setBody(body);
-                    } else {
+                if (request.getMethod() == "POST") {
+                    if (!data.empty()) {
+                        Json::Reader reader;
+                        Value body;
+                        bool validBody = reader.parse(data, body);
+                        if (validBody) {
+                            request.setBody(body);
+                        } else {
+                            return &controller->sendBadJsonError(*response);
+                        }
+                    }else{
                         return &controller->sendBadJsonError(*response);
                     }
-                }else{
-                    return &controller->sendBadJsonError(*response);
                 }
 
                 controller->preProcess(request, *response);

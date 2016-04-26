@@ -5,39 +5,38 @@
 #include "Account.h"
 
 Account::Account() {
-
+    this->keptAccounts.empty();
+    this->tossedAccounts.empty();
 }
 
-Account::Account(const string &username) : username(username) {
-
+Account::Account(const string &userId) : userId(userId) {
+    this->keptAccounts.empty();
+    this->tossedAccounts.empty();
 }
 
 Value Account::toJSON() {
     Value value;
+    std::string s1, s2;
+    value["userId"] = userId;
     value["username"] = username;
     value["password"] = password;
-    //value["keptAccounts"] = &keptAccounts[0];
-    //value["tossedAccounts"] = &tossedAccounts[0];
+    value["keptAccounts"] = Utils::arrayToString(this->keptAccounts, s1);
+    value["tossedAccounts"] = Utils::arrayToString(this->tossedAccounts, s2);
     return value;
 }
 
 void Account::fromJSON(Value value) {
-
-
+    this->keptAccounts.clear();
+    this->tossedAccounts.clear();
+    this->userId = value.get("userId", "").asString();
     this->username = value.get("username", "").asString();
     this->password = value.get("password", "").asString();
-    /*Value keepAccounts = value.get("keptAccounts", 0);
-    Value tossAccounts = value.get("tossedAccounts", 0);
-    for (unsigned int i = 0; i < keepAccounts.size(); i++) {
-        this->keptAccounts.push_back(keepAccounts[i].asString());
-    }
-    for (unsigned int j = 0; j < tossAccounts.size(); j++) {
-        this->tossedAccounts.push_back(tossAccounts[j].asString());
-    }*/
+    Utils::stringToArray(value.get("keptAccounts", "").asString(), this->keptAccounts);
+    Utils::stringToArray(value.get("tossedAccounts", "").asString(), this->tossedAccounts);
 }
 
 string Account::primaryKeyValue() {
-    return username;
+    return userId;
 }
 
 string Account::getName() {
@@ -68,8 +67,15 @@ void Account::addTossAccount(const string &tossedAccount) {
     this->tossedAccounts.push_back(tossedAccount);
 }
 
+void Account::setUserId(const string &id) {
+    this->userId = id;
+}
+
+const string &Account::getUserId() const {
+    return this->userId;
+}
+
 Account::~Account() {
     this->keptAccounts.clear();
     this->tossedAccounts.clear();
 }
-
