@@ -16,6 +16,11 @@ void AccountTest::setUp() {
     testAccount.setUsername("anUsername");
     testAccount.setPassword("aPassword");
     testAccount.setUserId("1234");
+    testAccount.addKeepAccount("1");
+    testAccount.addKeepAccount("2");
+    testAccount.addKeepAccount("3");
+    testAccount.addTossAccount("4");
+    testAccount.addTossAccount("5");
     testAccount.save();
 }
 
@@ -38,6 +43,19 @@ void AccountTest::fromJSON() {
     account.fetch();
     CPPUNIT_ASSERT(account.getUsername() == "anUsername");
     CPPUNIT_ASSERT(account.getPassword() == "aPassword");
+
+    const vector<string> &keptAccounts = account.getKeptAccounts();
+
+    CPPUNIT_ASSERT(keptAccounts.size() == 3);
+    CPPUNIT_ASSERT(keptAccounts.at(0) == "1");
+    CPPUNIT_ASSERT(keptAccounts.at(1) == "2");
+    CPPUNIT_ASSERT(keptAccounts.at(2) == "3");
+
+
+    const vector<string> &tossedAccounts = account.getTossedAccounts();
+    CPPUNIT_ASSERT(tossedAccounts.size() == 2);
+    CPPUNIT_ASSERT(tossedAccounts.at(0) == "4");
+    CPPUNIT_ASSERT(tossedAccounts.at(1) == "5");
 }
 
 

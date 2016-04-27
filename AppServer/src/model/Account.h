@@ -37,6 +37,10 @@ public:
 
     void setPassword(const string &password);
 
+    const vector<string> & getKeptAccounts() const;
+
+    const vector<string> & getTossedAccounts() const;
+
     void addKeepAccount(const string &keptAccount);
 
     void addTossAccount(const string &tossedAccount);
