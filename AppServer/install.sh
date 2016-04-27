@@ -52,9 +52,6 @@ ar rvs libjsoncpp.a jsoncpp.o && \
 sudo cp libjsoncpp.a /usr/lib && \
 
 
-
-
-
 cd $install_dir
 # Last release does not have cmake enabled, so we install it from master.
 echo "Installing mongose-cpp"

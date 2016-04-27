@@ -12,7 +12,7 @@ set(LIBS_PATH "${ROOT_PATH}/lib")
 # SRC folder
 set(SRC_PATH "${ROOT_PATH}/src")
 set(ROCKSDB_INCLUDE_DIRS "/usr/include/")
-set (CPPUNIT_ROOT_DIR "${ROOT_PATH}/lib/cppunit/")
+set(CPPUNIT_ROOT_DIR "${ROOT_PATH}/lib/cppunit/")
 
 # Tests SRC folder
 set(TEST_PATH "${ROOT_PATH}/test/")
@@ -31,7 +31,7 @@ message(STATUS "*** Check for libs existence ***")
 foreach (LIB ${LIBS_NAMES})
     find_library(LIB{LIB} NAMES ${LIB})
     if (LIB{LIB}) #False si es 0, OFF, NO, FALSE, N, IGNORE, NOTFOUND, vacio, o si termina en "-NOTFOUND". Caso contrario es TRUE.
-        message(STATUS "Lib |${LIB}| found at |${LIB${LIB}}|")
+        message(STATUS "Lib |${LIB}| found!")
     else (LIB${LIB})
         message(FATAL_ERROR "|${LIB}| lib not found.")
     endif (LIB{LIB})
@@ -59,17 +59,29 @@ set(SOURCES
         ${MONGOOSE_CPP}/WebSocket.cpp
         ${MONGOOSE_CPP}/WebSockets.cpp
         ${SHA256_CPP}/sha256.cpp
-        src/errors/UsernameAlreadyInUseError.h
-        src/model/AccessToken.cpp
-        src/controllers/matchs/MatchsController.cpp
-        src/errors/UnauthorizedError.h
-        src/utils/FileLogger.h src/utils/LockFile.h
-        src/utils/FileLogger.cpp
-        src/utils/LockFile.cpp
-        src/db/Database.cpp
-        src/db/Database.h
-        src/utils/Utils.cpp
-        src/utils/Utils.h)
+        ${SRC_PATH}/errors/UsernameAlreadyInUseError.h
+        ${SRC_PATH}/model/AccessToken.cpp
+        ${SRC_PATH}/controllers/matchs/MatchsController.cpp
+        ${SRC_PATH}/errors/UnauthorizedError.h
+        ${SRC_PATH}/utils/FileLogger.h
+        ${SRC_PATH}/utils/LockFile.h
+        ${SRC_PATH}/utils/FileLogger.cpp
+        ${SRC_PATH}/utils/LockFile.cpp
+        ${SRC_PATH}/db/Database.cpp
+        ${SRC_PATH}/db/Database.h
+        ${SRC_PATH}/utils/Utils.cpp
+        ${SRC_PATH}/utils/Utils.h
+        ${SRC_PATH}/controllers/accounts/AccountController.cpp
+        ${SRC_PATH}/controllers/accounts/AccountController.h
+        ${SRC_PATH}/controllers/BaseController.cpp
+        ${SRC_PATH}/controllers/BaseController.h
+        ${SRC_PATH}/errors/Error.h
+        ${SRC_PATH}/errors/EmptyParamError.h
+        ${SRC_PATH}/errors/BadJsonError.h
+        ${SRC_PATH}/model/Entity.cpp
+        ${SRC_PATH}/model/Entity.h
+        ${SRC_PATH}/model/Account.cpp
+        ${SRC_PATH}/model/Account.h)
 
 
 include_directories("${MONGOOSE_CPP}")
@@ -77,16 +89,7 @@ include_directories("${CPPUNIT_ROOT_DIR}")
 
 # Compiling executable
 message(STATUS "*** Generating executable ***")
-add_executable(${PROJECT_NAME}
-        ${SOURCES}
-        src/main.cpp src/controllers/accounts/AccountController.cpp
-        src/controllers/accounts/AccountController.h
-        src/controllers/BaseController.cpp
-        src/controllers/BaseController.h
-        src/errors/Error.h
-        src/errors/EmptyParamError.h
-        src/errors/BadJsonError.h src/model/Entity.cpp src/model/Entity.h
-        src/model/Account.cpp src/model/Account.h)
+add_executable(${PROJECT_NAME} ${SOURCES} ${SRC_PATH}/main.cpp)
 
 include_directories("${ROCKSDB_INCLUDE_DIRS}")
 
