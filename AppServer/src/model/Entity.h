@@ -25,6 +25,8 @@ public:
 
     bool save();
 
+    bool remove();
+
     virtual Value toJSON() = 0;
 
     /**

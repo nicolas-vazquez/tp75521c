@@ -31,5 +31,11 @@ bool Entity::save() {
     return s.ok();
 }
 
+bool Entity::remove() {
+    DB *db = Database::getInstance()->getDb();
+    Status s = db->Delete(WriteOptions(), getName() + primaryKeyValue());
+    return s.ok();
+}
+
 Entity::~Entity() {
 }
