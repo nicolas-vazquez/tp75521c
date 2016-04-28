@@ -1,23 +1,49 @@
 #Cmake based project
 
-# **AppServer** #
+## Installations steps ##
+
+Run install.sh in repository root:
+
+```
+#!bash
+
+sudo ./install.sh
+```
+
+## Build steps ##
+
+**Generate make file with cmake:**
+
+```
+#!bash
+ cd build
+ sudo cmake ..
+
+```
+
+**Run make:** (This will add app and tests executables)
+
+```
+#!bash
+
+sudo make
+```
+
+**Run app:** 
+
+```
+#!bash
+
+./appServer
+```
 
 
-**Build JSONcpp amalgamated sources:**
+## Run tests ##
 
-1. cd src/jsoncpp/
+From build folder:
 
-2. python amalgamate.py
+```
+#!bash
 
-
-**Build App Steps:**
-
-1. mkdir build
-
-2. cd build
-
-2. cmake ..
-
-3. make
-
-4. ./main
+ctest
+```
