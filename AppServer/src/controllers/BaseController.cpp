@@ -144,9 +144,7 @@ JsonResponse &BaseController::sendUnauthorizedResponse(JsonResponse &response) {
 }
 */
 void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors, int responseCode) {
-    ostringstream s;
-    s << "Error processing request with code: " << responseCode;
-    FileLogger::error(s.str());
+
     response.setCode(responseCode);
     setHeaders(response);
     string message;
@@ -159,6 +157,13 @@ void BaseController::sendErrors(JsonResponse &response, vector<Error *> &errors,
         response["errors"][i]["message"] = message;
         delete (error);
     }
+
+    ostringstream s;
+    s << "Error processing request with code: " << responseCode << endl;
+    s << "Response ->" << response.toStyledString();
+    FileLogger::error(s.str());
+
+
     errors.clear();
 }
 
