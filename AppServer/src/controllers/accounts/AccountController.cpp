@@ -37,7 +37,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
             const string &accessToken = generateToken(username, password);
             AccessToken token;
             token.setToken(accessToken);
-            token.setUserId(generateUserId(username));
+            token.setUsername(generateUserId(username));
             token.save();
             responseBody["accessToken"] = accessToken;
         }
@@ -103,7 +103,7 @@ void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
     if (tokenAuthenticate(request)) {
-        string keptAccount = routeParams->at("id");
+        string keptAccount = routeParams->at("username");
         Account account = request.getUser();
         account.addKeepAccount(keptAccount);
         account.save();
@@ -152,8 +152,8 @@ void AccountController::setup() {
     setPrefix("/api/accounts");
     addRouteResponse("POST", "/signup", AccountController, signup, JsonResponse);
     addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
-    addRouteResponse("PUT", "/{id}/like", AccountController, like, JsonResponse);
-    addRouteResponse("PUT", "/{id}/dislike", AccountController, dislike, JsonResponse);
+    addRouteResponse("PUT", "/{username}/like", AccountController, like, JsonResponse);
+    addRouteResponse("PUT", "/{username}/dislike", AccountController, dislike, JsonResponse);
 }
 
 bool AccountController::requireAuthentication(string method, string url) {

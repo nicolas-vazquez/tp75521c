@@ -11,10 +11,10 @@
 class Account : public Entity {
 
 private:
-    string userId;
     string username;
     string password;
 
+    vector<string> matches;
     vector<string> keptAccounts;
     vector<string> tossedAccounts;
 
@@ -29,17 +29,17 @@ public:
 
     const string &getPassword() const;
 
-    const string &getUserId() const;
-
     virtual Value toJSON() override;
 
-    void setUserId(const string &id);
-
     void setPassword(const string &password);
+
+    const vector<string> & getMatches() const;
 
     const vector<string> & getKeptAccounts() const;
 
     const vector<string> & getTossedAccounts() const;
+
+    void addMatch(const string &match);
 
     void addKeepAccount(const string &keptAccount);
 

@@ -10,7 +10,7 @@
 class AccessToken : public Entity {
 
 private:
-    string _id;
+    string username;
     string token;
 
 public:
@@ -21,9 +21,9 @@ public:
 
     void setToken(const string &token);
 
-    const string &getUserId() const;
+    const string &getUsername() const;
 
-    void setUserId(const string &username);
+    void setUsername(const string &username);
 
     string primaryKeyValue() override;
 

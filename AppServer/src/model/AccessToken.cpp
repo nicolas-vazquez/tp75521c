@@ -9,7 +9,7 @@ AccessToken::AccessToken() {
 }
 
 void AccessToken::fromJSON(Value value) {
-    this->_id = value.get("_id", "").asString();
+    this->username = value.get("username", "").asString();
 }
 
 string AccessToken::getName() {
@@ -18,7 +18,7 @@ string AccessToken::getName() {
 
 Value AccessToken::toJSON() {
     Value value;
-    value["_id"] = _id;
+    value["username"] = username;
     return value;
 }
 
@@ -34,12 +34,12 @@ void AccessToken::setToken(const string &token) {
     this->token = token;
 }
 
-const string &AccessToken::getUserId() const {
-    return _id;
+const string &AccessToken::getUsername() const {
+    return username;
 }
 
-void AccessToken::setUserId(const string &_id) {
-    this->_id = _id;
+void AccessToken::setUsername(const string &username) {
+    this->username = username;
 }
 
 AccessToken::~AccessToken() {

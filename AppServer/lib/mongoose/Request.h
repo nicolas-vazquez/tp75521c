@@ -99,8 +99,7 @@ namespace Mongoose {
 
         const Account &getUser() const;
 
-        void setUserId(string &userId);
-
+        void setUsername(string &username);
 
         const Value & getBody() const;
 

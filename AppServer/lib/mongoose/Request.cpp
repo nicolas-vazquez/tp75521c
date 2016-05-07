@@ -255,13 +255,12 @@ namespace Mongoose {
         }
     }
 
-
     const Account &Request::getUser() const {
         return user;
     }
 
-    void Request::setUserId(string &userId) {
-        user.setUserId(userId);
+    void Request::setUsername(string &username) {
+        user.setUsername(username);
         bool fetched = user.fetch();
         if (!fetched)
             throw std::domain_error("Username doest not exist anymore");

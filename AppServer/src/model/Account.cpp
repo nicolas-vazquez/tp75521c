@@ -5,38 +5,40 @@
 #include "Account.h"
 
 Account::Account() {
+    this->matches.empty();
     this->keptAccounts.empty();
     this->tossedAccounts.empty();
 }
 
-Account::Account(const string &userId) : userId(userId) {
+Account::Account(const string &username) : username(username) {
+    this->matches.empty();
     this->keptAccounts.empty();
     this->tossedAccounts.empty();
 }
 
 Value Account::toJSON() {
     Value value;
-    std::string s1, s2;
-    value["userId"] = userId;
+    std::string s1, s2, s3;
     value["username"] = username;
     value["password"] = password;
-    value["keptAccounts"] = Utils::arrayToString(this->keptAccounts, s1);
-    value["tossedAccounts"] = Utils::arrayToString(this->tossedAccounts, s2);
+    value["matches"] = Utils::arrayToString(this->matches, s1);
+    value["keptAccounts"] = Utils::arrayToString(this->keptAccounts, s2);
+    value["tossedAccounts"] = Utils::arrayToString(this->tossedAccounts, s3);
     return value;
 }
 
 void Account::fromJSON(Value value) {
     this->keptAccounts.clear();
     this->tossedAccounts.clear();
-    this->userId = value.get("userId", "").asString();
     this->username = value.get("username", "").asString();
     this->password = value.get("password", "").asString();
+    Utils::stringToArray(value.get("matches", "").asString(), this->matches);
     Utils::stringToArray(value.get("keptAccounts", "").asString(), this->keptAccounts);
     Utils::stringToArray(value.get("tossedAccounts", "").asString(), this->tossedAccounts);
 }
 
 string Account::primaryKeyValue() {
-    return userId;
+    return username;
 }
 
 string Account::getName() {
@@ -63,23 +65,31 @@ void Account::setPassword(const string &password) {
 
 void Account::addKeepAccount(const string &keptAccount) {
     this->keptAccounts.push_back(keptAccount);
+    Account otherAccount(keptAccount);
+    if (otherAccount.fetch()) {
+        vector<string> otherKepts = otherAccount.getKeptAccounts();
+        for (std::vector<string>::iterator it = otherKepts.begin() ; it != otherKepts.end(); ++it) {
+            if (*it == this->username) {
+                this->addMatch(keptAccount);
+                otherAccount.addMatch(this->username);
+                otherAccount.save();
+            }
+        }
+    }
 }
 
 void Account::addTossAccount(const string &tossedAccount) {
     this->tossedAccounts.push_back(tossedAccount);
 }
 
-void Account::setUserId(const string &id) {
-    this->userId = id;
-}
-
-const string &Account::getUserId() const {
-    return this->userId;
-}
-
 Account::~Account() {
+    this->matches.clear();
     this->keptAccounts.clear();
     this->tossedAccounts.clear();
+}
+
+const vector<string> &Account::getMatches() const {
+    return matches;
 }
 
 const vector<string> &Account::getTossedAccounts() const {
@@ -88,4 +98,8 @@ const vector<string> &Account::getTossedAccounts() const {
 
 const vector<string> &Account::getKeptAccounts() const {
     return keptAccounts;
+}
+
+void Account::addMatch(const string &match) {
+    this->matches.push_back(match);
 }
