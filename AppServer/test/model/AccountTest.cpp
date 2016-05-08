@@ -15,7 +15,6 @@ AccountTest::AccountTest() {
 void AccountTest::setUp() {
     testAccount.setUsername("anUsername");
     testAccount.setPassword("aPassword");
-    testAccount.setUserId("1234");
     testAccount.addKeepAccount("1");
     testAccount.addKeepAccount("2");
     testAccount.addKeepAccount("3");
@@ -39,7 +38,7 @@ void AccountTest::toJSON() {
 
 void AccountTest::fromJSON() {
     Account account;
-    account.setUserId("1234");
+    account.setUsername("anUsername");
     account.fetch();
     CPPUNIT_ASSERT(account.getUsername() == "anUsername");
     CPPUNIT_ASSERT(account.getPassword() == "aPassword");

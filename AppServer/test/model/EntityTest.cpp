@@ -11,7 +11,6 @@ EntityTest::EntityTest() {
 void EntityTest::setUp() {
     testEntity.setUsername("aTestUsername");
     testEntity.setPassword("aPassword");
-    testEntity.setUserId("1234");
     testEntity.addKeepAccount("1");
     testEntity.addKeepAccount("2");
     testEntity.addKeepAccount("3");
@@ -34,7 +33,7 @@ void EntityTest::notFetched() {
 
 void EntityTest::removed() {
     Account account;
-    account.setUserId("1456");
+    account.setUsername("aTestUsername");
     account.save();
     //Should be removed if was saved
     CPPUNIT_ASSERT(account.remove());
@@ -42,7 +41,7 @@ void EntityTest::removed() {
 
 void EntityTest::notRemoved() {
     Account account;
-    account.setUserId("unoNuevo");
+    account.setUsername("aTestUsername");
     //Should not be removed if saved was not done
     CPPUNIT_ASSERT(account.remove());
 }
