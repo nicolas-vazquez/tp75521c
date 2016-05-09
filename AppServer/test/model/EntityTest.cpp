@@ -4,12 +4,14 @@
 
 #include "EntityTest.h"
 
+CPPUNIT_TEST_SUITE_REGISTRATION(EntityTest);
+
 EntityTest::EntityTest() {
 
 }
 
 void EntityTest::setUp() {
-    testEntity.setUsername("aTestUsername");
+    testEntity.setUsername("aTest");
     testEntity.setPassword("aPassword");
     testEntity.addKeepAccount("1");
     testEntity.addKeepAccount("2");
@@ -27,13 +29,13 @@ void EntityTest::fetched() {
 void EntityTest::notFetched() {
     Account account;
     //An account with no userId should not be fetched
-    CPPUNIT_ASSERT(account.fetch());
+    CPPUNIT_ASSERT(!account.fetch());
 }
 
 
 void EntityTest::removed() {
     Account account;
-    account.setUsername("aTestUsername");
+    account.setUsername("aTest");
     account.save();
     //Should be removed if was saved
     CPPUNIT_ASSERT(account.remove());
@@ -41,7 +43,7 @@ void EntityTest::removed() {
 
 void EntityTest::notRemoved() {
     Account account;
-    account.setUsername("aTestUsername");
+    account.setUsername("aTest");
     //Should not be removed if saved was not done
     CPPUNIT_ASSERT(account.remove());
 }
@@ -54,6 +56,9 @@ void EntityTest::tearDown() {
 EntityTest::~EntityTest() {
 
 }
+
+
+
 
 
 
