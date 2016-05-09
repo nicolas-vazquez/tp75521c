@@ -5,41 +5,34 @@
 
 using namespace std;
 
-namespace Mongoose
-{
-    Session::Session()
-    {
+namespace Mongoose {
+    Session::Session() {
         ping();
     }
 
-    void Session::ping()
-    {
+    void Session::ping() {
         mutex.lock();
         date = time(NULL);
         mutex.unlock();
     }
 
-    void Session::setValue(string key, string value)
-    {
+    void Session::setValue(string key, string value) {
         mutex.lock();
         values[key] = value;
         mutex.unlock();
     }
 
-    void Session::unsetValue(string key)
-    {
+    void Session::unsetValue(string key) {
         mutex.lock();
         values.erase(key);
         mutex.unlock();
     }
 
-    bool Session::hasValue(string key)
-    {
+    bool Session::hasValue(string key) {
         return values.find(key) != values.end();
     }
 
-    string Session::get(string key, string fallback)
-    {
+    string Session::get(string key, string fallback) {
         mutex.lock();
         if (hasValue(key)) {
             string value = values[key];
@@ -52,8 +45,7 @@ namespace Mongoose
         }
     }
 
-    int Session::getAge()
-    {
-        return time(NULL)-date;
+    int Session::getAge() {
+        return time(NULL) - date;
     }
 }

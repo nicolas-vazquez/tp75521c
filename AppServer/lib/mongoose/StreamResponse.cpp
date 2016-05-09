@@ -3,10 +3,8 @@
 
 using namespace std;
 
-namespace Mongoose
-{
-    string StreamResponse::getBody()
-    {
+namespace Mongoose {
+    string StreamResponse::getBody() {
         return this->str();
     }
 }

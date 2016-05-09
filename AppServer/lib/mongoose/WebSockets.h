@@ -16,65 +16,64 @@ using namespace std;
  * The function clean() allow to remove closed connections from the
  * array.
  */
-namespace Mongoose
-{
-    class WebSockets
-    {
-        public:
-            /**
-             * Creates a websockets array, the responsible false specify whether the
-             * container will be responsible for cleaning the websocket
-             */
-            WebSockets(bool responsible = false);
-            virtual ~WebSockets();
+namespace Mongoose {
+    class WebSockets {
+    public:
+        /**
+         * Creates a websockets array, the responsible false specify whether the
+         * container will be responsible for cleaning the websocket
+         */
+        WebSockets(bool responsible = false);
 
-            /**
-             * Adds the given websocket to the poll. This container will not
-             * become responsible for cleaning this object
-             *
-             * @param WebSocket* the websocket object
-             */
-            void add(WebSocket *websocket);
+        virtual ~WebSockets();
 
-            /**
-             * Send data to all sockets in this container
-             */
-            void sendAll(string data);
+        /**
+         * Adds the given websocket to the poll. This container will not
+         * become responsible for cleaning this object
+         *
+         * @param WebSocket* the websocket object
+         */
+        void add(WebSocket *websocket);
 
-            /**
-             * Gets the websocket corresponding to the given connection
-             *
-             * @param strut mg_connection* the mongoose connection
-             */
-            WebSocket *getWebSocket(struct mg_connection *connection);
+        /**
+         * Send data to all sockets in this container
+         */
+        void sendAll(string data);
 
-            /**
-             * Cleans all the connections that are hold in this object and that are
-             * closed
-             */
-            void clean();
+        /**
+         * Gets the websocket corresponding to the given connection
+         *
+         * @param strut mg_connection* the mongoose connection
+         */
+        WebSocket *getWebSocket(struct mg_connection *connection);
 
-            /**
-             * Removes the websocket from the container
-             *
-             * @param WebSocket* the websocket object
-             */
-            void remove(WebSocket *websocket, bool lock = true);
-    
-            /**
-             * Gets the websockets having the id 
-             *
-             * @param int id
-             */
-            WebSocket *getWebSocket(int id);
+        /**
+         * Cleans all the connections that are hold in this object and that are
+         * closed
+         */
+        void clean();
 
-        protected:
-            Mutex mutex;
-            map<struct mg_connection*, WebSocket*> websockets;
-            map<int, WebSocket*> websocketsById;
-            bool responsible;
+        /**
+         * Removes the websocket from the container
+         *
+         * @param WebSocket* the websocket object
+         */
+        void remove(WebSocket *websocket, bool lock = true);
 
-            int id;
+        /**
+         * Gets the websockets having the id
+         *
+         * @param int id
+         */
+        WebSocket *getWebSocket(int id);
+
+    protected:
+        Mutex mutex;
+        map<struct mg_connection *, WebSocket *> websockets;
+        map<int, WebSocket *> websocketsById;
+        bool responsible;
+
+        int id;
     };
 }
 

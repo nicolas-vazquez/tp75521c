@@ -5,7 +5,7 @@
 #ifndef APPSERVER_ACCOUNTCONTROLLER_H
 #define APPSERVER_ACCOUNTCONTROLLER_H
 
-#include <sha256/sha256.h>
+#include <utils/sha256.h>
 #include <mongoose/Server.h>
 #include <mongoose/JsonResponse.h>
 #include "../BaseController.h"
@@ -26,6 +26,7 @@ public:
     string generateToken(const string &username, const string &password) const;
 
     string encodePassword(const string &password) const;
+
 public:
 
     AccountController();

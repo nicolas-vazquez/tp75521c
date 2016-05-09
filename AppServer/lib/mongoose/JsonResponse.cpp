@@ -4,15 +4,12 @@
 
 using namespace std;
 
-namespace Mongoose
-{
+namespace Mongoose {
     JsonResponse::JsonResponse()
-        : humanReadable(false)
-    {
+            : humanReadable(false) {
     }
 
-    string JsonResponse::getBody()
-    {
+    string JsonResponse::getBody() {
         if (humanReadable) {
             Json::StyledWriter writer;
             return writer.write(*this);
@@ -22,8 +19,7 @@ namespace Mongoose
         }
     }
 
-    void JsonResponse::setHuman(bool human)
-    {
+    void JsonResponse::setHuman(bool human) {
         humanReadable = human;
     }
 }

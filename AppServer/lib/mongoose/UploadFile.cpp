@@ -5,26 +5,21 @@
 
 using namespace std;
 
-namespace Mongoose
-{
+namespace Mongoose {
     UploadFile::UploadFile(string filename_, string data_)
-        : filename(filename_),
-        data(data_)
-    {
+            : filename(filename_),
+              data(data_) {
     }
 
-    string UploadFile::getName()
-    {
+    string UploadFile::getName() {
         return filename;
     }
 
-    string UploadFile::getData()
-    {
+    string UploadFile::getData() {
         return data;
     }
-    
-    void UploadFile::saveTo(string directory)
-    {
+
+    void UploadFile::saveTo(string directory) {
         ostringstream oss;
         oss << directory << "/" << filename;
         fstream file;

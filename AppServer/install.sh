@@ -63,6 +63,7 @@ cmake . && \
 make install && \
 
 apt-get install libcppunit-doc libcppunit-dev
+apt-get install lcov
 
 cd $root_dir
 rm -rf temp_install

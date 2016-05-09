@@ -1,18 +1,15 @@
 #include "WebController.h"
 #include "Session.h"
 
-namespace Mongoose
-{        
-    WebController::WebController(int gcDivisor_) 
-        : 
-        Controller(),
-        gcDivisor(gcDivisor_),
-        counter(0)
-    {
+namespace Mongoose {
+    WebController::WebController(int gcDivisor_)
+            :
+            Controller(),
+            gcDivisor(gcDivisor_),
+            counter(0) {
     }
 
-    void WebController::preProcess(Request &request, Response &response)
-    {
+    void WebController::preProcess(Request &request, Response &response) {
         mutex.lock();
         counter++;
 
