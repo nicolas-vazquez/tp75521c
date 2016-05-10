@@ -23,6 +23,8 @@ public:
 
     const string &getUsername() const;
 
+    virtual Value toJSON() override;
+
     void setUsername(const string &username);
 
     string primaryKeyValue() override;
@@ -30,8 +32,6 @@ public:
     virtual ~AccessToken();
 
 protected:
-
-    virtual Value toJSON() override;
 
     virtual void fromJSON(Value value) override;
 

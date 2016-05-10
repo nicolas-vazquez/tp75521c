@@ -6,7 +6,7 @@
 #define APPSERVER_ACCOUNTTEST_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "../../src/model/Account.h"
+#include <model/Account.h>
 
 using namespace CPPUNIT_NS;
 
@@ -19,7 +19,6 @@ CPPUNIT_TEST_SUITE(AccountTest);
 
 private:
     Account testAccount;
-
 
 public:
     AccountTest();

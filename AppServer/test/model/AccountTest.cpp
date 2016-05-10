@@ -3,7 +3,6 @@
 //
 
 #include "AccountTest.h"
-#include "../../src/model/Account.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(AccountTest);
 
