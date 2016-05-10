@@ -1,4 +1,4 @@
-#!/bin/bash
+cd #!/bin/bash
 
 root_dir=`pwd`
 install_dir="$root_dir/temp_install"

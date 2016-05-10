@@ -35,7 +35,7 @@ foreach (LIB ${LIBS_NAMES})
     endif (LIB{LIB})
 endforeach (LIB ${LIBS_NAMES})
 
-set(MONGOOSE_CPP "lib/mongoose")
+set(MONGOOSE_CPP "${LIBS_PATH}/mongoose")
 
 set(MONGOOSE_SOURCES
         ${MONGOOSE_SOURCES}
