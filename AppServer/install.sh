@@ -1,4 +1,4 @@
-cd #!/bin/bash
+#!/bin/bash
 
 root_dir=`pwd`
 install_dir="$root_dir/temp_install"
@@ -65,9 +65,11 @@ make install && \
 apt-get install libcppunit-doc libcppunit-dev
 apt-get install lcov
 
+echo "$root_dir"
+
 cd $root_dir
 rm -rf temp_install
 
 echo "Make and install"
-mkdir -p build && cd build \
+mkdir -p build && cd build
 cmake .. && make
