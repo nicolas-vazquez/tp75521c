@@ -71,5 +71,5 @@ cd $root_dir
 rm -rf temp_install
 
 echo "Make and install"
-mkdir -p build && cd build
+mkdir -p build && cd build && \
 cmake .. && make
