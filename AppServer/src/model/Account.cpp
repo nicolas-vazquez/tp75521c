@@ -28,10 +28,13 @@ Value Account::toJSON() {
 }
 
 void Account::fromJSON(Value value) {
+    cout << "guola1" << endl;
     this->keptAccounts.clear();
     this->tossedAccounts.clear();
+    cout << "guola2" << endl;
     this->username = value.get("username", "").asString();
     this->password = value.get("password", "").asString();
+    cout << "guola3" << endl;
     Utils::stringToArray(value.get("matches", "").asString(), this->matches);
     Utils::stringToArray(value.get("keptAccounts", "").asString(), this->keptAccounts);
     Utils::stringToArray(value.get("tossedAccounts", "").asString(), this->tossedAccounts);
@@ -44,7 +47,6 @@ string Account::primaryKeyValue() {
 string Account::getName() {
     return "account/";
 }
-
 
 
 void Account::setUsername(const string &username) {
@@ -68,7 +70,7 @@ void Account::addKeepAccount(const string &keptAccount) {
     Account otherAccount(keptAccount);
     if (otherAccount.fetch()) {
         vector<string> otherKepts = otherAccount.getKeptAccounts();
-        for (std::vector<string>::iterator it = otherKepts.begin() ; it != otherKepts.end(); ++it) {
+        for (std::vector<string>::iterator it = otherKepts.begin(); it != otherKepts.end(); ++it) {
             if (*it == this->username) {
                 this->addMatch(keptAccount);
                 otherAccount.addMatch(this->username);

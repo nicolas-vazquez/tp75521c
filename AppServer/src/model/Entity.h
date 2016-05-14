@@ -7,6 +7,7 @@
 
 
 #include <json/json.h>
+#include <iostream>
 
 using namespace std;
 using namespace Json;

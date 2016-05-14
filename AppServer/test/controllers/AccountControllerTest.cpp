@@ -28,11 +28,11 @@ void AccountControllerTest::login() {
     request.setBody(body);
     accountController.login(request, *response);
 
-    delete (response);
+    const Value &value = response->get("errors", "[]");
+    string code = value[0]["code"].asString();
 
-    //const Value &value = response->get("errors", "[]");
-    //string code = value[0]["code"].asString();
-    CPPUNIT_ASSERT(true);
+    delete (response);
+    CPPUNIT_ASSERT(code == "5");
 }
 
 

@@ -26,7 +26,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
         return sendErrors(response, errors, 400);
     }
 
-    Account account(generateUserId(username));
+    Account account(username);
     JsonResponse responseBody;
 
     if (account.fetch()) {
@@ -37,7 +37,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
             const string &accessToken = generateToken(username, password);
             AccessToken token;
             token.setToken(accessToken);
-            token.setUsername(generateUserId(username));
+            token.setUsername(username);
             token.save();
             responseBody["accessToken"] = accessToken;
         }
@@ -75,7 +75,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     }
 
     JsonResponse jsonResponse;
-    Account account(generateUserId(username));
+    Account account(username);
 
     if (!account.fetch()) {
         const string &encodedPassword = encodePassword(password);
@@ -94,10 +94,6 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     }
 }
 
-string AccountController::generateUserId(const string &username) const {
-    cout << sha256(username) << endl;
-    return sha256(username);
-}
 
 void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;
