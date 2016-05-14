@@ -17,7 +17,6 @@ int main(void) {
     CppUnit::TestFactoryRegistry &registry = CppUnit::TestFactoryRegistry::getRegistry();
     runner.addTest(registry.makeTest());
     bool wasSuccessful = runner.run("", false);
-    Database::destroy();
     FileLogger::destroy();
     return !wasSuccessful;
 }

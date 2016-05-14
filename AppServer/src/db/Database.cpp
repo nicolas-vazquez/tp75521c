@@ -5,12 +5,13 @@
 #include "Database.h"
 
 std::string DBPath = "/tmp/appServerDB";
-Database* Database::s_instance= NULL;
 
-Database *Database::getInstance() {
-    if (s_instance == NULL)
-        s_instance = new Database();
-    return s_instance;
+Database & Database::getInstance() {
+    // Since it's a static variable, if the class has already been created,
+    // It won't be created again.
+    // And it **is** thread-safe in C++11.
+    static Database instance;
+    return instance;
 }
 
 Database::Database() {
@@ -20,17 +21,18 @@ Database::Database() {
     options.OptimizeLevelStyleCompaction();
     // create the DB if it's not already present
     options.create_if_missing = true;
-
-    Status s = DB::Open(options, DBPath, &db);
+    Status s = DB::Open(options, DBPath, &this->db);
     assert(s.ok());
-    this->db = db;
-}
-
-void Database::destroy() {
-    if (s_instance != NULL)
-        delete (s_instance);
 }
 
 DB *Database::getDb() const {
     return db;
 }
+
+Database::~Database() {
+    delete (db);
+}
+
+
+
+

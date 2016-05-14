@@ -12,25 +12,24 @@ using namespace rocksdb;
 class Database {
 
 private:
-
     DB *db;
-
-    int m_value;
-    static Database *s_instance;
-
-    Database();
-
-    virtual ~Database() {
-        //delete _output;
-    };
 
 public:
 
-    static Database *getInstance();
+    static Database  &getInstance();
 
-    static void destroy();
-
+    Database(Database const &) = delete;             // Copy construct
+    Database(Database &&) = delete;                  // Move construct
+    Database &operator=(Database const &) = delete;  // Copy assign
+    Database &operator=(Database &&) = delete;      // Move assign
     DB *getDb() const;
+
+protected:
+
+protected:
+    Database();
+
+    virtual ~Database();
 };
 
 

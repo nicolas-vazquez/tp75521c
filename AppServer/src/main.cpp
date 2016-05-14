@@ -46,7 +46,6 @@ int main() {
         sleep(10);
     }
 
-    Database::destroy();
     FileLogger::destroy();
 
     server.stop();

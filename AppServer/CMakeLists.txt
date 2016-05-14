@@ -18,7 +18,7 @@ set(CPPUNIT_ROOT_DIR "${ROOT_PATH}/lib/cppunit/")
 set(TEST_PATH "${ROOT_PATH}/test/")
 
 # - use ISO C++11 required for RocksDB
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -lz -pthread -lrt -std=c++11 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage -lz -pthread -lrt -std=c++11 -Wall -Wextra -g")
 
 # Nombres de las librerías a usar en el proyecto
 set(LIBS_NAMES rocksdb z snappy bz2 jsoncpp mongoose cppunit)

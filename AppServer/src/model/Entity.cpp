@@ -11,7 +11,7 @@ Entity::Entity() {
 
 bool Entity::fetch() {
     string value;
-    DB *db = Database::getInstance()->getDb();
+    DB *db = Database::getInstance().getDb();
 
     Status s = db->Get(ReadOptions(), getName() + primaryKeyValue(), &value);
     bool fetched = s.ok();
@@ -26,13 +26,13 @@ bool Entity::fetch() {
 }
 
 bool Entity::save() {
-    DB *db = Database::getInstance()->getDb();
+    DB *db = Database::getInstance().getDb();
     Status s = db->Put(WriteOptions(), getName() + primaryKeyValue(), toJSON().toStyledString());
     return s.ok();
 }
 
 bool Entity::remove() {
-    DB *db = Database::getInstance()->getDb();
+    DB *db = Database::getInstance().getDb();
     Status s = db->Delete(WriteOptions(), getName() + primaryKeyValue());
     return s.ok();
 }
