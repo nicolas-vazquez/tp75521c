@@ -12,27 +12,38 @@ AccountControllerTest::AccountControllerTest() {
 }
 
 
-void AccountControllerTest::login() {
-    mg_connection connection;
-    connection.request_method = "POST";
-    char content[] = "mock";
-    connection.content = content;
-    connection.content_len = 4;
-    connection.uri = "testUri";
-    Request request(&connection);
-    JsonResponse *response = new JsonResponse();
+void AccountControllerTest::loginInvalidCredentialsTest() {
     string data = "{\"username\":\"noValidUser\",\"password\":\"anInvalidPassword\"}";
-    Json::Reader reader;
-    Value body;
-    reader.parse(data, body);
-    request.setBody(body);
+    Request request = makePostRequest(data);
+    JsonResponse *response = new JsonResponse();
     accountController.login(request, *response);
-
     const Value &value = response->get("errors", "[]");
     string code = value[0]["code"].asString();
-
     delete (response);
     CPPUNIT_ASSERT(code == "5");
+}
+
+
+void AccountControllerTest::loginEmptyUsernameTest() {
+    string data = "{\"password\":\"aPassword\"}";
+    Request request = makePostRequest(data);
+    JsonResponse *response = new JsonResponse();
+    accountController.login(request, *response);
+    const Value &value = response->get("errors", "[]");
+    string code = value[0]["code"].asString();
+    delete (response);
+    CPPUNIT_ASSERT(code == "2");
+}
+
+void AccountControllerTest::loginEmptyPasswordTest() {
+    string data = "{\"username\":\"anUsername\"}";
+    Request request = makePostRequest(data);
+    JsonResponse *response = new JsonResponse();
+    accountController.login(request, *response);
+    const Value &value = response->get("errors", "[]");
+    string code = value[0]["code"].asString();
+    delete (response);
+    CPPUNIT_ASSERT(code == "2");
 }
 
 

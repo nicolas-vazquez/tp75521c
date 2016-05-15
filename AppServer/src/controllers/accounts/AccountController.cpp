@@ -33,7 +33,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
         if (account.getPassword() != encodePassword(password)) {
             errors.push_back(new UnauthorizedError());
         } else {
-            responseBody["message"] = "Successful login.";
+            responseBody["message"] = "Successful loginInvalidCredentialsTest.";
             const string &accessToken = generateToken(username, password);
             AccessToken token;
             token.setToken(accessToken);
@@ -147,13 +147,13 @@ void AccountController::validateAccount(string username, string password,
 void AccountController::setup() {
     setPrefix("/api/accounts");
     addRouteResponse("POST", "/signup", AccountController, signup, JsonResponse);
-    addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
+    addRouteResponse("POST", "/loginInvalidCredentialsTest", AccountController, login, JsonResponse);
     addRouteResponse("PUT", "/{username}/like", AccountController, like, JsonResponse);
     addRouteResponse("PUT", "/{username}/dislike", AccountController, dislike, JsonResponse);
 }
 
 bool AccountController::requireAuthentication(string method, string url) {
-    if ((!method.compare("POST") && !url.compare(getPrefix() + "/login"))
+    if ((!method.compare("POST") && !url.compare(getPrefix() + "/loginInvalidCredentialsTest"))
         || (!method.compare("POST") && !url.compare(getPrefix() + "/signup"))) {
         return false;
     }

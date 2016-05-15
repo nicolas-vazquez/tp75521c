@@ -28,13 +28,10 @@ Value Account::toJSON() {
 }
 
 void Account::fromJSON(Value value) {
-    cout << "guola1" << endl;
     this->keptAccounts.clear();
     this->tossedAccounts.clear();
-    cout << "guola2" << endl;
     this->username = value.get("username", "").asString();
     this->password = value.get("password", "").asString();
-    cout << "guola3" << endl;
     Utils::stringToArray(value.get("matches", "").asString(), this->matches);
     Utils::stringToArray(value.get("keptAccounts", "").asString(), this->keptAccounts);
     Utils::stringToArray(value.get("tossedAccounts", "").asString(), this->tossedAccounts);

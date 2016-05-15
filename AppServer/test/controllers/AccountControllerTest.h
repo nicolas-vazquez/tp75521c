@@ -8,12 +8,15 @@
 #include <utils/FileLogger.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <controllers/accounts/AccountController.h>
+#include "BaseTestController.h"
 
 using namespace CPPUNIT_NS;
 
-class AccountControllerTest : public TestFixture {
+class AccountControllerTest : public TestFixture, BaseTestController {
 CPPUNIT_TEST_SUITE(AccountControllerTest);
-        CPPUNIT_TEST(login);
+        CPPUNIT_TEST(loginInvalidCredentialsTest);
+        CPPUNIT_TEST(loginEmptyPasswordTest);
+        CPPUNIT_TEST(loginEmptyUsernameTest);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -22,10 +25,13 @@ private:
 public:
     AccountControllerTest();
 
-    void login();
+    void loginInvalidCredentialsTest();
+
+    void loginEmptyUsernameTest();
+
+    void loginEmptyPasswordTest();
 
     virtual ~AccountControllerTest();
-
 };
 
 

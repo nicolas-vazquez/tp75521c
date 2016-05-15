@@ -8,10 +8,10 @@ add_executable(AccessTokenTest model/AccessTokenTest.cpp main.cpp)
 target_link_libraries(AccessTokenTest model db ${LIBS_NAMES})
 
 
-add_executable(MatchControllerTest controllers/MatchControllerTest.cpp ${MONGOOSE_SOURCES} main.cpp)
+add_executable(MatchControllerTest controllers/MatchControllerTest.cpp ${MONGOOSE_SOURCES} controllers/BaseTestController.cpp main.cpp)
 target_link_libraries(MatchControllerTest mongoose db model controllers utils ${LIBS_NAMES})
 
-add_executable(AccountControllerTest controllers/AccountControllerTest.cpp ${MONGOOSE_SOURCES} main.cpp)
+add_executable(AccountControllerTest controllers/AccountControllerTest.cpp ${MONGOOSE_SOURCES} controllers/BaseTestController.cpp main.cpp)
 target_link_libraries(AccountControllerTest mongoose db model controllers utils ${LIBS_NAMES})
 
 add_test(NAME "EntityTest" COMMAND EntityTest)
