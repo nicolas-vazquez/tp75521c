@@ -2,6 +2,7 @@
 // Created by federicofarina on 4/26/16.
 //
 
+#include <utils/sha256.h>
 #include "AccountTest.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(AccountTest);
@@ -39,7 +40,7 @@ void AccountTest::fromJSON() {
     account.setUsername("username");
     account.fetch();
     CPPUNIT_ASSERT(account.getUsername() == "username");
-    CPPUNIT_ASSERT(account.getPassword() == "password");
+    CPPUNIT_ASSERT(account.getPassword() == sha256("password"));
 
     const vector<string> &keptAccounts = account.getKeptAccounts();
 

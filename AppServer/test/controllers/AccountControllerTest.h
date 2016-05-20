@@ -14,16 +14,22 @@ using namespace CPPUNIT_NS;
 
 class AccountControllerTest : public TestFixture, BaseTestController {
 CPPUNIT_TEST_SUITE(AccountControllerTest);
+        CPPUNIT_TEST(loginValidCredentialsTest);
         CPPUNIT_TEST(loginInvalidCredentialsTest);
         CPPUNIT_TEST(loginEmptyPasswordTest);
         CPPUNIT_TEST(loginEmptyUsernameTest);
     CPPUNIT_TEST_SUITE_END();
 
 private:
+    Account testAccount;
     AccountController accountController;
 
 public:
     AccountControllerTest();
+
+    virtual void setUp();
+
+    void loginValidCredentialsTest();
 
     void loginInvalidCredentialsTest();
 
@@ -31,7 +37,10 @@ public:
 
     void loginEmptyPasswordTest();
 
+    virtual void tearDown();
+
     virtual ~AccountControllerTest();
+
 };
 
 

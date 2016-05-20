@@ -2,6 +2,7 @@
 // Created by fede on 4/3/16.
 //
 
+#include <utils/sha256.h>
 #include "Account.h"
 
 Account::Account() {
@@ -20,7 +21,7 @@ Value Account::toJSON() {
     Value value;
     std::string s1, s2, s3;
     value["username"] = username;
-    value["password"] = password;
+    value["password"] = sha256(password);
     value["matches"] = Utils::arrayToString(this->matches, s1);
     value["keptAccounts"] = Utils::arrayToString(this->keptAccounts, s2);
     value["tossedAccounts"] = Utils::arrayToString(this->tossedAccounts, s3);

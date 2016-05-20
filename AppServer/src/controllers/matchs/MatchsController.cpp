@@ -11,22 +11,7 @@ MatchsController::MatchsController() {
 }
 
 void MatchsController::getMatches(Request &request, JsonResponse &response) {
-
-    //fixme
-    string tokenHeader = request.getHeaderKeyValue("Authorization");
-
-    AccessToken token;
-    token.setToken(tokenHeader);
-
-    bool found = token.fetch();
-
-    vector<Error *> errors;
-    if (found) {
-        //todo
-    } else {
-        errors.push_back(new UnauthorizedError());
-        sendErrors(response, errors, 401);
-    }
+    //TODO
 }
 
 void MatchsController::setup() {

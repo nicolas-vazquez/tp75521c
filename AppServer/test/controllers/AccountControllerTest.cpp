@@ -11,6 +11,21 @@ AccountControllerTest::AccountControllerTest() {
 
 }
 
+void  AccountControllerTest::setUp() {
+    testAccount.setUsername("username");
+    testAccount.setPassword("password");
+    testAccount.save();
+}
+
+void AccountControllerTest::loginValidCredentialsTest() {
+    string data = "{\"username\":\"username\",\"password\":\"password\"}";
+    Request request = makePostRequest(data);
+    JsonResponse *response = new JsonResponse();
+    accountController.login(request, *response);
+    int code = response->getCode();
+    delete (response);
+    CPPUNIT_ASSERT(code == HTTP_OK);
+}
 
 void AccountControllerTest::loginInvalidCredentialsTest() {
     string data = "{\"username\":\"noValidUser\",\"password\":\"anInvalidPassword\"}";
@@ -46,26 +61,9 @@ void AccountControllerTest::loginEmptyPasswordTest() {
     CPPUNIT_ASSERT(code == "2");
 }
 
+void AccountControllerTest::tearDown() {
+    testAccount.remove();
+}
 
 AccountControllerTest::~AccountControllerTest() {
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

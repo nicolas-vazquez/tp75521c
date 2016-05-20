@@ -49,7 +49,12 @@ namespace Mongoose {
         setHeader("Set-cookie", definition.str());
     }
 
+    int Response::getCode() const {
+        return code;
+    }
+    
     void Response::setCode(int code_) {
         code = code_;
     }
+
 }

@@ -55,8 +55,10 @@ namespace Mongoose {
          */
         virtual string getBody() = 0;
 
+        int getCode() const;
+
         /**
-         * Sets the cookie, note that you can only define one cookie by request
+        * Sets the cookie, note that you can only define one cookie by request
          * for now
          *
          * @param string the key of the cookie

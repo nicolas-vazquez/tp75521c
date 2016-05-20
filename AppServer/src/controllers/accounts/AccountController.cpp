@@ -33,7 +33,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
         if (account.getPassword() != encodePassword(password)) {
             errors.push_back(new UnauthorizedError());
         } else {
-            responseBody["message"] = "Successful loginInvalidCredentialsTest.";
+            responseBody["message"] = "Successful login";
             const string &accessToken = generateToken(username, password);
             AccessToken token;
             token.setToken(accessToken);
