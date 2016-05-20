@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-cd build/
-make test
+cd build && \
+make && make test
 
 lcov --capture --directory src/ --output-file coverage.info
 # remove output for external libraries
