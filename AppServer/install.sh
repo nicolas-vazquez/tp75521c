@@ -65,7 +65,15 @@ make install && \
 apt-get install libcppunit-doc libcppunit-dev
 apt-get install lcov
 
-echo "$root_dir"
+
+apt-get install libboost-all-dev libssl-dev git
+
+git clone https://github.com/Microsoft/cpprestsdk.git casablanca && \
+cd casablanca/Release && \
+mkdir build.debug && \
+cd build.debug && \
+cmake .. -DCMAKE_BUILD_TYPE=Debug && \
+make install
 
 cd $root_dir
 rm -rf temp_install
