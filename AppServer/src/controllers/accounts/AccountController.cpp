@@ -2,15 +2,13 @@
 // Created by fedefarina on 26/03/16.
 //
 
+#include <utils/FileLogger.h>
 #include "AccountController.h"
-#include "../../errors/UsernameAlreadyInUseError.h"
-#include "../../model/AccessToken.h"
-#include "../../errors/UnauthorizedError.h"
-#include "../../utils/FileLogger.h"
 
 AccountController::AccountController() {
 
 }
+
 
 void AccountController::login(Request &request, JsonResponse &response) {
 
@@ -30,9 +28,12 @@ void AccountController::login(Request &request, JsonResponse &response) {
     JsonResponse responseBody;
 
     if (account.fetch()) {
+        cout << "p1" << account.getPassword() << endl;
+        cout << "p2" << encodePassword(password) << endl;
         if (account.getPassword() != encodePassword(password)) {
             errors.push_back(new UnauthorizedError());
         } else {
+            //todo add request to shared
             responseBody["message"] = "Successful login";
             const string &accessToken = generateToken(username, password);
             AccessToken token;
@@ -78,8 +79,17 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     Account account(username);
 
     if (!account.fetch()) {
-        const string &encodedPassword = encodePassword(password);
-        account.setPassword(encodedPassword);
+/*        //If account is not fetched here, fetch the SharedServer to get user
+
+        http_client client(U("http://www.bing.com/"));
+        client.request(methods::GET, uri_builder(U("/search")).append_query(U("q"), searchTerm).to_string())
+        // Write the response body into the file buffer.
+        .then([=](http_response response) -> pplx::task<size_t> {
+            printf("Response status code %u returned.\n", response.status_code());
+        });*/
+
+
+        account.setPassword(password);
         account.setUsername(username);
         account.save();
         jsonResponse["message"] = "Successful signup";
@@ -147,13 +157,13 @@ void AccountController::validateAccount(string username, string password,
 void AccountController::setup() {
     setPrefix("/api/accounts");
     addRouteResponse("POST", "/signup", AccountController, signup, JsonResponse);
-    addRouteResponse("POST", "/loginInvalidCredentialsTest", AccountController, login, JsonResponse);
+    addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
     addRouteResponse("PUT", "/{username}/like", AccountController, like, JsonResponse);
     addRouteResponse("PUT", "/{username}/dislike", AccountController, dislike, JsonResponse);
 }
 
 bool AccountController::requireAuthentication(string method, string url) {
-    if ((!method.compare("POST") && !url.compare(getPrefix() + "/loginInvalidCredentialsTest"))
+    if ((!method.compare("POST") && !url.compare(getPrefix() + "/login"))
         || (!method.compare("POST") && !url.compare(getPrefix() + "/signup"))) {
         return false;
     }

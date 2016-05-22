@@ -12,9 +12,16 @@
 #include "../../model/Account.h"
 #include "../../errors/BadJsonError.h"
 #include "../../errors/EmptyParamError.h"
+#include "../../errors/UsernameAlreadyInUseError.h"
+#include "../../errors/UnauthorizedError.h"
+#include <cpprest/http_client.h>
 
 using namespace std;
 using namespace Mongoose;
+using namespace utility;
+using namespace web::http;
+using namespace web::http::client;
+using namespace concurrency::streams;
 
 class AccountController : public BaseController {
 private:
