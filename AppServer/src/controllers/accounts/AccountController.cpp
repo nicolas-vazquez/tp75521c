@@ -86,8 +86,8 @@ void AccountController::signup(Request &request, JsonResponse &response) {
         http_client sharedServer(http::uri_builder(uri).append_path(U("/signup")).to_uri());
 
         web::json::value bodyToShared;
-        bodyToShared.operator[]("username") = json::value::string(username);
-        bodyToShared.operator[]("password") = json::value::string(username);
+        bodyToShared["username"] = json::value::string(username);
+        bodyToShared["password"] = json::value::string(username);
         const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
 
         if (sharedResponse.status_code() == status_codes::OK) {
@@ -95,9 +95,12 @@ void AccountController::signup(Request &request, JsonResponse &response) {
             account.setUsername(username);
             account.save();
             jsonResponse["message"] = "Successful signup";
+        } else if (sharedResponse.status_code() == status_codes::BadRequest) {
+            //fixme aca el server tiene que devolver un mensaje con que es lo que paso
+            errors.push_back(new UsernameAlreadyInUseError());
         } else {
-            //Return response given by sharedServer
-            sendResult(response, jsonResponse, sharedResponse.status_code());
+            //fixme devolver un nuevo error del tipo ServerError
+            errors.push_back(new UsernameAlreadyInUseError());
         }
 
     } else {
