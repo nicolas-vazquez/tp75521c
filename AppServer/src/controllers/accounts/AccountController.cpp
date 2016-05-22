@@ -28,12 +28,9 @@ void AccountController::login(Request &request, JsonResponse &response) {
     JsonResponse responseBody;
 
     if (account.fetch()) {
-        cout << "p1" << account.getPassword() << endl;
-        cout << "p2" << encodePassword(password) << endl;
         if (account.getPassword() != encodePassword(password)) {
             errors.push_back(new UnauthorizedError());
         } else {
-            //todo add request to shared
             responseBody["message"] = "Successful login";
             const string &accessToken = generateToken(username, password);
             AccessToken token;
@@ -65,7 +62,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
     vector<Error *> errors;
 
-    Json::Value body = request.getBody();
+    const Json::Value body = request.getBody();
 
     string username = body.get("username", "").asString();
     string password = body.get("password", "").asString();
@@ -78,21 +75,31 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     JsonResponse jsonResponse;
     Account account(username);
 
+
+    //If account is not fetched here, fetch the SharedServer to try to fetch
     if (!account.fetch()) {
-/*        //If account is not fetched here, fetch the SharedServer to get user
+        utility::string_t address = U("http://localhost:");
+        utility::string_t port = U("3000");
+        address.append(port);
 
-        http_client client(U("http://www.bing.com/"));
-        client.request(methods::GET, uri_builder(U("/search")).append_query(U("q"), searchTerm).to_string())
-        // Write the response body into the file buffer.
-        .then([=](http_response response) -> pplx::task<size_t> {
-            printf("Response status code %u returned.\n", response.status_code());
-        });*/
+        http::uri uri = http::uri(address);
+        http_client sharedServer(http::uri_builder(uri).append_path(U("/signup")).to_uri());
 
+        web::json::value bodyToShared;
+        bodyToShared.operator[]("username") = json::value::string(username);
+        bodyToShared.operator[]("password") = json::value::string(username);
+        const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
 
-        account.setPassword(password);
-        account.setUsername(username);
-        account.save();
-        jsonResponse["message"] = "Successful signup";
+        if (sharedResponse.status_code() == status_codes::OK) {
+            account.setPassword(password);
+            account.setUsername(username);
+            account.save();
+            jsonResponse["message"] = "Successful signup";
+        } else {
+            //Return response given by sharedServer
+            sendResult(response, jsonResponse, sharedResponse.status_code());
+        }
+
     } else {
         errors.push_back(new UsernameAlreadyInUseError());
     }

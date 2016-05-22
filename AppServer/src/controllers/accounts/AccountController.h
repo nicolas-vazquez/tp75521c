@@ -18,10 +18,10 @@
 
 using namespace std;
 using namespace Mongoose;
+using namespace web;
 using namespace utility;
-using namespace web::http;
-using namespace web::http::client;
-using namespace concurrency::streams;
+using namespace http;
+using namespace http::client;
 
 class AccountController : public BaseController {
 private:
