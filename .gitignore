@@ -7,12 +7,12 @@ install_manifest.txt
 *.pro.user*
 
 #Build folder
-
-/build
+AppServer/build
 
 #Temp install folder
-/temp_install
+AppServer/temp_install
 
 #Idea files
-/.idea
+.idea
+AppServer/.idea
 

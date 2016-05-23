@@ -1,3 +1,7 @@
+sudo: required
+
+dist: trusty
+
 language: cpp
 
 compiler:
@@ -7,14 +11,9 @@ before_install:
   - sudo pip install cpp-coveralls
 
 install:
+  - cd AppServer
   - chmod +x install.sh
-  - ./install.sh
-
-before_script:
-  - cd build
-  - sudo cmake ..
-  - sudo make
+  - sudo ./install.sh
 
 script:
   - ctest
-

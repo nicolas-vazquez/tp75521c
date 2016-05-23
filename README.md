@@ -47,3 +47,5 @@ From build folder:
 
 ctest
 ```
+
+[![Build Status](https://travis-ci.org/nicolas-vazquez/tp75521c.svg?branch=develop)](https://travis-ci.org/nicolas-vazquez/tp75521c)

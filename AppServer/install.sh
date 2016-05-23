@@ -15,12 +15,8 @@ echo "Search end"
 
 # Instalación de dependencias y herramientas
 echo "Installing tools and dependencies"
-apt-get update\
-apt-get install -y --assume-yes --force-yes\
-libsnappy-dev \
-zlib1g-dev \
-libbz2-dev \
-libgflags-dev
+apt-get update
+apt-get install -y --assume-yes --force-yes libsnappy-dev zlib1g-dev libbz2-dev libgflags-dev
 
 # Instala las librerías
 echo "Installing libraries"
@@ -62,11 +58,9 @@ cd mongoose-cpp-master && \
 cmake . && \
 make install && \
 
-apt-get install libcppunit-doc libcppunit-dev
-apt-get install lcov
-
-
-apt-get install libboost-all-dev libssl-dev git
+apt-get install -y libcppunit-doc libcppunit-dev
+apt-get install -y lcov
+apt-get install -y libboost-all-dev libssl-dev git
 
 git clone https://github.com/Microsoft/cpprestsdk.git casablanca && \
 cd casablanca/Release && \
