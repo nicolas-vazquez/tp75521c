@@ -38,7 +38,7 @@ From build folder:
 ctest
 ```
 
-## Run funcional tests ##
+## Run functional tests ##
 
 Install Python, PIP and requests module
 
