@@ -13,7 +13,6 @@ AccountController::AccountController() {
 void AccountController::login(Request &request, JsonResponse &response) {
 
     vector<Error *> errors;
-
     Json::Value body = request.getBody();
 
     string username = body.get("username", "").asString();
@@ -26,6 +25,8 @@ void AccountController::login(Request &request, JsonResponse &response) {
 
     Account account(username);
     JsonResponse responseBody;
+
+    int responseFailCode = status_codes::Unauthorized;
 
     if (!account.fetch()) {
         utility::string_t address = U("http://localhost:");
@@ -41,10 +42,24 @@ void AccountController::login(Request &request, JsonResponse &response) {
 
         const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
 
-        if (sharedResponse.status_code() == status_codes::OK) {
+        status_code statusCode = sharedResponse.status_code();
+
+        if (statusCode != status_codes::OK) {
+            responseFailCode = statusCode;
+        }
+
+        if (statusCode == status_codes::OK) {
             responseBody = buildLoginResponse(username, password, responseBody);
-        } else {
+        } else if (statusCode == status_codes::Unauthorized) {
             errors.push_back(new UnauthorizedError());
+        } else {
+            errors.push_back(new ServerError());
+        }
+
+        if (errors.empty()) {
+            sendResult(response, responseBody, HTTP_OK);
+        } else {
+            sendErrors(response, errors, statusCode);
         }
 
     } else {
@@ -53,12 +68,12 @@ void AccountController::login(Request &request, JsonResponse &response) {
         } else {
             responseBody = buildLoginResponse(username, password, responseBody);
         }
-    }
 
+    }
     if (errors.empty()) {
         sendResult(response, responseBody, HTTP_OK);
     } else {
-        sendErrors(response, errors, status_codes::Unauthorized);
+        sendErrors(response, errors, responseFailCode);
     }
 }
 
@@ -74,13 +89,6 @@ JsonResponse &AccountController::buildLoginResponse(const string &username, cons
     return responseBody;
 }
 
-string AccountController::encodePassword(const string &password) const {
-    return sha256(password);
-}
-
-string AccountController::generateToken(const string &username, const string &password) const {
-    return sha256(username + password);
-}
 
 void AccountController::signup(Request &request, JsonResponse &response) {
 
@@ -99,6 +107,8 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     JsonResponse jsonResponse;
     Account account(username);
 
+    int responseFailCode = status_codes::BadRequest;
+
 
     //If account is not fetched here, fetch the SharedServer to try to fetch
     if (!account.fetch()) {
@@ -114,19 +124,22 @@ void AccountController::signup(Request &request, JsonResponse &response) {
         bodyToShared["password"] = json::value::string(password);
         const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
 
-        if (sharedResponse.status_code() == status_codes::OK) {
+        status_code statusCode = sharedResponse.status_code();
+
+        if (statusCode != status_codes::OK) {
+            responseFailCode = statusCode;
+        }
+
+        if (statusCode == status_codes::OK) {
             account.setPassword(password);
             account.setUsername(username);
             account.save();
             jsonResponse["message"] = "Successful signup";
-        } else if (sharedResponse.status_code() == status_codes::BadRequest) {
-            //fixme aca el server tiene que devolver un mensaje con que es lo que paso
+        } else if (statusCode == status_codes::BadRequest) {
             errors.push_back(new UsernameAlreadyInUseError());
         } else {
-            //fixme devolver un nuevo error del tipo ServerError
-            errors.push_back(new UsernameAlreadyInUseError());
+            errors.push_back(new ServerError());
         }
-
     } else {
         errors.push_back(new UsernameAlreadyInUseError());
     }
@@ -134,10 +147,18 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     if (errors.empty()) {
         sendResult(response, jsonResponse, HTTP_OK);
     } else {
-        sendErrors(response, errors, status_codes::BadRequest);
+        sendErrors(response, errors, responseFailCode);
     }
 }
 
+
+string AccountController::encodePassword(const string &password) const {
+    return sha256(password);
+}
+
+string AccountController::generateToken(const string &username, const string &password) const {
+    return sha256(username + password);
+}
 
 void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;

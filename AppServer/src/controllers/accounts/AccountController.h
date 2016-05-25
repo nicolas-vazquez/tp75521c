@@ -11,6 +11,7 @@
 #include "../BaseController.h"
 #include "../../model/Account.h"
 #include "../../errors/BadJsonError.h"
+#include "../../errors/ServerError.h"
 #include "../../errors/EmptyParamError.h"
 #include "../../errors/UsernameAlreadyInUseError.h"
 #include "../../errors/UnauthorizedError.h"
