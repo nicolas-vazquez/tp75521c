@@ -21,33 +21,57 @@ void AccountController::login(Request &request, JsonResponse &response) {
     validateAccount(username, password, errors);
 
     if (!errors.empty()) {
-        return sendErrors(response, errors, 400);
+        return sendErrors(response, errors, status_codes::BadRequest);
     }
 
     Account account(username);
     JsonResponse responseBody;
 
-    if (account.fetch()) {
+    if (!account.fetch()) {
+        utility::string_t address = U("http://localhost:");
+        utility::string_t port = U("3000");
+        address.append(port);
+
+        http::uri uri = http::uri(address);
+        http_client sharedServer(http::uri_builder(uri).append_path(U("/login")).to_uri());
+
+        web::json::value bodyToShared;
+        bodyToShared["username"] = json::value::string(username);
+        bodyToShared["password"] = json::value::string(password);
+
+        const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
+
+        if (sharedResponse.status_code() == status_codes::OK) {
+            responseBody = buildLoginResponse(username, password, responseBody);
+        } else {
+            errors.push_back(new UnauthorizedError());
+        }
+
+    } else {
         if (account.getPassword() != encodePassword(password)) {
             errors.push_back(new UnauthorizedError());
         } else {
-            responseBody["message"] = "Successful login";
-            const string &accessToken = generateToken(username, password);
-            AccessToken token;
-            token.setToken(accessToken);
-            token.setUsername(username);
-            token.save();
-            responseBody["accessToken"] = accessToken;
+            responseBody = buildLoginResponse(username, password, responseBody);
         }
-    } else {
-        errors.push_back(new UnauthorizedError());
     }
 
     if (errors.empty()) {
         sendResult(response, responseBody, HTTP_OK);
     } else {
-        sendErrors(response, errors, 401);
+        sendErrors(response, errors, status_codes::Unauthorized);
     }
+}
+
+JsonResponse &AccountController::buildLoginResponse(const string &username, const string &password,
+                                                    JsonResponse &responseBody) const {
+    responseBody["message"] = "Successful login";
+    const string &accessToken = generateToken(username, password);
+    AccessToken token;
+    token.setToken(accessToken);
+    token.setUsername(username);
+    token.save();
+    responseBody["accessToken"] = accessToken;
+    return responseBody;
 }
 
 string AccountController::encodePassword(const string &password) const {
@@ -69,7 +93,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     validateAccount(username, password, errors);
 
     if (!errors.empty()) {
-        return sendErrors(response, errors, 400);
+        return sendErrors(response, errors, status_codes::BadRequest);
     }
 
     JsonResponse jsonResponse;
@@ -83,11 +107,11 @@ void AccountController::signup(Request &request, JsonResponse &response) {
         address.append(port);
 
         http::uri uri = http::uri(address);
-        http_client sharedServer(http::uri_builder(uri).append_path(U("/signup")).to_uri());
+        http_client sharedServer(http::uri_builder(uri).append_path(U("/users")).to_uri());
 
         web::json::value bodyToShared;
         bodyToShared["username"] = json::value::string(username);
-        bodyToShared["password"] = json::value::string(username);
+        bodyToShared["password"] = json::value::string(password);
         const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
 
         if (sharedResponse.status_code() == status_codes::OK) {
@@ -110,7 +134,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     if (errors.empty()) {
         sendResult(response, jsonResponse, HTTP_OK);
     } else {
-        sendErrors(response, errors, 400);
+        sendErrors(response, errors, status_codes::BadRequest);
     }
 }
 
@@ -128,7 +152,7 @@ void AccountController::like(Request &request, JsonResponse &response) {
         sendResult(response, responseBody, HTTP_OK);
     } else {
         errors.push_back(new UnauthorizedError());
-        sendErrors(response, errors, 401);
+        sendErrors(response, errors, status_codes::Unauthorized);
     }
 }
 
@@ -145,7 +169,7 @@ void AccountController::dislike(Request &request, JsonResponse &response) {
         sendResult(response, responseBody, HTTP_OK);
     } else {
         errors.push_back(new UnauthorizedError());
-        sendErrors(response, errors, 401);
+        sendErrors(response, errors, status_codes::Unauthorized);
     }
 }
 

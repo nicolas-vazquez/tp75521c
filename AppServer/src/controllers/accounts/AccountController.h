@@ -48,6 +48,8 @@ public:
 
     void validateAccount(string username, string password, vector<Error *> &errors);
 
+    JsonResponse &buildLoginResponse(const string &username, const string &password, JsonResponse &responseBody) const;
+
     virtual ~AccountController();
 };
 
