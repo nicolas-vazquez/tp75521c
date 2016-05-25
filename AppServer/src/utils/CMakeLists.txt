@@ -1,6 +1,6 @@
 project(${PROJECT_NAME})
 
-add_library(utils FileLogger.cpp LockFile.cpp Utils.cpp sha256.cpp)
+add_library(utils FileLogger.cpp LockFile.cpp Utils.cpp sha256.cpp ConnectionUtils.cpp ConnectionUtils.h)
 target_link_libraries(utils ${LIBS_NAMES})
 
 

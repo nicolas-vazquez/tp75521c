@@ -15,6 +15,7 @@
 #include "../../errors/EmptyParamError.h"
 #include "../../errors/UsernameAlreadyInUseError.h"
 #include "../../errors/UnauthorizedError.h"
+#include <utils/ConnectionUtils.h>
 #include <cpprest/http_client.h>
 
 using namespace std;

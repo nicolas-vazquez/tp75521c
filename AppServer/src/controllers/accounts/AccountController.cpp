@@ -2,7 +2,7 @@
 // Created by fedefarina on 26/03/16.
 //
 
-#include <utils/FileLogger.h>
+
 #include "AccountController.h"
 
 AccountController::AccountController() {
@@ -29,9 +29,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
     int responseFailCode = status_codes::Unauthorized;
 
     if (!account.fetch()) {
-        utility::string_t address = U("http://localhost:");
-        utility::string_t port = U("3000");
-        address.append(port);
+        string_t address = ConnectionUtils::buildConnection();
 
         http::uri uri = http::uri(address);
         http_client sharedServer(http::uri_builder(uri).append_path(U("/login")).to_uri());
@@ -112,10 +110,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
     //If account is not fetched here, fetch the SharedServer to try to fetch
     if (!account.fetch()) {
-        utility::string_t address = U("http://localhost:");
-        utility::string_t port = U("3000");
-        address.append(port);
-
+        string_t address = ConnectionUtils::buildConnection();
         http::uri uri = http::uri(address);
         http_client sharedServer(http::uri_builder(uri).append_path(U("/users")).to_uri());
 
