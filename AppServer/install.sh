@@ -62,12 +62,15 @@ apt-get install -y libcppunit-doc libcppunit-dev
 apt-get install -y lcov
 apt-get install -y libboost-all-dev libssl-dev git
 
+
+echo "Installing Casablanca"
 git clone https://github.com/Microsoft/cpprestsdk.git casablanca && \
 cd casablanca/Release && \
 mkdir build.debug && \
 cd build.debug && \
-cmake .. -DCMAKE_BUILD_TYPE=Debug && \
+    cmake .. -DCMAKE_BUILD_TYPE=Debug && \
 make install
+ldconfig -v
 
 cd $root_dir
 rm -rf temp_install
