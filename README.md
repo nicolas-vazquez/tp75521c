@@ -48,4 +48,22 @@ From build folder:
 ctest
 ```
 
+## Run funcional tests ##
+
+Install Python, PIP and requests module
+
+```
+#!bash
+
+sudo apt-get install python2.7
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python get-pip.py
+sudo pip install requests
+
+```
+
+
+
+
+
 [![Build Status](https://travis-ci.org/nicolas-vazquez/tp75521c.svg?branch=develop)](https://travis-ci.org/nicolas-vazquez/tp75521c)
