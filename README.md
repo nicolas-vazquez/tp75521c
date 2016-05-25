@@ -62,8 +62,11 @@ sudo pip install requests
 
 ```
 
-
-
+Run tests
+```
+cd functionalTests/
+python restTester.py
+```
 
 
 [![Build Status](https://travis-ci.org/nicolas-vazquez/tp75521c.svg?branch=develop)](https://travis-ci.org/nicolas-vazquez/tp75521c)
