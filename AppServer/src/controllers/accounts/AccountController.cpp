@@ -57,7 +57,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
         if (errors.empty()) {
             sendResult(response, responseBody, HTTP_OK);
         } else {
-            sendErrors(response, errors, statusCode);
+            sendErrors(response, errors, responseFailCode);
         }
 
     } else {
