@@ -29,6 +29,7 @@ void AccountController::login(Request &request, JsonResponse &response) {
     int responseFailCode = status_codes::Unauthorized;
 
     if (!account.fetch()) {
+
         string_t address = ConnectionUtils::buildConnection();
 
         http::uri uri = http::uri(address);
@@ -46,8 +47,9 @@ void AccountController::login(Request &request, JsonResponse &response) {
             responseFailCode = statusCode;
         }
 
+
         if (statusCode == status_codes::OK) {
-            responseBody = buildLoginResponse(username, password, responseBody);
+            buildLoginResponse(username, password, responseBody);
         } else if (statusCode == status_codes::Unauthorized) {
             errors.push_back(new UnauthorizedError());
         } else {
@@ -61,22 +63,19 @@ void AccountController::login(Request &request, JsonResponse &response) {
         }
 
     } else {
+        cout << "fetched" << endl;
         if (account.getPassword() != encodePassword(password)) {
             errors.push_back(new UnauthorizedError());
         } else {
-            responseBody = buildLoginResponse(username, password, responseBody);
+            buildLoginResponse(username, password, responseBody);
+            sendResult(response, responseBody, HTTP_OK);
         }
 
     }
-    if (errors.empty()) {
-        sendResult(response, responseBody, HTTP_OK);
-    } else {
-        sendErrors(response, errors, responseFailCode);
-    }
 }
 
-JsonResponse &AccountController::buildLoginResponse(const string &username, const string &password,
-                                                    JsonResponse &responseBody) const {
+void AccountController::buildLoginResponse(const string &username, const string &password,
+                                           JsonResponse &responseBody) const {
     responseBody["message"] = "Successful login";
     const string &accessToken = generateToken(username, password);
     AccessToken token;
@@ -84,7 +83,6 @@ JsonResponse &AccountController::buildLoginResponse(const string &username, cons
     token.setUsername(username);
     token.save();
     responseBody["accessToken"] = accessToken;
-    return responseBody;
 }
 
 
