@@ -63,7 +63,6 @@ void AccountController::login(Request &request, JsonResponse &response) {
         }
 
     } else {
-        cout << "fetched" << endl;
         if (account.getPassword() != encodePassword(password)) {
             errors.push_back(new UnauthorizedError());
         } else {
