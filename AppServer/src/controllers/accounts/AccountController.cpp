@@ -210,7 +210,9 @@ void AccountController::setup() {
 }
 
 bool AccountController::requireAuthentication(string method, string url) {
-    if ((!method.compare("POST") && !url.compare(getPrefix() + "/login"))
+
+    if (!BaseController::requireAuthentication(method, url) ||
+        (!method.compare("POST") && !url.compare(getPrefix() + "/login"))
         || (!method.compare("POST") && !url.compare(getPrefix() + "/signup"))) {
         return false;
     }
@@ -219,3 +221,5 @@ bool AccountController::requireAuthentication(string method, string url) {
 AccountController::~AccountController() {
 
 }
+
+

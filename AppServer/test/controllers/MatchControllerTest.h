@@ -7,11 +7,11 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <controllers/matchs/MatchsController.h>
-#include "BaseTestController.h"
+#include "BaseControllerTest.h"
 
 using namespace CPPUNIT_NS;
 
-class MatchControllerTest : public TestFixture, BaseTestController {
+class MatchControllerTest : public TestFixture, BaseControllerTest {
 CPPUNIT_TEST_SUITE(MatchControllerTest);
     CPPUNIT_TEST_SUITE_END();
 

@@ -18,9 +18,13 @@ using namespace Mongoose;
 
 class BaseController : public JsonController {
 
+protected:
+    bool debugMode = false;
 
 public:
     map<string, string> *routeParams;
+
+    BaseController();
 
     virtual Response *process(Request &request) override;
 
@@ -34,7 +38,8 @@ public:
 
     JsonResponse &sendBadJsonError(JsonResponse &response);
 
-    BaseController();
+    void setDebugMode(bool debugMode);
+
 
     virtual ~BaseController();
 

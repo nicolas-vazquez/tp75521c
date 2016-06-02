@@ -2,18 +2,19 @@
 // Created by federicofarina on 5/14/16.
 //
 
-#include <mongoose/mongoose.h>
-#include "BaseTestController.h"
+
+#include "BaseControllerTest.h"
 
 
-BaseTestController::BaseTestController() {
+BaseControllerTest::BaseControllerTest() {
 
 }
 
-Request BaseTestController::makePostRequest(string data) const {
+Request BaseControllerTest::makeDummyRequest(string data, string method) const {
     mg_connection connection;
     //Only mock data, method it´s not important
-    connection.request_method = "POST";
+    connection.request_method = method.c_str();
+    connection.num_headers = 0;
     char content[] = "mock";
     connection.content = content;
     connection.content_len = 4;
@@ -28,6 +29,9 @@ Request BaseTestController::makePostRequest(string data) const {
     return request;
 }
 
-BaseTestController::~BaseTestController() {
+BaseControllerTest::~BaseControllerTest() {
 
 }
+
+
+

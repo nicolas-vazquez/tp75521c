@@ -187,8 +187,14 @@ void BaseController::setHeaders(JsonResponse &response) {
 
 
 bool BaseController::requireAuthentication(string method, string url) {
-    return true;
+    return !debugMode;
 }
+
+
+void BaseController::setDebugMode(bool debugMode) {
+    this->debugMode = debugMode;
+}
+
 
 BaseController::~BaseController() {
     delete routeParams;

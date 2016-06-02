@@ -26,17 +26,16 @@ using namespace http;
 using namespace http::client;
 
 class AccountController : public BaseController {
-private:
+
 public:
+
+    AccountController();
+
     virtual bool requireAuthentication(string method, string url) override;
 
     string generateToken(const string &username, const string &password) const;
 
     string encodePassword(const string &password) const;
-
-public:
-
-    AccountController();
 
     void setup();
 
@@ -53,6 +52,7 @@ public:
     void buildLoginResponse(const string &username, const string &password, JsonResponse &responseBody) const;
 
     virtual ~AccountController();
+
 };
 
 
