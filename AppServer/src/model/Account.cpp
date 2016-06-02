@@ -66,6 +66,7 @@ void Account::setPassword(const string &password) {
 void Account::addKeepAccount(const string &keptAccount) {
     this->keptAccounts.push_back(keptAccount);
     Account otherAccount(keptAccount);
+    //A liked account is always stored in local database because during like we fetch "otherAccount" from SharedServer
     if (otherAccount.fetch()) {
         vector<string> otherKepts = otherAccount.getKeptAccounts();
         for (std::vector<string>::iterator it = otherKepts.begin(); it != otherKepts.end(); ++it) {
@@ -82,12 +83,6 @@ void Account::addTossAccount(const string &tossedAccount) {
     this->tossedAccounts.push_back(tossedAccount);
 }
 
-Account::~Account() {
-    this->matches.clear();
-    this->keptAccounts.clear();
-    this->tossedAccounts.clear();
-}
-
 const vector<string> &Account::getMatches() const {
     return matches;
 }
@@ -102,4 +97,11 @@ const vector<string> &Account::getKeptAccounts() const {
 
 void Account::addMatch(const string &match) {
     this->matches.push_back(match);
+}
+
+
+Account::~Account() {
+    this->matches.clear();
+    this->keptAccounts.clear();
+    this->tossedAccounts.clear();
 }
