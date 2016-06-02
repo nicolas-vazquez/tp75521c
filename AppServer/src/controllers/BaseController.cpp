@@ -190,6 +190,9 @@ bool BaseController::requireAuthentication(string method, string url) {
     return !debugMode;
 }
 
+bool BaseController::isDebugMode() const {
+    return debugMode;
+}
 
 void BaseController::setDebugMode(bool debugMode) {
     this->debugMode = debugMode;
@@ -199,24 +202,3 @@ void BaseController::setDebugMode(bool debugMode) {
 BaseController::~BaseController() {
     delete routeParams;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

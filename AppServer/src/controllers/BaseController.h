@@ -38,6 +38,8 @@ public:
 
     JsonResponse &sendBadJsonError(JsonResponse &response);
 
+    bool isDebugMode() const;
+
     void setDebugMode(bool debugMode);
 
 
@@ -56,7 +58,6 @@ private:
     string replaceRouteParams(string key) const;
 
     void parseRouteParams(const string &key, const string &currentRequest) const;
-
 
 };
 

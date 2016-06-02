@@ -18,13 +18,15 @@ Request BaseControllerTest::makeDummyRequest(string data, string method) const {
     char content[] = "mock";
     connection.content = content;
     connection.content_len = 4;
-    connection.uri = "testUri";
+    connection.uri = "mock";
     Request request(&connection);
+
 
     Json::Reader reader;
     Value body;
     reader.parse(data, body);
     request.setBody(body);
+    request.setData(data);
 
     return request;
 }

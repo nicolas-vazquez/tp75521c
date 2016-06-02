@@ -97,6 +97,9 @@ namespace Mongoose {
 
         string getData();
 
+
+        void setData(const string &data);
+
         const Account &getUser() const;
 
         void setUsername(string &username);

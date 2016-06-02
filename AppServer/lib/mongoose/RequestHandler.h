@@ -19,7 +19,7 @@ namespace Mongoose {
         typedef void (BaseController::*fPtr)(Request &request, JsonResponse &response);
 
         RequestHandler(BaseController *controller_, fPtr function_)
-                : controller(controller_), function(function_) {
+        : controller(controller_), function(function_) {
 
         }
 
@@ -48,12 +48,15 @@ namespace Mongoose {
                         } else {
                             return &controller->sendBadJsonError(*response);
                         }
-                    }else{
+                    } else {
                         return &controller->sendBadJsonError(*response);
                     }
                 }
 
-                controller->preProcess(request, *response);
+                if (!controller->isDebugMode()) {
+                    controller->preProcess(request, *response);
+                }
+
                 (controller->*function)(request, *response);
             } catch (string exception) {
                 return controller->serverInternalError(exception);

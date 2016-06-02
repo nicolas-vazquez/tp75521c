@@ -273,4 +273,8 @@ namespace Mongoose {
     void Request::setBody(const Value &body) {
         Request::body = body;
     }
+
+    void Request::setData(const string &data) {
+        Request::data = data;
+    }
 }
