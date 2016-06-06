@@ -47,9 +47,10 @@ void AccountController::login(Request &request, JsonResponse &response) {
             responseFailCode = statusCode;
         }
 
-
         if (statusCode == status_codes::OK) {
             buildLoginResponse(username, password, responseBody);
+            account.setPassword(password);
+            account.save();
         } else if (statusCode == status_codes::Unauthorized) {
             errors.push_back(new UnauthorizedError());
         } else {
@@ -124,7 +125,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
         if (statusCode == status_codes::OK) {
             account.setPassword(password);
-            account.setUsername(username);
+            //account.setUsername(username);
             account.save();
             jsonResponse["message"] = "Successful signup";
         } else if (statusCode == status_codes::BadRequest) {
@@ -173,7 +174,7 @@ void AccountController::dislike(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
     if (tokenAuthenticate(request)) {
-        string tossedAccount = routeParams->at("id");
+        string tossedAccount = routeParams->at("username");
         Account account = request.getUser();
         account.addTossAccount(tossedAccount);
         account.save();
@@ -186,8 +187,7 @@ void AccountController::dislike(Request &request, JsonResponse &response) {
     }
 }
 
-void AccountController::validateAccount(string username, string password,
-                                        vector<Error *> &errors) {
+void AccountController::validateAccount(string username, string password, vector<Error *> &errors) {
     if (username.empty()) {
         EmptyParamError *emptyUserError = new EmptyParamError();
         emptyUserError->setMessage("Empty username");

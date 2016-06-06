@@ -1,13 +1,13 @@
-#include "Utils.h"
+#include "utils.h"
 
-string& Utils::arrayToString(vector <string> &array, string& result) {
+string& utils::serializeArray(vector<string> &array, string &result) {
     for (unsigned int i = 0; i < array.size(); i++) {
         result.append(array[i] + ",");
     }
     return result;
 }
 
-void Utils::stringToArray(string source, vector<string>& array) {
+void utils::deserializeArray(string source, vector<string> &array) {
     std::string delimiter = ",";
     size_t pos = 0;
     std::string token;
@@ -19,3 +19,11 @@ void Utils::stringToArray(string source, vector<string>& array) {
     }
 }
 
+bool utils::findValueInArray(vector<string> &array, string &value) {
+    for (std::vector<string>::iterator it = array.begin(); it != array.end(); ++it) {
+        if (*it == value) {
+            return 1;
+        }
+    }
+    return 0;
+}

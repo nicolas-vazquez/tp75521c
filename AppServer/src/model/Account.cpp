@@ -22,20 +22,21 @@ Value Account::toJSON() {
     std::string s1, s2, s3;
     value["username"] = username;
     value["password"] = sha256(password);
-    value["matches"] = Utils::arrayToString(this->matches, s1);
-    value["keptAccounts"] = Utils::arrayToString(this->keptAccounts, s2);
-    value["tossedAccounts"] = Utils::arrayToString(this->tossedAccounts, s3);
+    value["matches"] = utils::serializeArray(this->matches, s1);
+    value["keptAccounts"] = utils::serializeArray(this->keptAccounts, s2);
+    value["tossedAccounts"] = utils::serializeArray(this->tossedAccounts, s3);
     return value;
 }
 
 void Account::fromJSON(Value value) {
+    this->matches.clear();
     this->keptAccounts.clear();
     this->tossedAccounts.clear();
     this->username = value.get("username", "").asString();
     this->password = value.get("password", "").asString();
-    Utils::stringToArray(value.get("matches", "").asString(), this->matches);
-    Utils::stringToArray(value.get("keptAccounts", "").asString(), this->keptAccounts);
-    Utils::stringToArray(value.get("tossedAccounts", "").asString(), this->tossedAccounts);
+    utils::deserializeArray(value.get("matches", "").asString(), this->matches);
+    utils::deserializeArray(value.get("keptAccounts", "").asString(), this->keptAccounts);
+    utils::deserializeArray(value.get("tossedAccounts", "").asString(), this->tossedAccounts);
 }
 
 string Account::primaryKeyValue() {
@@ -98,7 +99,6 @@ const vector<string> &Account::getKeptAccounts() const {
 void Account::addMatch(const string &match) {
     this->matches.push_back(match);
 }
-
 
 Account::~Account() {
     this->matches.clear();
