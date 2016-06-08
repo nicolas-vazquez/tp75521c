@@ -16,7 +16,7 @@ echo "Search end"
 # Instalación de dependencias y herramientas
 echo "Installing tools and dependencies"
 apt-get update
-apt-get install -y --assume-yes --force-yes libsnappy-dev zlib1g-dev libbz2-dev libgflags-dev
+apt-get install -y --assume-yes --force-yes libsnappy-dev zlib1g-dev libbz2-dev libgflags-dev cmake
 
 # Instala las librerías
 echo "Installing libraries"
