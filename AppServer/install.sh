@@ -16,9 +16,9 @@ echo "Search end"
 # Instalación de dependencias y herramientas
 echo "Installing tools and dependencies"
 apt-get update
-apt-get install -y --assume-yes --force-yes libsnappy-dev zlib1g-dev libbz2-dev libgflags-dev cmake
+apt-get install -y --assume-yes --force-yes libsnappy-dev zlib1g-dev libbz2-dev libgflags-dev cmake libcppunit-doc libcppunit-dev lcov libboost-all-dev libssl-dev git
 
-# Instala las librerías
+## Instala las librerías
 echo "Installing libraries"
 apt-get install -y wget
 mkdir -p temp_install && \
@@ -34,7 +34,6 @@ sudo cp -r include/rocksdb /usr/include && \
 sudo install -m755 -D librocksdb.so.4.4.1 /usr/lib/librocksdb.so.4.4 && \
 sudo install -m755 -D librocksdb.so.4.4.1 /usr/lib/librocksdb.so && \
 sudo install -D -m644 LICENSE "/usr/share/licenses/$pkgname/LICENSE" && \
-
 
 cd $install_dir
 echo "Installing jsoncpp"
@@ -58,9 +57,6 @@ cd mongoose-cpp-master && \
 cmake . && \
 make install && \
 
-apt-get install -y libcppunit-doc libcppunit-dev
-apt-get install -y lcov
-apt-get install -y libboost-all-dev libssl-dev git
 
 
 echo "Installing Casablanca"

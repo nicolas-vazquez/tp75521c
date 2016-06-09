@@ -17,8 +17,6 @@ ENV LANG=en_GB.UTF-8 \
 RUN apt-get update && apt-get -y upgrade && apt-get -y install wget
 
 RUN apt-get -y --no-install-recommends install \
-  aptitude \
-  bash-completion \
   build-essential \
   clang-${LLVM_VERSION} \
   cmake \
@@ -42,7 +40,7 @@ RUN apt-get -y --no-install-recommends install \
   vim
 
 # Use install scripts
-RUN cd /home/AppServer && chmod 777 install.sh && ./install.sh -docker
+RUN cd /home/AppServer && ./install.sh -docker
 
 # Defino el directorio para correr
 WORKDIR /home/AppServer/build
