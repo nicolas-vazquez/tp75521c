@@ -60,7 +60,7 @@ python restTester.py
 ## Run with Docker ##
 
 
-With Docker instaled and from repository root.
+With Docker installed and from repository root.
 
 Build Docker container:
 
