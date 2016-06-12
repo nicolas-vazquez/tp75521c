@@ -2,13 +2,11 @@
 // Created by fedefarina on 26/03/16.
 //
 
-
 #include "AccountController.h"
 
 AccountController::AccountController() {
 
 }
-
 
 void AccountController::login(Request &request, JsonResponse &response) {
 
@@ -85,7 +83,6 @@ void AccountController::buildLoginResponse(const string &username, const string 
     responseBody["accessToken"] = accessToken;
 }
 
-
 void AccountController::signup(Request &request, JsonResponse &response) {
 
     vector<Error *> errors;
@@ -143,7 +140,6 @@ void AccountController::signup(Request &request, JsonResponse &response) {
         sendErrors(response, errors, responseFailCode);
     }
 }
-
 
 string AccountController::encodePassword(const string &password) const {
     return sha256(password);
@@ -221,5 +217,3 @@ bool AccountController::requireAuthentication(string method, string url) {
 AccountController::~AccountController() {
 
 }
-
-

@@ -8,6 +8,7 @@
 #include "../BaseController.h"
 #include <mongoose/Server.h>
 #include <mongoose/JsonResponse.h>
+#include "../../model/Chat.h"
 #include "../../model/Account.h"
 #include "../../errors/BadJsonError.h"
 #include "../../errors/ServerError.h"
@@ -33,6 +34,10 @@ public:
     void getMatches(Request &request, JsonResponse &response);
 
     void getCandidates(Request &request, JsonResponse &response);
+
+    void getMessages(Request &request, JsonResponse &response);
+
+    void update(Request &request, JsonResponse &response);
 
     void setup();
 

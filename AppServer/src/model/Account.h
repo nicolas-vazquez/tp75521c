@@ -5,7 +5,7 @@
 #ifndef APPSERVER_USER_H
 #define APPSERVER_USER_H
 
-#include "Entity.h"
+#include "Chat.h"
 #include "utils/utils.h"
 
 class Account : public Entity {

@@ -47,7 +47,6 @@ string Account::getName() {
     return "account/";
 }
 
-
 void Account::setUsername(const string &username) {
     Account::username = username;
 }
@@ -75,6 +74,15 @@ void Account::addKeepAccount(const string &keptAccount) {
                 this->addMatch(keptAccount);
                 otherAccount.addMatch(this->username);
                 otherAccount.save();
+                string chatId;
+                //FIXME This is not the best place to do so
+                if (this->username.compare(keptAccount) < 0) {
+                    chatId = username + ',' + keptAccount;
+                } else {
+                    chatId = keptAccount + ',' + username;
+                }
+                Chat chat(chatId);
+                chat.save();
             }
         }
     }

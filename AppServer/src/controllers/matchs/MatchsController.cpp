@@ -62,10 +62,56 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
     }
 }
 
+void MatchsController::update(Request &request, JsonResponse &response) {
+    vector<Error *> errors;
+    const Json::Value body = request.getBody();
+
+    if (tokenAuthenticate(request)) {
+        string message = body.get("message", "").asString();
+        string chatId = routeParams->at("id");
+        string sender = request.getUser().getUsername();
+        Chat chat(chatId);
+        chat.setUser(sender);
+        chat.update(message);
+        chat.save();
+        JsonResponse responseBody;
+        responseBody["message"] = "Successful updated chat";
+        sendResult(response, responseBody, HTTP_OK);
+    } else {
+        errors.push_back(new UnauthorizedError());
+        sendErrors(response, errors, status_codes::Unauthorized);
+    }
+}
+
+void MatchsController::getMessages(Request &request, JsonResponse &response) {
+    vector<Error *> errors;
+    JsonResponse responseBody;
+
+    if (tokenAuthenticate(request)) {
+        string chatId = routeParams->at("id");
+        Chat chat(chatId);
+        if (chat.fetch()) {
+            vector<string> messages = chat.getMessages();
+            Value jsonResponse;
+            for (unsigned int i = 0; i < messages.size(); i++) {
+                Value message(messages[i]);
+                jsonResponse.append(message);
+            }
+            responseBody["messages"] = jsonResponse;
+            sendResult(response, responseBody, HTTP_OK);
+        }
+    } else {
+        errors.push_back(new UnauthorizedError());
+        sendErrors(response, errors, status_codes::Unauthorized);
+    }
+}
+
 void MatchsController::setup() {
     setPrefix("/api/matches");
     addRouteResponse("GET", "/", MatchsController, getMatches, JsonResponse);
     addRouteResponse("GET", "/candidate", MatchsController, getCandidates, JsonResponse);
+    addRouteResponse("GET", "/{id}/messages", MatchsController, getMessages, JsonResponse);
+    addRouteResponse("PUT", "/{id}/message", MatchsController, update, JsonResponse);
 }
 
 MatchsController::~MatchsController() {
