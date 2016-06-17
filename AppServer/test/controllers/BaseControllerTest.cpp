@@ -7,7 +7,8 @@
 
 
 BaseControllerTest::BaseControllerTest() {
-
+   map<string, string> * routeParams = new map<string, string>();
+   
 }
 
 Request BaseControllerTest::makeDummyRequest(string data, string method) const {
@@ -27,7 +28,7 @@ Request BaseControllerTest::makeDummyRequest(string data, string method) const {
     reader.parse(data, body);
     request.setBody(body);
     request.setData(data);
-
+    
     return request;
 }
 

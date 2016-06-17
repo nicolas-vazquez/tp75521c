@@ -79,6 +79,44 @@ void AccountControllerTest::badJsonResponseTest() {
     CPPUNIT_ASSERT(code == "3");
 }
 
+void AccountControllerTest::signupTest() {
+    string data = "{}";
+    Request request = makeDummyRequest(data, "POST");
+
+    RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::signup);
+    JsonResponse *response = (JsonResponse *) requestHandler.process(request);
+
+    const Value &value = response->get("errors", "[]");
+    string code = value[0]["code"].asString();
+
+    delete (response);
+    CPPUNIT_ASSERT(code == "3");
+}
+
+void AccountControllerTest::likeTest() {
+    string data = "{\"username\":\"pepe\"}";
+    Request request = makeDummyRequest(data, "PUT");
+
+    RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::like);
+    JsonResponse *response = (JsonResponse *) requestHandler.process(request);
+
+    const Value &value = response->get("errors", "[]");
+    int code = response->getCode();
+    delete (response);
+    CPPUNIT_ASSERT(code == HTTP_OK);
+}
+
+void AccountControllerTest::dislikeTest() {
+    string data = "{\"username\":\"pepi\"}";
+    Request request = makeDummyRequest(data, "PUT");
+
+    RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::dislike);
+    JsonResponse *response = (JsonResponse *) requestHandler.process(request);
+    int code = response->getCode();
+    delete (response);
+    CPPUNIT_ASSERT(code == HTTP_OK);
+}
+
 
 void AccountControllerTest::tearDown() {
     testAccount.remove();

@@ -15,8 +15,10 @@ using namespace Mongoose;
 class BaseControllerTest {
 
 public:
-    BaseControllerTest();
+    map<string, string> * routeParams;
 
+    BaseControllerTest();
+    
     Request makeDummyRequest(string data, string method) const;
 
     virtual ~BaseControllerTest();

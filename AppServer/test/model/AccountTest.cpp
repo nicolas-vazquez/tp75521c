@@ -61,6 +61,16 @@ void AccountTest::tearDown() {
     testAccount.remove();
 }
 
+void AccountTest::getMatchesZero() {
+    const vector<string> &matches = testAccount.getMatches();    
+    CPPUNIT_ASSERT(matches.size() == 0);
+}
+
+void AccountTest::getMatchesMultiple(){
+    testAccount.addMatch("8");  
+    const vector<string> &matches = testAccount.getMatches();
+    CPPUNIT_ASSERT(matches.size() > 0);
+}
 
 AccountTest::~AccountTest() {
 

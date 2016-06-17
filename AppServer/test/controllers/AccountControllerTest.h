@@ -39,6 +39,12 @@ public:
     void loginEmptyPasswordTest();
 
     void badJsonResponseTest();
+    
+    void signupTest();
+
+    void likeTest();
+
+    void dislikeTest();
 
     virtual void tearDown();
 
