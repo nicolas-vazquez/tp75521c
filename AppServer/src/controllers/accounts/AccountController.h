@@ -47,6 +47,8 @@ public:
 
     void dislike(Request &request, JsonResponse &response);
 
+    void getInterests(Request &request, JsonResponse &response);
+
     void validateAccount(string username, string password, vector<Error *> &errors);
 
     void buildLoginResponse(const string &username, const string &password, JsonResponse &responseBody) const;
