@@ -21,6 +21,7 @@ CPPUNIT_TEST_SUITE(AccountTest);
 
 private:
     Account testAccount;
+    Account testAccount2;
 
 public:
     AccountTest();

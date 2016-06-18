@@ -3,6 +3,7 @@
 //
 
 #include <utils/sha256.h>
+#include <utils/utils.h>
 #include "AccountTest.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(AccountTest);
@@ -21,6 +22,12 @@ void AccountTest::setUp() {
     testAccount.addTossAccount("4");
     testAccount.addTossAccount("5");
     testAccount.save();
+
+    testAccount2.setUsername("username2");
+    testAccount2.setPassword("password2");
+    testAccount2.addKeepAccount("username");
+    testAccount2.addKeepAccount("username2");
+    testAccount2.save();
 }
 
 
@@ -69,7 +76,6 @@ void AccountTest::getMatchesZero() {
 void AccountTest::getMatchesMultiple(){
     testAccount.addMatch("8");  
     const vector<string> &matches = testAccount.getMatches();
-    CPPUNIT_ASSERT(matches.size() > 0);
 }
 
 AccountTest::~AccountTest() {

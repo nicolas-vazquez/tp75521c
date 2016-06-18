@@ -28,6 +28,7 @@ void AccessTokenTest::fromJSON() {
 void AccessTokenTest::toJSON() {
     AccessToken accessToken;
     accessToken.setToken("token");
+    CPPUNIT_ASSERT(accessToken.getToken() == "token");
     accessToken.fetch();
     CPPUNIT_ASSERT(accessToken.getUsername() == "username");
 }
