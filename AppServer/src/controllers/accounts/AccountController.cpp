@@ -2,6 +2,7 @@
 // Created by fedefarina on 26/03/16.
 //
 
+#include <utils/FileLogger.h>
 #include "AccountController.h"
 
 AccountController::AccountController() {
@@ -166,6 +167,7 @@ string AccountController::generateToken(const string &username, const string &pa
 
 void AccountController::like(Request &request, JsonResponse &response) {
     string keptAccount = routeParams->at("username");
+
     Account account = request.getUser();
     account.addKeepAccount(keptAccount);
     account.save();

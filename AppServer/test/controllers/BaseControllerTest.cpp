@@ -8,18 +8,6 @@
 
 
 BaseControllerTest::BaseControllerTest() {
-
-   //Coverage on logger
-   FileLogger::warn("Warning on BasecontrollerTest");
-   FileLogger::warn("Warning on Basecontroller", "BaseControllerTest");
-   FileLogger::info("Info on BasecontrollerTest");
-   FileLogger::info("Info on BasecontrollerTest", "BaseControllerTest");
-   FileLogger::log("Log on BasecontrollerTest", 0);
-   FileLogger::log("Log on BasecontrollerTest", 0, "BaseControllerTest");
-   FileLogger::debug("Debug on BasecontrollerTest");
-   FileLogger::debug("Debug on BasecontrollerTest", "BaseControllerTest");
-   FileLogger::error("Error on BasecontrollerTest");
-   FileLogger::error("Error on BasecontrollerTest", "BaseControllerTest");
 }
 
 Request BaseControllerTest::makeDummyRequest(string data, string method) const {

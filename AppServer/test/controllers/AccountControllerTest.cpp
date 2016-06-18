@@ -8,8 +8,6 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(AccountControllerTest);
 
 AccountControllerTest::AccountControllerTest() {
-routeParams = new map<string, string>();
-
 }
 
 void  AccountControllerTest::setUp() {
@@ -90,7 +88,9 @@ void AccountControllerTest::signupTest() {
 }
 
 void AccountControllerTest::likeTest() {
-    routeParams->insert(std::pair<string, string>("id", "pepe"));
+
+    accountController.routeParams->insert(std::pair<string, string>("username", "username"));
+
     string data = "{\"username\":\"pepe\"}";
     Request request = makeDummyRequest(data, "PUT");
 
@@ -102,7 +102,7 @@ void AccountControllerTest::likeTest() {
 }
 
 void AccountControllerTest::dislikeTest() {
-    routeParams->insert(std::pair<string, string>("id", "username"));
+    //routeParams->insert(std::pair<string, string>("id", "username"));
     string data = "{\"username\":\"pepi\"}";
     Request request = makeDummyRequest(data, "PUT");
 
@@ -115,9 +115,11 @@ void AccountControllerTest::dislikeTest() {
 
 void AccountControllerTest::getInterestsTest() {
     string data = "{\"username\":\"pepi\"}";
-    Request request = makeDummyRequest(data, "PUT");
 
-    RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::getInterests);
+    //routeParams->insert(std::pair<string, string>("username", "username"));
+    Request request = makeDummyRequest(data, "PUT");
+    RequestHandler<AccountController, JsonResponse> requestHandler(&accountController,
+                                                                   &AccountController::getInterests);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
     int code = response->getCode();
     delete (response);
