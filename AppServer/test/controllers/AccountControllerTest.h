@@ -14,7 +14,15 @@ using namespace CPPUNIT_NS;
 
 class AccountControllerTest : public TestFixture, BaseControllerTest {
 CPPUNIT_TEST_SUITE(AccountControllerTest);
+        CPPUNIT_TEST(loginValidCredentialsTest);
+        CPPUNIT_TEST(loginInvalidCredentialsTest);
+        CPPUNIT_TEST(loginEmptyUsernameTest);
+        CPPUNIT_TEST(loginEmptyPasswordTest);
+        CPPUNIT_TEST(badJsonResponseTest);
+        CPPUNIT_TEST(signupTest);
         CPPUNIT_TEST(likeTest);
+        CPPUNIT_TEST(dislikeTest);
+        CPPUNIT_TEST(getInterestsTest);                
     CPPUNIT_TEST_SUITE_END();
 
 private:

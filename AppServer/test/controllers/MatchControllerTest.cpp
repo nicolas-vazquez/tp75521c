@@ -14,7 +14,8 @@ void MatchControllerTest::getMessages() {
     string data = "{\"id\": \"2\"}";
     Request request = makeDummyRequest(data, "GET");
     RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getMessages);
-    //TODO routeParams is breaking the tests, refactor
+    matchsController.routeParams->insert(std::pair<string, string>("id", "username"));
+
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
     /*const Value &value = response->get("messages", "[]");
     string code = value[0]["code"].asString();
@@ -23,6 +24,8 @@ void MatchControllerTest::getMessages() {
 }
 
 void MatchControllerTest::getCandidates() {
+matchsController.routeParams->insert(std::pair<string, string>("id", "username"));
+
     string data = "";
     Request request = makeDummyRequest(data, "GET");
     RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getCandidates);
@@ -36,6 +39,8 @@ void MatchControllerTest::getCandidates() {
 }
 
 void MatchControllerTest::update() {
+    matchsController.routeParams->insert(std::pair<string, string>("id", "username"));
+
     string data = "{\"id\": \"2\", \"message\": \"Hola\"}";
     Request request = makeDummyRequest(data, "PUT");
     RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::update);
