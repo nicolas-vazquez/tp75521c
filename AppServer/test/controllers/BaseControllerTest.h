@@ -15,7 +15,6 @@ using namespace Mongoose;
 class BaseControllerTest {
 
 public:
-    map<string, string> * routeParams;
 
     BaseControllerTest();
     

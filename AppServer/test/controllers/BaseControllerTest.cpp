@@ -8,7 +8,7 @@
 
 
 BaseControllerTest::BaseControllerTest() {
-   map<string, string> * routeParams = new map<string, string>();
+
    //Coverage on logger
    FileLogger::warn("Warning on BasecontrollerTest");
    FileLogger::warn("Warning on Basecontroller", "BaseControllerTest");
