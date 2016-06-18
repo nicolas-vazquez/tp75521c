@@ -17,6 +17,8 @@ void MatchControllerTest::getMessages() {
     matchsController.routeParams->insert(std::pair<string, string>("id", "username"));
 
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
+
+    Response *response2 =  matchsController.process(request);
     /*const Value &value = response->get("messages", "[]");
     string code = value[0]["code"].asString();
     delete (response);*/

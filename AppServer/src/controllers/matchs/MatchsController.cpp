@@ -18,10 +18,6 @@ void MatchsController::getMatches(Request &request, JsonResponse &response) {
 void MatchsController::getCandidates(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
-    ostringstream s;
-    s << "Probando!!";
-    FileLogger::error(s.str());
-
     Account account = request.getUser();
     string_t address = ConnectionUtils::buildConnection();
     http::uri uri = http::uri(address);
