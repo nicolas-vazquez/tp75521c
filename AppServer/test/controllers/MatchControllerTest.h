@@ -14,6 +14,7 @@ using namespace CPPUNIT_NS;
 class MatchControllerTest : public TestFixture, BaseControllerTest {
 CPPUNIT_TEST_SUITE(MatchControllerTest);
         CPPUNIT_TEST(getMessages);
+        CPPUNIT_TEST(getCandidates);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -24,7 +25,7 @@ public:
     MatchControllerTest();
 
     virtual void setUp();
-    
+
     void getMessages();
 
     void getMatches();

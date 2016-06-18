@@ -29,6 +29,8 @@ using namespace http::client;
 class MatchsController : public BaseController {
 
 public:
+    virtual bool requireAuthentication(string method, string url) override;
+
     MatchsController();
 
     void getMatches(Request &request, JsonResponse &response);
