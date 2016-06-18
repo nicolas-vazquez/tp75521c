@@ -89,8 +89,16 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
     const Json::Value body = request.getBody();
 
+    unsigned int age = body.get("age", "").asUInt();
+    string name = body.get("name", "").asString();
+    string email = body.get("email", "").asString();
+    string gender = body.get("gender", "").asString();
     string username = body.get("username", "").asString();
     string password = body.get("password", "").asString();
+    string latitude = body.get("latitude", "").asString();
+    string longitude = body.get("longitude", "").asString();
+    string interests = body.get("interests", "").asString();
+    string photo_profile = body.get("photo_profile", "").asString();
     validateAccount(username, password, errors);
 
     if (!errors.empty()) {
@@ -102,7 +110,6 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
     int responseFailCode = status_codes::BadRequest;
 
-
     //If account is not fetched here, fetch the SharedServer to try to fetch
     if (!account.fetch()) {
         string_t address = ConnectionUtils::buildConnection();
@@ -110,8 +117,16 @@ void AccountController::signup(Request &request, JsonResponse &response) {
         http_client sharedServer(http::uri_builder(uri).append_path(U("/users")).to_uri());
 
         web::json::value bodyToShared;
+        bodyToShared["age"] = json::value::number(age);
+        bodyToShared["name"] = json::value::string(name);
+        bodyToShared["email"] = json::value::string(email);
+        bodyToShared["gender"] = json::value::string(gender);
         bodyToShared["username"] = json::value::string(username);
         bodyToShared["password"] = json::value::string(password);
+        bodyToShared["latitude"] = json::value::string(latitude);
+        bodyToShared["longitude"] = json::value::string(longitude);
+        bodyToShared["interests"] = json::value::string(interests);
+        bodyToShared["photo_profile"] = json::value::string(photo_profile);
         const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
 
         status_code statusCode = sharedResponse.status_code();
@@ -197,10 +212,37 @@ void AccountController::validateAccount(string username, string password, vector
     }
 }
 
+void AccountController::getInterests(Request &request, JsonResponse &response) {
+    vector<Error *> errors;
+
+    string_t address = ConnectionUtils::buildConnection();
+    http::uri uri = http::uri(address);
+    http_client sharedServer(http::uri_builder(uri).append_path(U("/interests")).to_uri());
+    const http_response &sharedResponse = sharedServer.request(methods::GET, U("")).get();
+
+    JsonResponse jsonResponse;
+    int responseFailCode = status_codes::BadRequest;
+    status_code statusCode = sharedResponse.status_code();
+
+    if (statusCode == status_codes::OK) {
+        jsonResponse["interests"] = sharedResponse.extract_json().get().at("interests").serialize();
+    } else {
+        responseFailCode = statusCode;
+        errors.push_back(new ServerError());
+    }
+
+    if (errors.empty()) {
+        sendResult(response, jsonResponse, HTTP_OK);
+    } else {
+        sendErrors(response, errors, responseFailCode);
+    }
+}
+
 void AccountController::setup() {
     setPrefix("/api/accounts");
     addRouteResponse("POST", "/signup", AccountController, signup, JsonResponse);
     addRouteResponse("POST", "/login", AccountController, login, JsonResponse);
+    addRouteResponse("GET", "/interests", AccountController, getInterests, JsonResponse);
     addRouteResponse("PUT", "/{username}/like", AccountController, like, JsonResponse);
     addRouteResponse("PUT", "/{username}/dislike", AccountController, dislike, JsonResponse);
 }
@@ -209,7 +251,8 @@ bool AccountController::requireAuthentication(string method, string url) {
 
     if (!BaseController::requireAuthentication(method, url) ||
         (!method.compare("POST") && !url.compare(getPrefix() + "/login"))
-        || (!method.compare("POST") && !url.compare(getPrefix() + "/signup"))) {
+        || (!method.compare("POST") && !url.compare(getPrefix() + "/signup"))
+        || (!method.compare("GET") && !url.compare(getPrefix() + "/interests"))) {
         return false;
     }
 }
