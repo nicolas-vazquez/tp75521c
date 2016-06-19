@@ -37,8 +37,21 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
             if (!utils::findValueInArray(tossedAccounts, username) &&
                 !utils::findValueInArray(keptAccounts, username)) {
                 Account candidate(username);
-                if (candidate.fetch() && candidate.getMatches().size() < 3) {
-                    //TODO Implement Entity MatchCount
+
+                MatchCount matchCount;
+
+                int criteria = 1;
+
+                if (matchCount.fetch()) {
+                    int totalMatchs = matchCount.getMatches();
+                    int totalAccounts = matchCount.getAccounts();
+                    criteria = totalMatchs / totalAccounts;
+                }
+
+                //Return empty object if criteria is not matched
+                jsonResponse["profile"] = Json::Value(Json::objectValue);
+
+                if (candidate.fetch() && candidate.getMatches().size() < criteria) {
                     jsonResponse["profile"] = responseBody.at("users").as_array()[i].serialize();
                 }
             }

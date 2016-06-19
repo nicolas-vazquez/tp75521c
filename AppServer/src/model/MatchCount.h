@@ -16,6 +16,10 @@ public:
 
     void addAccount();
 
+    int getMatches() const;
+
+    int getAccounts() const;
+
     virtual Value toJSON() override;
 
     virtual ~MatchCount();

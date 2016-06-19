@@ -36,3 +36,11 @@ void MatchCount::addMatch() {
 void MatchCount::addAccount() {
     this->accounts++;
 }
+
+int MatchCount::getMatches() const {
+    return matches;
+}
+
+int MatchCount::getAccounts() const {
+    return accounts;
+}
