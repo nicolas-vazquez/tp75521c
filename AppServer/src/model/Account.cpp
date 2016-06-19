@@ -83,6 +83,11 @@ void Account::addKeepAccount(const string &keptAccount) {
                 }
                 Chat chat(chatId);
                 chat.save();
+                MatchCount matchCount;
+                if (matchCount.fetch()) {
+                    matchCount.addMatch();
+                    matchCount.save();
+                }
             }
         }
     }

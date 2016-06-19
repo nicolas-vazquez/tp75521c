@@ -10,6 +10,7 @@
 #include <mongoose/JsonResponse.h>
 #include "../BaseController.h"
 #include "../../model/Account.h"
+#include "../../model/MatchCount.h"
 #include "../../errors/BadJsonError.h"
 #include "../../errors/ServerError.h"
 #include "../../errors/EmptyParamError.h"

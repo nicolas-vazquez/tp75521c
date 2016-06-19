@@ -101,6 +101,7 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
     JsonResponse jsonResponse;
     Account account(username);
+    MatchCount matchCount;
 
     int responseFailCode = status_codes::BadRequest;
 
@@ -127,6 +128,10 @@ void AccountController::signup(Request &request, JsonResponse &response) {
         }
 
         if (statusCode == status_codes::OK) {
+            if (matchCount.fetch()) {
+                matchCount.addAccount();
+                matchCount.save();
+            }
             account.setPassword(password);
             //account.setUsername(username);
             account.save();

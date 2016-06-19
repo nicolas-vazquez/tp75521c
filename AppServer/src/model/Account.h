@@ -6,6 +6,7 @@
 #define APPSERVER_USER_H
 
 #include "Chat.h"
+#include "MatchCount.h"
 #include "utils/utils.h"
 
 class Account : public Entity {
