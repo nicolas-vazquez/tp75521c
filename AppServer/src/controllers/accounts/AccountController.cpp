@@ -105,8 +105,6 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
     int responseFailCode = status_codes::BadRequest;
 
-    cout << "Hola" << endl;
-
     //If account is not fetched here, fetch the SharedServer to try to fetch
     if (!account.fetch()) {
         string_t address = ConnectionUtils::buildConnection();
@@ -133,7 +131,6 @@ void AccountController::signup(Request &request, JsonResponse &response) {
                 matchCount.save();
             }
             account.setPassword(password);
-            //account.setUsername(username);
             account.save();
             jsonResponse["message"] = "Successful signup";
         } else if (statusCode == status_codes::BadRequest) {
@@ -163,35 +160,24 @@ string AccountController::generateToken(const string &username, const string &pa
 void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
-    if (tokenAuthenticate(request)) {
-        string keptAccount = routeParams->at("username");
-        Account account = request.getUser();
-        account.addKeepAccount(keptAccount);
-        account.save();
-        JsonResponse responseBody;
-        responseBody["message"] = "Like successful";
-        sendResult(response, responseBody, HTTP_OK);
-    } else {
-        errors.push_back(new UnauthorizedError());
-        sendErrors(response, errors, status_codes::Unauthorized);
-    }
+    string keptAccount = routeParams->at("username");
+    Account account = request.getUser();
+    account.addKeepAccount(keptAccount);
+    account.save();
+    JsonResponse responseBody;
+    responseBody["message"] = "Like successful";
+    sendResult(response, responseBody, HTTP_OK);
 }
 
 void AccountController::dislike(Request &request, JsonResponse &response) {
     vector<Error *> errors;
-
-    if (tokenAuthenticate(request)) {
-        string tossedAccount = routeParams->at("username");
-        Account account = request.getUser();
-        account.addTossAccount(tossedAccount);
-        account.save();
-        JsonResponse responseBody;
-        responseBody["message"] = "Dislike successful";
-        sendResult(response, responseBody, HTTP_OK);
-    } else {
-        errors.push_back(new UnauthorizedError());
-        sendErrors(response, errors, status_codes::Unauthorized);
-    }
+    string tossedAccount = routeParams->at("username");
+    Account account = request.getUser();
+    account.addTossAccount(tossedAccount);
+    account.save();
+    JsonResponse responseBody;
+    responseBody["message"] = "Dislike successful";
+    sendResult(response, responseBody, HTTP_OK);
 }
 
 void AccountController::validateAccount(string username, string password, vector<Error *> &errors) {
