@@ -7,6 +7,7 @@
 
 #include <mongoose/JsonController.h>
 #include <mongoose/Server.h>
+#include <casablanca/cpprest/json.h>
 #include "../errors/Error.h"
 #include "../errors/BadJsonError.h"
 #include "../model/AccessToken.h"
@@ -15,6 +16,8 @@
 using namespace std;
 using namespace Json;
 using namespace Mongoose;
+
+typedef web::json::value WebJsonValue;
 
 class BaseController : public JsonController {
 

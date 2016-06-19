@@ -4,6 +4,7 @@
 
 #include "AccountController.h"
 
+
 AccountController::AccountController() {
 
 }
@@ -89,16 +90,9 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
     const Json::Value body = request.getBody();
 
-    unsigned int age = body.get("age", "").asUInt();
-    string name = body.get("name", "").asString();
-    string email = body.get("email", "").asString();
-    string gender = body.get("gender", "").asString();
     string username = body.get("username", "").asString();
     string password = body.get("password", "").asString();
-    string latitude = body.get("latitude", "").asString();
-    string longitude = body.get("longitude", "").asString();
-    string interests = body.get("interests", "").asString();
-    string photo_profile = body.get("photo_profile", "").asString();
+
     validateAccount(username, password, errors);
 
     if (!errors.empty()) {
@@ -110,24 +104,21 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 
     int responseFailCode = status_codes::BadRequest;
 
+    cout << "Hola" << endl;
+
     //If account is not fetched here, fetch the SharedServer to try to fetch
     if (!account.fetch()) {
         string_t address = ConnectionUtils::buildConnection();
         http::uri uri = http::uri(address);
         http_client sharedServer(http::uri_builder(uri).append_path(U("/users")).to_uri());
 
-        web::json::value bodyToShared;
-        bodyToShared["age"] = json::value::number(age);
-        bodyToShared["name"] = json::value::string(name);
-        bodyToShared["email"] = json::value::string(email);
-        bodyToShared["gender"] = json::value::string(gender);
-        bodyToShared["username"] = json::value::string(username);
-        bodyToShared["password"] = json::value::string(password);
-        bodyToShared["latitude"] = json::value::string(latitude);
-        bodyToShared["longitude"] = json::value::string(longitude);
-        bodyToShared["interests"] = json::value::string(interests);
-        bodyToShared["photo_profile"] = json::value::string(photo_profile);
-        const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
+        stringstream_t s;
+        s << U(body.toStyledString());
+
+        std::error_code errorCode;
+        WebJsonValue json = WebJsonValue::parse(s, errorCode);
+
+        const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), json).get();
 
         status_code statusCode = sharedResponse.status_code();
 
