@@ -2,7 +2,6 @@
 // Created by fedefarina on 17/04/16.
 //
 
-#include <utils/FileLogger.h>
 #include "MatchsController.h"
 #include "../../model/AccessToken.h"
 #include "../../errors/UnauthorizedError.h"
@@ -74,32 +73,43 @@ void MatchsController::update(Request &request, JsonResponse &response) {
     vector<Error *> errors;
     const Json::Value body = request.getBody();
 
-    string message = body.get("message", "").asString();
-    string chatId = routeParams->at("id");
-    string sender = request.getUser().getUsername();
-    Chat chat(chatId);
-    chat.setUser(sender);
-    chat.update(message);
-    chat.save();
-    JsonResponse responseBody;
-    responseBody["message"] = "Successful updated chat";
-    sendResult(response, responseBody, HTTP_OK);
+    if (tokenAuthenticate(request)) {
+        string message = body.get("message", "").asString();
+        string chatId = routeParams->at("id");
+        string sender = request.getUser().getUsername();
+        Chat chat(chatId);
+        chat.setUser(sender);
+        chat.update(message);
+        chat.save();
+        JsonResponse responseBody;
+        responseBody["message"] = "Successful updated chat";
+        sendResult(response, responseBody, HTTP_OK);
+    } else {
+        errors.push_back(new UnauthorizedError());
+        sendErrors(response, errors, status_codes::Unauthorized);
+    }
 }
 
 void MatchsController::getMessages(Request &request, JsonResponse &response) {
+    vector<Error *> errors;
     JsonResponse responseBody;
 
-    string chatId = routeParams->at("id");
-    Chat chat(chatId);
-    if (chat.fetch()) {
-        vector<string> messages = chat.getMessages();
-        Value jsonResponse;
-        for (unsigned int i = 0; i < messages.size(); i++) {
-            Value message(messages[i]);
-            jsonResponse.append(message);
+    if (tokenAuthenticate(request)) {
+        string chatId = routeParams->at("id");
+        Chat chat(chatId);
+        if (chat.fetch()) {
+            vector<string> messages = chat.getMessages();
+            Value jsonResponse;
+            for (unsigned int i = 0; i < messages.size(); i++) {
+                Value message(messages[i]);
+                jsonResponse.append(message);
+            }
+            responseBody["messages"] = jsonResponse;
+            sendResult(response, responseBody, HTTP_OK);
         }
-        responseBody["messages"] = jsonResponse;
-        sendResult(response, responseBody, HTTP_OK);
+    } else {
+        errors.push_back(new UnauthorizedError());
+        sendErrors(response, errors, status_codes::Unauthorized);
     }
 }
 
@@ -110,13 +120,6 @@ void MatchsController::setup() {
     addRouteResponse("GET", "/{id}/messages", MatchsController, getMessages, JsonResponse);
     addRouteResponse("PUT", "/{id}/message", MatchsController, update, JsonResponse);
 }
-
-
-bool MatchsController::requireAuthentication(string method, string url) {
-    //fixme
-    return false;
-}
-
 
 MatchsController::~MatchsController() {
 
