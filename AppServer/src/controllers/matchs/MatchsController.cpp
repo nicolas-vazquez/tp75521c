@@ -3,8 +3,6 @@
 //
 
 #include "MatchsController.h"
-#include "../../model/AccessToken.h"
-#include "../../errors/UnauthorizedError.h"
 
 MatchsController::MatchsController() {
 
@@ -42,17 +40,18 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
 
                 int criteria = 1;
 
+
                 if (matchCount.fetch()) {
                     int totalMatchs = matchCount.getMatches();
                     int totalAccounts = matchCount.getAccounts();
                     criteria = totalMatchs / totalAccounts;
                 }
 
-                //Return empty object if criteria is not matched
-                jsonResponse["profile"] = Json::Value(Json::objectValue);
-
-                if (candidate.fetch() && candidate.getMatches().size() < criteria) {
+                if (candidate.fetch() && candidate.getMatches().size() <= criteria) {
                     jsonResponse["profile"] = responseBody.at("users").as_array()[i].serialize();
+                }else{
+                    //Return empty object if criteria is not matched
+                    jsonResponse["profile"] = Json::Value(Json::objectValue);
                 }
             }
         }
@@ -70,46 +69,34 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
 }
 
 void MatchsController::update(Request &request, JsonResponse &response) {
-    vector<Error *> errors;
     const Json::Value body = request.getBody();
 
-    if (tokenAuthenticate(request)) {
-        string message = body.get("message", "").asString();
-        string chatId = routeParams->at("id");
-        string sender = request.getUser().getUsername();
-        Chat chat(chatId);
-        chat.setUser(sender);
-        chat.update(message);
-        chat.save();
-        JsonResponse responseBody;
-        responseBody["message"] = "Successful updated chat";
-        sendResult(response, responseBody, HTTP_OK);
-    } else {
-        errors.push_back(new UnauthorizedError());
-        sendErrors(response, errors, status_codes::Unauthorized);
-    }
+    string message = body.get("message", "").asString();
+    string chatId = routeParams->at("id");
+    string sender = request.getUser().getUsername();
+    Chat chat(chatId);
+    chat.setUser(sender);
+    chat.update(message);
+    chat.save();
+    JsonResponse responseBody;
+    responseBody["message"] = "Successful updated chat";
+    sendResult(response, responseBody, HTTP_OK);
 }
 
 void MatchsController::getMessages(Request &request, JsonResponse &response) {
-    vector<Error *> errors;
     JsonResponse responseBody;
 
-    if (tokenAuthenticate(request)) {
-        string chatId = routeParams->at("id");
-        Chat chat(chatId);
-        if (chat.fetch()) {
-            vector<string> messages = chat.getMessages();
-            Value jsonResponse;
-            for (unsigned int i = 0; i < messages.size(); i++) {
-                Value message(messages[i]);
-                jsonResponse.append(message);
-            }
-            responseBody["messages"] = jsonResponse;
-            sendResult(response, responseBody, HTTP_OK);
+    string chatId = routeParams->at("id");
+    Chat chat(chatId);
+    if (chat.fetch()) {
+        vector<string> messages = chat.getMessages();
+        Value jsonResponse;
+        for (unsigned int i = 0; i < messages.size(); i++) {
+            Value message(messages[i]);
+            jsonResponse.append(message);
         }
-    } else {
-        errors.push_back(new UnauthorizedError());
-        sendErrors(response, errors, status_codes::Unauthorized);
+        responseBody["messages"] = jsonResponse;
+        sendResult(response, responseBody, HTTP_OK);
     }
 }
 
