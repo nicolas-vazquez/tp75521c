@@ -17,6 +17,7 @@ class BaseControllerTest {
 public:
 
     BaseControllerTest();
+    void log();
     
     Request makeDummyRequest(string data, string method) const;
 

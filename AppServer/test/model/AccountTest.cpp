@@ -76,6 +76,7 @@ void AccountTest::getMatchesZero() {
 void AccountTest::getMatchesMultiple(){
     testAccount.addMatch("8");  
     const vector<string> &matches = testAccount.getMatches();
+    CPPUNIT_ASSERT(matches.size() == 1);
 }
 
 AccountTest::~AccountTest() {

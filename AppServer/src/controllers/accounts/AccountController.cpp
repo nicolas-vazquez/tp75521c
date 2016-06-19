@@ -161,7 +161,6 @@ string AccountController::generateToken(const string &username, const string &pa
 void AccountController::like(Request &request, JsonResponse &response) {
     string keptAccount = routeParams->at("username");
 
-    string keptAccount = routeParams->at("username");
     Account account = request.getUser();
     account.addKeepAccount(keptAccount);
     account.save();

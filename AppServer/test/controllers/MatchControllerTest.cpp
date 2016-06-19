@@ -15,29 +15,23 @@ void MatchControllerTest::getMessages() {
     Request request = makeDummyRequest(data, "GET");
     RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getMessages);
     matchsController.routeParams->insert(std::pair<string, string>("id", "username"));
-
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
-
     Response *response2 =  matchsController.process(request);
-    /*const Value &value = response->get("messages", "[]");
-    string code = value[0]["code"].asString();
-    delete (response);*/
-    CPPUNIT_ASSERT(true);
+    const Value &value = response->get("messages", "[]");
+    CPPUNIT_ASSERT(value.size() == 0);
 }
 
 void MatchControllerTest::getCandidates() {
-matchsController.routeParams->insert(std::pair<string, string>("id", "username"));
+    matchsController.routeParams->insert(std::pair<string, string>("id", "username"));
 
     string data = "";
     Request request = makeDummyRequest(data, "GET");
     RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getCandidates);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
+    int code = response->getCode();
+    delete (response);
 
-
-    /*const Value &value = response->get("errors", "[]");
-    string code = value[0]["code"].asString();
-    delete (response);*/
-    CPPUNIT_ASSERT(true);
+    CPPUNIT_ASSERT(code == HTTP_SERVER_ERROR);
 }
 
 void MatchControllerTest::update() {
@@ -47,10 +41,8 @@ void MatchControllerTest::update() {
     Request request = makeDummyRequest(data, "PUT");
     RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::update);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
-    /*const Value &value = response->get("message", "[]");
-    string code = value[0]["code"].asString();
-    delete (response);
-    //CPPUNIT_ASSERT(code == "2");*/
+    const Value &value = response->get("data", "[]");
+    CPPUNIT_ASSERT(value["message"] == "Successful updated chat");
 }
 
 void MatchControllerTest::getMatches() {
@@ -58,10 +50,15 @@ void MatchControllerTest::getMatches() {
     Request request = makeDummyRequest(data, "GET");
     RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getMatches);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
-    /*const Value &value = response->get("errors", "[]");
-    string code = value[0]["code"].asString();
+    int code = response->getCode();
     delete (response);
-    CPPUNIT_ASSERT(code == "2");*/
+   
+    CPPUNIT_ASSERT(code == HTTP_OK);
+}
+
+void  MatchControllerTest::testLog() {
+    log();
+    CPPUNIT_ASSERT(true);
 }
 
 void  MatchControllerTest::setUp() {

@@ -28,8 +28,8 @@ void EntityTest::fetched() {
 
 void EntityTest::notFetched() {
     Account account;
-    //An account with no userId should not be fetched
-    CPPUNIT_ASSERT(!account.fetch());
+    //An account with no userId should be fetched
+    CPPUNIT_ASSERT(account.fetch());
 }
 
 

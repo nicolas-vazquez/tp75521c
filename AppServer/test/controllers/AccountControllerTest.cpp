@@ -34,10 +34,10 @@ void AccountControllerTest::loginInvalidCredentialsTest() {
     Request request = makeDummyRequest(data, "POST");
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::login);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
-    /*const Value &value = response->get("errors", "[]");
-    string code = value[0]["code"].asString();
+    int code = response->getCode();
     delete (response);
-    CPPUNIT_ASSERT(code == "5");*/
+
+    CPPUNIT_ASSERT(code == HTTP_SERVER_ERROR);
 }
 
 void AccountControllerTest::loginEmptyUsernameTest() {
@@ -96,7 +96,8 @@ void AccountControllerTest::likeTest() {
 
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::like);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
-
+    const Value &value = response->get("data", "[]");
+    CPPUNIT_ASSERT(value["message"] == "Like successful");
 }
 
 void AccountControllerTest::dislikeTest() {
@@ -107,7 +108,8 @@ void AccountControllerTest::dislikeTest() {
 
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::dislike);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
-
+    const Value &value = response->get("data", "[]");
+    CPPUNIT_ASSERT(value["message"] == "Dislike successful");
 }
 
 void AccountControllerTest::getInterestsTest() {
@@ -118,7 +120,9 @@ void AccountControllerTest::getInterestsTest() {
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController,
                                                                    &AccountController::getInterests);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
-
+    int code = response->getCode();
+    delete (response);
+    CPPUNIT_ASSERT(code == 500);
 }
 
 
