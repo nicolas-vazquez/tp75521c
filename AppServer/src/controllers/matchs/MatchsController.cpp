@@ -21,7 +21,8 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
     Account account = request.getUser();
     string_t address = ConnectionUtils::buildConnection();
     http::uri uri = http::uri(address);
-    string_t url = U("/users/" + account.getUsername() + "/candidate");
+
+    string_t url = U("/users/" + account.getUsername() + "/candidates");
     http_client sharedServer(http::uri_builder(uri).append_path(url).to_uri());
 
     const http_response &sharedResponse = sharedServer.request(methods::GET, U("")).get();
@@ -37,12 +38,22 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
             if (!utils::findValueInArray(tossedAccounts, username) &&
                 !utils::findValueInArray(keptAccounts, username)) {
                 Account candidate(username);
-                if (candidate.fetch() && candidate.getMatches().size() < 3) { //TODO Implement Entity MatchCount
+
+                MatchCount matchCount;
+
+                int criteria = 1;
+
+                if (matchCount.fetch()) {
+                    int totalMatchs = matchCount.getMatches();
+                    int totalAccounts = matchCount.getAccounts();
+                    criteria = totalMatchs / totalAccounts;
+                }
+
+                //Return empty object if criteria is not matched
+                jsonResponse["profile"] = Json::Value(Json::objectValue);
+
+                if (candidate.fetch() && candidate.getMatches().size() < criteria) {
                     jsonResponse["profile"] = responseBody.at("users").as_array()[i].serialize();
-//                        jsonResponse["profile"]["name"] = responseBody.at("users").as_array()[i].at("name").as_string();
-//                        jsonResponse["profile"]["username"] = responseBody.at("users").as_array()[i].at("alias").as_string();
-//                        jsonResponse["profile"]["age"] = responseBody.at("users").as_array()[i].at("age").as_number();
-//                        jsonResponse["profile"]["sex"] = responseBody.at("users").as_array()[i].at("sex").as_string();
                 }
             }
         }
@@ -95,7 +106,7 @@ void MatchsController::getMessages(Request &request, JsonResponse &response) {
 void MatchsController::setup() {
     setPrefix("/api/matches");
     addRouteResponse("GET", "/", MatchsController, getMatches, JsonResponse);
-    addRouteResponse("GET", "/candidate", MatchsController, getCandidates, JsonResponse);
+    addRouteResponse("GET", "/candidates", MatchsController, getCandidates, JsonResponse);
     addRouteResponse("GET", "/{id}/messages", MatchsController, getMessages, JsonResponse);
     addRouteResponse("PUT", "/{id}/message", MatchsController, update, JsonResponse);
 }
