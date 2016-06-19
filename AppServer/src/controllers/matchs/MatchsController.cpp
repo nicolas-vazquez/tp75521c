@@ -30,8 +30,11 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
         web::json::value responseBody = sharedResponse.extract_json().get();
         vector<string> keptAccounts = account.getKeptAccounts();
         vector<string> tossedAccounts = account.getTossedAccounts();
-        for (unsigned int i = 0; i < responseBody.at("users").size(); i++) {
-            string username = responseBody.at("users").at(i).at("alias").as_string();
+
+        int index = 0;
+        bool found = false;
+        while (!found && index < responseBody.at("users").size()) {
+            string username = responseBody.at("users").at(index).at("alias").as_string();
             if (!utils::findValueInArray(tossedAccounts, username) &&
                 !utils::findValueInArray(keptAccounts, username)) {
                 Account candidate(username);
@@ -40,7 +43,6 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
 
                 int criteria = 1;
 
-
                 if (matchCount.fetch()) {
                     int totalMatchs = matchCount.getMatches();
                     int totalAccounts = matchCount.getAccounts();
@@ -48,12 +50,15 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
                 }
 
                 if (candidate.fetch() && candidate.getMatches().size() <= criteria) {
-                    jsonResponse["profile"] = responseBody.at("users").as_array()[i].serialize();
-                }else{
-                    //Return empty object if criteria is not matched
-                    jsonResponse["profile"] = Json::Value(Json::objectValue);
+                    jsonResponse["profile"] = responseBody.at("users").as_array()[index].serialize();
+                    found = true;
                 }
             }
+            index++;
+        }
+        if (!found) {
+            //Return empty object if criteria is not matched
+            jsonResponse["profile"] = Json::Value(Json::objectValue);
         }
     } else if (statusCode == status_codes::BadRequest) {
         errors.push_back(new UnauthorizedError());
