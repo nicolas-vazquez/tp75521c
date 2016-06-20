@@ -85,8 +85,6 @@ class AccountTest(unittest.TestCase):
 		payload = {'username': "'"+ self._username +"'",'password':'pass'}
 		r = requests.post(self.__api_base_url + self._url_usuario + "login", json=payload)
 		self.assertEqual(r.status_code, 200)
-		data = json.loads(r.text)
-		self.assertTrue(data["data"]["accessToken"])
 
 	#Failed login bad credentials
 	def test_9(self):
@@ -144,19 +142,23 @@ class AccountTest(unittest.TestCase):
 		self.assertEqual(data["errors"][0]["code"], 5)
 		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
 
-	#Successful like TODO AUTH
+	#Successful like and dislike 
 	def test_16(self):
 		payload = {'username': "'"+ self._username +"'",'password':'pass'}
 		r = requests.post(self.__api_base_url + self._url_usuario + "login", json=payload)
 		data = json.loads(r.text)
 		token = data["data"]["accessToken"]
 
-		auth = {'Authorization': "'" + token + "'"}
+		auth = {'Authorization': token}
 		r = requests.put(self.__api_base_url + self._url_usuario +  self._usernamelike + "/like", headers=auth)
-		self.assertEqual(r.status_code, 401)
+		self.assertEqual(r.status_code, 200)
 		data = json.loads(r.text)
-		self.assertEqual(data["errors"][0]["code"], 5)
-		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+		self.assertEqual(data["data"]["message"], "Like successful")
+
+		r = requests.put(self.__api_base_url + self._url_usuario +  self._usernamelike + "/dislike", headers=auth)
+		self.assertEqual(r.status_code, 200)
+		data = json.loads(r.text)
+		self.assertEqual(data["data"]["message"], "Dislike successful")
 
 	#Unauthorized dislike
 	def test_17(self):
@@ -173,16 +175,3 @@ class AccountTest(unittest.TestCase):
 		self.assertEqual(data["errors"][0]["code"], 5)
 		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
 
-	#Successful dislike TODO auth
-	def test_19(self):
-		payload = {'username': "'"+ self._username +"'",'password':'pass'}
-		r = requests.post(self.__api_base_url + self._url_usuario + "login", json=payload)
-		data = json.loads(r.text)
-		token = data["data"]["accessToken"]
-
-		auth = {'Authorization': "'" + token + "'"}
-		r = requests.put(self.__api_base_url + self._url_usuario +  self._usernamelike + "/dislike", headers=auth)
-		self.assertEqual(r.status_code, 401)
-		data = json.loads(r.text)
-		self.assertEqual(data["errors"][0]["code"], 5)
-		self.assertEqual(data["errors"][0]["message"], "Bad credentials")

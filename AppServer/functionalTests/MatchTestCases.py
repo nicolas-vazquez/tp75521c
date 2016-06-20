@@ -21,6 +21,7 @@ class MatchTest(unittest.TestCase):
 		data = json.loads(r.text)
 		cls._token = data["data"]["accessToken"]
 		
+		
 	#Bad credentials matches list	
 	def test_1(self):
 		r = requests.get(self.__api_base_url + self._url_matches)
@@ -55,40 +56,34 @@ class MatchTest(unittest.TestCase):
 		self.assertEquals(data["errors"][0]["code"], 5)
 		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
 
-	#Successful matches list TODO AUTH	
+	#Successful matches list 	
 	def test_5(self):
-		payload = {'Authorization': "'" + self._token + "'"}
+		payload = {'Authorization': self._token}
 		r = requests.get(self.__api_base_url + self._url_matches, headers=payload)
-		self.assertEqual(r.status_code, 401)
-		data = json.loads(r.text)
-		self.assertEquals(data["errors"][0]["code"], 5)
-		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+		self.assertEqual(r.status_code, 200)
 
-	#Successful candidates list	 TODO AUTH
+	#Successful candidates list	 
 	def test_6(self):
-		payload = {'Authorization': "'" + self._token + "'"}
+		payload = {'Authorization': self._token}
 		r = requests.get(self.__api_base_url + self._url_matches + "candidates", headers=payload)
-		self.assertEqual(r.status_code, 401)
+		self.assertEqual(r.status_code, 200)
 		data = json.loads(r.text)
-		self.assertEquals(data["errors"][0]["code"], 5)
-		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+		self.assertTrue(data)
 
-	#Successful messages from user	 TODO AUTH
+	#Successful messages from user	 
 	def test_7(self):
-		payload = {'Authorization': "'" + self._token + "'"}
+		payload = {'Authorization': self._token}
 		user_id = "27"
 		r = requests.get(self.__api_base_url + self._url_matches +  user_id + "/messages", headers=payload)
-		self.assertEqual(r.status_code, 401)
+		self.assertEqual(r.status_code, 200)
 		data = json.loads(r.text)
-		self.assertEquals(data["errors"][0]["code"], 5)
-		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+		self.assertTrue(data["data"]["messages"])
 
-	#Successful message to user	 TODO AUTH
+	#Successful message to user	 
 	def test_8(self):
-		payload = {'Authorization': "'" + self._token + "'"}
+		payload = {'Authorization': self._token }
 		user_id = "27"
 		r = requests.put(self.__api_base_url + self._url_matches +  user_id + "/message", headers=payload)
-		self.assertEqual(r.status_code, 401)
+		self.assertEqual(r.status_code, 200)
 		data = json.loads(r.text)
-		self.assertEquals(data["errors"][0]["code"], 5)
-		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+		self.assertEqual(data["data"]["message"], "Successful updated chat")
