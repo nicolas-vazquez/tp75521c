@@ -33,8 +33,10 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
 
         int index = 0;
         bool found = false;
-        while (!found && index < responseBody.at("users").size()) {
-            string username = responseBody.at("users").at(index).at("alias").as_string();
+        json::value &users = responseBody.at("users");
+
+        while (!found && index < users.size()) {
+            string username = users.at(index).at("alias").as_string();
             if (!utils::findValueInArray(tossedAccounts, username) &&
                 !utils::findValueInArray(keptAccounts, username)) {
                 Account candidate(username);
@@ -50,16 +52,18 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
                 }
 
                 if (candidate.fetch() && candidate.getMatches().size() <= criteria) {
-                    jsonResponse["profile"] = responseBody.at("users").as_array()[index].serialize();
+                    jsonResponse["profile"] = users.as_array()[index].serialize();
                     found = true;
                 }
             }
             index++;
         }
+
         if (!found) {
             //Return empty object if criteria is not matched
             jsonResponse["profile"] = Json::Value(Json::objectValue);
         }
+
     } else if (statusCode == status_codes::BadRequest) {
         errors.push_back(new UnauthorizedError());
     } else {

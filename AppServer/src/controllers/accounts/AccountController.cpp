@@ -22,67 +22,60 @@ void AccountController::login(Request &request, JsonResponse &response) {
         return sendErrors(response, errors, status_codes::BadRequest);
     }
 
-    Account account(username);
+
     JsonResponse responseBody;
 
     int responseFailCode = status_codes::Unauthorized;
 
-    if (!account.fetch()) {
+    string_t address = ConnectionUtils::buildConnection();
 
-        string_t address = ConnectionUtils::buildConnection();
+    http::uri uri = http::uri(address);
+    http_client sharedServer(http::uri_builder(uri).append_path(U("/login")).to_uri());
 
-        http::uri uri = http::uri(address);
-        http_client sharedServer(http::uri_builder(uri).append_path(U("/login")).to_uri());
+    web::json::value bodyToShared;
+    bodyToShared["username"] = json::value::string(username);
+    bodyToShared["password"] = json::value::string(password);
 
-        web::json::value bodyToShared;
-        bodyToShared["username"] = json::value::string(username);
-        bodyToShared["password"] = json::value::string(password);
+    const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
 
-        const http_response &sharedResponse = sharedServer.request(methods::POST, U(""), bodyToShared).get();
+    status_code statusCode = sharedResponse.status_code();
 
-        status_code statusCode = sharedResponse.status_code();
+    if (statusCode != status_codes::OK) {
+        responseFailCode = statusCode;
+    }
 
-        if (statusCode != status_codes::OK) {
-            responseFailCode = statusCode;
-        }
+    if (statusCode == status_codes::OK) {
 
-        if (statusCode == status_codes::OK) {
-            buildLoginResponse(username, password, responseBody);
-            account.setPassword(password);
-            account.save();
-        } else if (statusCode == status_codes::Unauthorized) {
-            errors.push_back(new UnauthorizedError());
-        } else {
-            errors.push_back(new ServerError());
-        }
+        const string &accessToken = generateToken(username, password);
 
-        if (errors.empty()) {
-            sendResult(response, responseBody, HTTP_OK);
-        } else {
-            sendErrors(response, errors, responseFailCode);
-        }
+        //Save account locally
+        Account account(username);
+        account.setPassword(password);
+        account.save();
 
+        //Generate a new accessToken in every login
+        AccessToken token;
+        token.setToken(accessToken);
+        token.setUsername(username);
+        token.save();
+
+        responseBody["message"] = "Successful login";
+        responseBody["profile"] = sharedResponse.extract_json().get().serialize();
+        responseBody["accessToken"] = accessToken;
+
+    } else if (statusCode == status_codes::Unauthorized) {
+        errors.push_back(new UnauthorizedError());
     } else {
-        if (account.getPassword() != encodePassword(password)) {
-            errors.push_back(new UnauthorizedError());
-        } else {
-            buildLoginResponse(username, password, responseBody);
-            sendResult(response, responseBody, HTTP_OK);
-        }
+        errors.push_back(new ServerError());
+    }
 
+    if (errors.empty()) {
+        sendResult(response, responseBody, HTTP_OK);
+    } else {
+        sendErrors(response, errors, responseFailCode);
     }
 }
 
-void AccountController::buildLoginResponse(const string &username, const string &password,
-                                           JsonResponse &responseBody) const {
-    responseBody["message"] = "Successful login";
-    const string &accessToken = generateToken(username, password);
-    AccessToken token;
-    token.setToken(accessToken);
-    token.setUsername(username);
-    token.save();
-    responseBody["accessToken"] = accessToken;
-}
 
 void AccountController::signup(Request &request, JsonResponse &response) {
 
@@ -149,17 +142,11 @@ void AccountController::signup(Request &request, JsonResponse &response) {
     }
 }
 
-string AccountController::encodePassword(const string &password) const {
-    return sha256(password);
-}
-
 string AccountController::generateToken(const string &username, const string &password) const {
     return sha256(username + password);
 }
 
 void AccountController::like(Request &request, JsonResponse &response) {
-    vector<Error *> errors;
-
     string keptAccount = routeParams->at("username");
     Account account = request.getUser();
     account.addKeepAccount(keptAccount);
@@ -170,7 +157,6 @@ void AccountController::like(Request &request, JsonResponse &response) {
 }
 
 void AccountController::dislike(Request &request, JsonResponse &response) {
-    vector<Error *> errors;
     string tossedAccount = routeParams->at("username");
     Account account = request.getUser();
     account.addTossAccount(tossedAccount);
