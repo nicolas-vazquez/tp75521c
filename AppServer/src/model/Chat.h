@@ -1,6 +1,7 @@
 #ifndef APPSERVER_CONVERSATION_H
 #define APPSERVER_CONVERSATION_H
 
+#include <ctime>
 #include "Entity.h"
 #include <utils/utils.h>
 
@@ -9,16 +10,18 @@ class Chat : public Entity {
 private:
     string id;
     string sender;
-    vector<string> messages;
+    string messages;
 
 public:
     Chat(const string& id);
+
+    Chat(const string& u1, const string& u2);
 
     void setUser(const string &sender);
 
     void update(const string &message);
 
-    const vector<string> & getMessages() const;
+    const string& getMessages() const;
 
     virtual Value toJSON() override;
 

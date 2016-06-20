@@ -1,20 +1,26 @@
 #include "Chat.h"
 
 Chat::Chat(const string &id) {
-    this->messages.empty();
+    this->messages = "";
     this->id = id;
+}
+
+Chat::Chat(const string &u1, const string &u2) {
+    if (u1.compare(u2) < 0) {
+        this->id = u1 + ',' + u2;
+    } else {
+        this->id = u2 + ',' + u1;
+    }
 }
 
 Value Chat::toJSON() {
     Value value;
-    string s1;
-    value["messages"] = utils::serializeArray(this->messages, s1);
+    value["messages"] = this->messages;
     return value;
 }
 
 void Chat::fromJSON(Value value) {
-    this->messages.clear();
-    utils::deserializeArray(value.get("messages", "").asString(), this->messages);
+    this->messages = value.get("messages", "").asString();
 }
 
 void Chat::setUser(const string &sender) {
@@ -22,14 +28,16 @@ void Chat::setUser(const string &sender) {
 }
 
 void Chat::update(const string &message) {
-    //TODO Store new date in the message
+    time_t now = time(0);
+    char* dt = ctime(&now);
     Value value;
+    value["time"] = dt;
     value["sender"] = this->sender;
     value["message"] = message;
-    this->messages.push_back(value.toStyledString());
+    this->messages.append(value.asString());
 }
 
-const vector<string> &Chat::getMessages() const {
+const string &Chat::getMessages() const {
     return this->messages;
 }
 

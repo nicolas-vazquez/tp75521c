@@ -9,7 +9,22 @@ MatchsController::MatchsController() {
 }
 
 void MatchsController::getMatches(Request &request, JsonResponse &response) {
-    //TODO
+    vector<string> matches = request.getUser().getMatches();
+    string_t address = ConnectionUtils::buildConnection();
+    http::uri uri = http::uri(address);
+    JsonResponse jsonResponse;
+    jsonResponse["matches"] = Json::Value(Json::arrayValue);
+    for (std::vector<string>::iterator it = matches.begin(); it != matches.end(); ++it) {
+        string_t url = U("/users/" + *it + "/profile");
+        http_client sharedServer(http::uri_builder(uri).append_path(url).to_uri());
+        const http_response &sharedResponse = sharedServer.request(methods::GET, U("")).get();
+        status_code statusCode = sharedResponse.status_code();
+        web::json::value responseBody = sharedResponse.extract_json().get();
+        if (statusCode == status_codes::OK) {
+            jsonResponse["matches"].append(responseBody.serialize());
+        }
+    }
+    sendResult(response, jsonResponse, HTTP_OK);
 }
 
 void MatchsController::getCandidates(Request &request, JsonResponse &response) {
@@ -31,7 +46,7 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
         vector<string> keptAccounts = account.getKeptAccounts();
         vector<string> tossedAccounts = account.getTossedAccounts();
 
-        int index = 0;
+        size_t index = 0;
         bool found = false;
         json::value &users = responseBody.at("users");
 
@@ -40,9 +55,7 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
             if (!utils::findValueInArray(tossedAccounts, username) &&
                 !utils::findValueInArray(keptAccounts, username)) {
                 Account candidate(username);
-
                 MatchCount matchCount;
-
                 int criteria = 1;
 
                 if (matchCount.fetch()) {
@@ -93,20 +106,20 @@ void MatchsController::update(Request &request, JsonResponse &response) {
 }
 
 void MatchsController::getMessages(Request &request, JsonResponse &response) {
-    JsonResponse responseBody;
-
-    string chatId = routeParams->at("id");
-    Chat chat(chatId);
-    if (chat.fetch()) {
-        vector<string> messages = chat.getMessages();
-        Value jsonResponse;
-        for (unsigned int i = 0; i < messages.size(); i++) {
-            Value message(messages[i]);
-            jsonResponse.append(message);
-        }
-        responseBody["messages"] = jsonResponse;
-        sendResult(response, responseBody, HTTP_OK);
-    }
+//    JsonResponse responseBody;
+//
+//    string chatId = routeParams->at("id");
+//    Chat chat(chatId);
+//    if (chat.fetch()) {
+//        //vector<string> messages = chat.getMessages();
+//        Value jsonResponse;
+//        for (unsigned int i = 0; i < messages.size(); i++) {
+//            Value message(messages[i]);
+//            jsonResponse.append(message);
+//        }
+//        responseBody["messages"] = jsonResponse;
+//        sendResult(response, responseBody, HTTP_OK);
+//    }
 }
 
 void MatchsController::setup() {

@@ -22,7 +22,6 @@ void AccountController::login(Request &request, JsonResponse &response) {
         return sendErrors(response, errors, status_codes::BadRequest);
     }
 
-
     JsonResponse responseBody;
 
     int responseFailCode = status_codes::Unauthorized;
@@ -45,7 +44,6 @@ void AccountController::login(Request &request, JsonResponse &response) {
     }
 
     if (statusCode == status_codes::OK) {
-
         const string &accessToken = generateToken(username, password);
 
         //Save account locally

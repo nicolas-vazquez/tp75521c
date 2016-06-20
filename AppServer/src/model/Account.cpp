@@ -74,14 +74,7 @@ void Account::addKeepAccount(const string &keptAccount) {
                 this->addMatch(keptAccount);
                 otherAccount.addMatch(this->username);
                 otherAccount.save();
-                string chatId;
-                //FIXME This is not the best place to do so
-                if (this->username.compare(keptAccount) < 0) {
-                    chatId = username + ',' + keptAccount;
-                } else {
-                    chatId = keptAccount + ',' + username;
-                }
-                Chat chat(chatId);
+                Chat chat(this->username, keptAccount);
                 chat.save();
                 MatchCount matchCount;
                 if (matchCount.fetch()) {
