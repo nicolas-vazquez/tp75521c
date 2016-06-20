@@ -144,14 +144,19 @@ class AccountTest(unittest.TestCase):
 		self.assertEqual(data["errors"][0]["code"], 5)
 		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
 
-	#Successful like TODO
-	#def test_16(self):
-	#	payload = {'username': "'"+ self._username +"'",'password':'pass'}
-	#	r = requests.put(self.__api_base_url + self._url_usuario +  self._usernamelike + "/like", auth=("'"+ self._username +"'", 'pass'))
-	#	self.assertEqual(r.status_code, 200)
-	#	data = json.loads(r.text)
-	#	self.assertEqual(data["errors"][0]["code"], 5)
-	#	self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+	#Successful like TODO AUTH
+	def test_16(self):
+		payload = {'username': "'"+ self._username +"'",'password':'pass'}
+		r = requests.post(self.__api_base_url + self._url_usuario + "login", json=payload)
+		data = json.loads(r.text)
+		token = data["data"]["accessToken"]
+
+		auth = {'Authorization': "'" + token + "'"}
+		r = requests.put(self.__api_base_url + self._url_usuario +  self._usernamelike + "/like", headers=auth)
+		self.assertEqual(r.status_code, 401)
+		data = json.loads(r.text)
+		self.assertEqual(data["errors"][0]["code"], 5)
+		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
 
 	#Unauthorized dislike
 	def test_17(self):
@@ -168,15 +173,16 @@ class AccountTest(unittest.TestCase):
 		self.assertEqual(data["errors"][0]["code"], 5)
 		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
 
-	#Successful dislike TODO
-	#def test_19(self):
-	#	payload = {'username': "'"+ self._username +"'",'password':'pass'}
-	#	r = requests.post(self.__api_base_url + self._url_usuario + "login", json=payload)
-	#	data = json.loads(r.text)
-	#	token = data["data"]["accessToken"]
-	#	payload = {'Authorization': "'auth_token "+ token +"'"}
-	#	r = requests.put(self.__api_base_url + self._url_usuario +  self._usernamelike + "/dislike", headers=payload)
-	#	self.assertEqual(r.status_code, 200)
-	#	data = json.loads(r.text)
-	#	self.assertEqual(data["errors"][0]["code"], 5)
-	#	self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+	#Successful dislike TODO auth
+	def test_19(self):
+		payload = {'username': "'"+ self._username +"'",'password':'pass'}
+		r = requests.post(self.__api_base_url + self._url_usuario + "login", json=payload)
+		data = json.loads(r.text)
+		token = data["data"]["accessToken"]
+
+		auth = {'Authorization': "'" + token + "'"}
+		r = requests.put(self.__api_base_url + self._url_usuario +  self._usernamelike + "/dislike", headers=auth)
+		self.assertEqual(r.status_code, 401)
+		data = json.loads(r.text)
+		self.assertEqual(data["errors"][0]["code"], 5)
+		self.assertEqual(data["errors"][0]["message"], "Bad credentials")

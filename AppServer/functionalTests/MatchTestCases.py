@@ -7,15 +7,19 @@ import ConfigParser
 class MatchTest(unittest.TestCase):
 	def __init__(self, *args, **kwargs):
 		super(MatchTest, self).__init__(*args, **kwargs)
-		self.__api_base_url = "http://localhost:8083/"
-		self._url_usuario = "/api/accounts/"
-		self._url_matches = "/api/matches/"
 
 	@classmethod
 	def setUpClass(cls):
+		cls.__api_base_url = "http://localhost:8083/"
+		cls._url_usuario = "/api/accounts/"
+		cls._url_matches = "/api/matches/"
 		cls._username_long = uuid.uuid4().hex
 		cls._username = cls._username_long[0:10]
-		cls._token = ""
+		payload = {'username': "'"+ cls._username +"'",'password':'pass'}
+		r = requests.post(cls.__api_base_url + cls._url_usuario + "signup", json=payload)
+		r = requests.post(cls.__api_base_url + cls._url_usuario + "login", json=payload)
+		data = json.loads(r.text)
+		cls._token = data["data"]["accessToken"]
 		
 	#Bad credentials matches list	
 	def test_1(self):
@@ -51,4 +55,40 @@ class MatchTest(unittest.TestCase):
 		self.assertEquals(data["errors"][0]["code"], 5)
 		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
 
-	#TODO add auth token and run successful tests
+	#Successful matches list TODO AUTH	
+	def test_5(self):
+		payload = {'Authorization': "'" + self._token + "'"}
+		r = requests.get(self.__api_base_url + self._url_matches, headers=payload)
+		self.assertEqual(r.status_code, 401)
+		data = json.loads(r.text)
+		self.assertEquals(data["errors"][0]["code"], 5)
+		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+
+	#Successful candidates list	 TODO AUTH
+	def test_6(self):
+		payload = {'Authorization': "'" + self._token + "'"}
+		r = requests.get(self.__api_base_url + self._url_matches + "candidates", headers=payload)
+		self.assertEqual(r.status_code, 401)
+		data = json.loads(r.text)
+		self.assertEquals(data["errors"][0]["code"], 5)
+		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+
+	#Successful messages from user	 TODO AUTH
+	def test_7(self):
+		payload = {'Authorization': "'" + self._token + "'"}
+		user_id = "27"
+		r = requests.get(self.__api_base_url + self._url_matches +  user_id + "/messages", headers=payload)
+		self.assertEqual(r.status_code, 401)
+		data = json.loads(r.text)
+		self.assertEquals(data["errors"][0]["code"], 5)
+		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
+
+	#Successful message to user	 TODO AUTH
+	def test_8(self):
+		payload = {'Authorization': "'" + self._token + "'"}
+		user_id = "27"
+		r = requests.put(self.__api_base_url + self._url_matches +  user_id + "/message", headers=payload)
+		self.assertEqual(r.status_code, 401)
+		data = json.loads(r.text)
+		self.assertEquals(data["errors"][0]["code"], 5)
+		self.assertEqual(data["errors"][0]["message"], "Bad credentials")
