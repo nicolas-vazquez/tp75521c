@@ -10,20 +10,32 @@ MatchsController::MatchsController() {
 
 void MatchsController::getMatches(Request &request, JsonResponse &response) {
     vector<string> matches = request.getUser().getMatches();
+
     string_t address = ConnectionUtils::buildConnection();
     http::uri uri = http::uri(address);
+
     JsonResponse jsonResponse;
     jsonResponse["matches"] = Json::Value(Json::arrayValue);
+
     for (std::vector<string>::iterator it = matches.begin(); it != matches.end(); ++it) {
         string_t url = U("/users/" + *it + "/profile");
         http_client sharedServer(http::uri_builder(uri).append_path(url).to_uri());
         const http_response &sharedResponse = sharedServer.request(methods::GET, U("")).get();
+
         status_code statusCode = sharedResponse.status_code();
         web::json::value responseBody = sharedResponse.extract_json().get();
+
         if (statusCode == status_codes::OK) {
-            jsonResponse["matches"].append(responseBody.serialize());
+            Value value;
+            Chat chat(request.getUser().getUsername(), *it);
+            if (chat.fetch()) {
+                value["chatId"] = chat.getId();
+            }
+            value["profile"] = responseBody.serialize();
+            jsonResponse["matches"].append(value);
         }
     }
+
     sendResult(response, jsonResponse, HTTP_OK);
 }
 
@@ -91,35 +103,45 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
 }
 
 void MatchsController::update(Request &request, JsonResponse &response) {
-    const Json::Value body = request.getBody();
+    vector<Error *> errors;
 
+    const Json::Value body = request.getBody();
     string message = body.get("message", "").asString();
-    string chatId = routeParams->at("id");
     string sender = request.getUser().getUsername();
+    string chatId = routeParams->at("id");
     Chat chat(chatId);
-    chat.setUser(sender);
-    chat.update(message);
-    chat.save();
+
+    if (chat.fetch()) {
+        chat.setUser(sender);
+        chat.update(message);
+        chat.save();
+    } else {
+        errors.push_back(new ResourceNotFoundError());
+    }
+
     JsonResponse responseBody;
     responseBody["message"] = "Successful updated chat";
-    sendResult(response, responseBody, HTTP_OK);
+
+    if (errors.empty()) {
+        sendResult(response, responseBody, HTTP_OK);
+    } else {
+        sendErrors(response, errors, 400);
+    }
 }
 
 void MatchsController::getMessages(Request &request, JsonResponse &response) {
+    vector<Error *> errors;
     JsonResponse responseBody;
-//
-//    string chatId = routeParams->at("id");
-//    Chat chat(chatId);
-//    if (chat.fetch()) {
-//        //vector<string> messages = chat.getMessages();
-//        Value jsonResponse;
-//        for (unsigned int i = 0; i < messages.size(); i++) {
-//            Value message(messages[i]);
-//            jsonResponse.append(message);
-//        }
-    responseBody["messages"] = "";
-    sendResult(response, responseBody, HTTP_OK);
-//    }
+    Chat chat(routeParams->at("id"));
+
+    if (chat.fetch()) {
+        Value jsonResponse = chat.getMessages();
+        responseBody["messages"] = jsonResponse;
+        sendResult(response, responseBody, HTTP_OK);
+    } else {
+        errors.push_back(new ResourceNotFoundError());
+        sendErrors(response, errors, 400);
+    }
 }
 
 void MatchsController::setup() {

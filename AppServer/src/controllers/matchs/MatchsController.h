@@ -13,6 +13,7 @@
 #include "../../errors/BadJsonError.h"
 #include "../../errors/ServerError.h"
 #include "../../errors/EmptyParamError.h"
+#include "../../errors/ResourceNotFound.h"
 #include "../../errors/UsernameAlreadyInUseError.h"
 #include "../../errors/UnauthorizedError.h"
 #include <utils/ConnectionUtils.h>

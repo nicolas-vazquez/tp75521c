@@ -10,18 +10,20 @@ class Chat : public Entity {
 private:
     string id;
     string sender;
-    string messages;
+    Value messages;
 
 public:
     Chat(const string& id);
 
     Chat(const string& u1, const string& u2);
 
+    const string &getId() const;
+
     void setUser(const string &sender);
 
     void update(const string &message);
 
-    const string& getMessages() const;
+    const Value& getMessages() const;
 
     virtual Value toJSON() override;
 

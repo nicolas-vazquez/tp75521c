@@ -1,7 +1,6 @@
 #include "Chat.h"
 
 Chat::Chat(const string &id) {
-    this->messages = "";
     this->id = id;
 }
 
@@ -15,16 +14,20 @@ Chat::Chat(const string &u1, const string &u2) {
 
 Value Chat::toJSON() {
     Value value;
-    value["messages"] = this->messages;
+    value["messages"] = this->messages.toStyledString();
     return value;
 }
 
 void Chat::fromJSON(Value value) {
-    this->messages = value.get("messages", "").asString();
+    this->messages = value.get("messages", Json::arrayValue).asString();
 }
 
 void Chat::setUser(const string &sender) {
     this->sender = sender;
+}
+
+const string &Chat::getId() const {
+    return this->id;
 }
 
 void Chat::update(const string &message) {
@@ -34,10 +37,10 @@ void Chat::update(const string &message) {
     value["time"] = dt;
     value["sender"] = this->sender;
     value["message"] = message;
-    this->messages.append(value.asString());
+    this->messages.append(value);
 }
 
-const string &Chat::getMessages() const {
+const Value &Chat::getMessages() const {
     return this->messages;
 }
 

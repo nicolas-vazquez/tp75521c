@@ -14,7 +14,6 @@ void utils::deserializeArray(string source, vector<string> &array) {
     while ((pos = source.find(delimiter)) != std::string::npos) {
         token = source.substr(0, pos);
         array.push_back(token);
-        std::cout << token << std::endl;
         source.erase(0, pos + delimiter.length());
     }
 }
