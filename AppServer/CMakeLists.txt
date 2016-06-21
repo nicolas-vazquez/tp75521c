@@ -77,7 +77,7 @@ set(MONGOOSE_SOURCES
         ${MONGOOSE_CPP}/JsonResponse.cpp
         ${MONGOOSE_CPP}/JsonController.cpp
         ${MONGOOSE_CPP}/WebSocket.cpp
-        ${MONGOOSE_CPP}/WebSockets.cpp src/errors/ResourceNotFound.h)
+        ${MONGOOSE_CPP}/WebSockets.cpp)
 
 
 include_directories(src)
