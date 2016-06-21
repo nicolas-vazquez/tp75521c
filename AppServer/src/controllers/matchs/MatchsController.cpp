@@ -106,7 +106,7 @@ void MatchsController::update(Request &request, JsonResponse &response) {
 }
 
 void MatchsController::getMessages(Request &request, JsonResponse &response) {
-//    JsonResponse responseBody;
+    JsonResponse responseBody;
 //
 //    string chatId = routeParams->at("id");
 //    Chat chat(chatId);
@@ -117,8 +117,8 @@ void MatchsController::getMessages(Request &request, JsonResponse &response) {
 //            Value message(messages[i]);
 //            jsonResponse.append(message);
 //        }
-//        responseBody["messages"] = jsonResponse;
-//        sendResult(response, responseBody, HTTP_OK);
+    responseBody["messages"] = "";
+    sendResult(response, responseBody, HTTP_OK);
 //    }
 }
 
