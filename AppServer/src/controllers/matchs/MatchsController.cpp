@@ -46,8 +46,19 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
     string_t address = ConnectionUtils::buildConnection();
     http::uri uri = http::uri(address);
 
+
+    string radius = request.get("radius");
+    string latitude = request.get("latitude");
+    string longitude = request.get("longitude");
+
     string_t url = U("/users/" + account.getUsername() + "/candidates");
-    http_client sharedServer(http::uri_builder(uri).append_path(url).to_uri());
+    uri_builder builder = http::uri_builder(uri);
+    builder.append_path(url);
+    builder.append_query(U("radius"), U(radius));
+    builder.append_query(U("latitude"), U(latitude));
+    builder.append_query(U("longitude"), U(longitude));
+
+    http_client sharedServer(builder.to_uri());
 
     const http_response &sharedResponse = sharedServer.request(methods::GET, U("")).get();
     status_code statusCode = sharedResponse.status_code();
