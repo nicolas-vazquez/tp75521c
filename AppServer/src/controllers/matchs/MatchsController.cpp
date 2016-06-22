@@ -46,7 +46,6 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
     string_t address = ConnectionUtils::buildConnection();
     http::uri uri = http::uri(address);
 
-
     string radius = request.get("radius");
     string latitude = request.get("latitude");
     string longitude = request.get("longitude");
@@ -116,7 +115,7 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
 void MatchsController::update(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
-    const Json::Value body = request.getBody();
+    Json::Value body = request.getBody();
     string message = body.get("message", "").asString();
     string sender = request.getUser().getUsername();
     string chatId = routeParams->at("id");
@@ -146,6 +145,7 @@ void MatchsController::getMessages(Request &request, JsonResponse &response) {
     Chat chat(routeParams->at("id"));
 
     if (chat.fetch()) {
+
         Value jsonResponse = chat.getMessages();
         responseBody["messages"] = jsonResponse;
         sendResult(response, responseBody, HTTP_OK);
@@ -160,7 +160,7 @@ void MatchsController::setup() {
     addRouteResponse("GET", "/", MatchsController, getMatches, JsonResponse);
     addRouteResponse("GET", "/candidates", MatchsController, getCandidates, JsonResponse);
     addRouteResponse("GET", "/{id}/messages", MatchsController, getMessages, JsonResponse);
-    addRouteResponse("PUT", "/{id}/message", MatchsController, update, JsonResponse);
+    addRouteResponse("POST", "/{id}/message", MatchsController, update, JsonResponse);
 }
 
 MatchsController::~MatchsController() {

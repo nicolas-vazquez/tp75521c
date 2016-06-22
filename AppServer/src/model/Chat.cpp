@@ -6,20 +6,20 @@ Chat::Chat(const string &id) {
 
 Chat::Chat(const string &u1, const string &u2) {
     if (u1.compare(u2) < 0) {
-        this->id = u1 + ',' + u2;
+        this->id = u1 + '+' + u2;
     } else {
-        this->id = u2 + ',' + u1;
+        this->id = u2 + '+' + u1;
     }
 }
 
 Value Chat::toJSON() {
     Value value;
-    value["messages"] = this->messages.toStyledString();
+    value["messages"] = this->messages;
     return value;
 }
 
 void Chat::fromJSON(Value value) {
-    this->messages = value.get("messages", Json::arrayValue).asString();
+    this->messages = value.get("messages", Json::arrayValue);
 }
 
 void Chat::setUser(const string &sender) {
@@ -53,5 +53,4 @@ string Chat::getName() {
 }
 
 Chat::~Chat() {
-    this->messages.clear();
 }
