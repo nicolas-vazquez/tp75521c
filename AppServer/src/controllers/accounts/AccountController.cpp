@@ -48,8 +48,10 @@ void AccountController::login(Request &request, JsonResponse &response) {
 
         //Save account locally
         Account account(username);
-        account.setPassword(password);
-        account.save();
+        if (!account.fetch()) {
+            account.setPassword(password);
+            account.save();
+        }
 
         //Generate a new accessToken in every login
         AccessToken token;
@@ -150,7 +152,8 @@ void AccountController::like(Request &request, JsonResponse &response) {
     Account account = request.getUser();
     string keptAccount = routeParams->at("username");
 
-    if (request.getUser().getUsername() != keptAccount && !utils::findValueInArray(account.getKeptAccounts(), keptAccount)) {
+    if (request.getUser().getUsername() != keptAccount &&
+        !utils::findValueInArray(account.getKeptAccounts(), keptAccount)) {
         Account otherAccount(keptAccount);
         if (otherAccount.fetch()) {
             if (account.addKeepAccount(keptAccount)) {
@@ -178,7 +181,8 @@ void AccountController::dislike(Request &request, JsonResponse &response) {
     Account account = request.getUser();
     string tossedAccount = routeParams->at("username");
 
-    if (request.getUser().getUsername() != tossedAccount && !utils::findValueInArray(account.getTossedAccounts(), tossedAccount)) {
+    if (request.getUser().getUsername() != tossedAccount &&
+        !utils::findValueInArray(account.getTossedAccounts(), tossedAccount)) {
         Account otherAccount(tossedAccount);
         if (otherAccount.fetch()) {
             account.addTossAccount(tossedAccount);
