@@ -146,47 +146,55 @@ string AccountController::generateToken(const string &username, const string &pa
 void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
+    Account account = request.getUser();
     string keptAccount = routeParams->at("username");
 
-    if (request.getUser().getUsername() == keptAccount) {
+    if (request.getUser().getUsername() != keptAccount && !utils::findValueInArray(account.getKeptAccounts(), keptAccount)) {
+        Account otherAccount(keptAccount);
+        if (otherAccount.fetch()) {
+            account.addKeepAccount(keptAccount);
+            account.save();
+        } else {
+            errors.push_back(new ResourceNotFoundError());
+        }
+    } else {
         errors.push_back(new BadParamError());
-        sendErrors(response, errors, 400);
     }
 
-    Account otherAccount(keptAccount);
-
-    if (!otherAccount.fetch()) {
-        errors.push_back(new ResourceNotFoundError());
+    if (errors.empty()) {
+        JsonResponse responseBody;
+        responseBody["message"] = "Like successful";
+        sendResult(response, responseBody, HTTP_OK);
+    } else {
         sendErrors(response, errors, 400);
     }
-
-    Account account = request.getUser();
-    account.addKeepAccount(keptAccount);
-    account.save();
-
-    JsonResponse responseBody;
-    responseBody["message"] = "Like successful";
-    sendResult(response, responseBody, HTTP_OK);
 }
 
 void AccountController::dislike(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
+    Account account = request.getUser();
     string tossedAccount = routeParams->at("username");
-    Account otherAccount(tossedAccount);
 
-    if (!otherAccount.fetch()) {
-        errors.push_back(new ResourceNotFoundError());
-        sendErrors(response, errors, 400);
+    if (request.getUser().getUsername() != tossedAccount && !utils::findValueInArray(account.getTossedAccounts(), tossedAccount)) {
+        Account otherAccount(tossedAccount);
+        if (otherAccount.fetch()) {
+            account.addTossAccount(tossedAccount);
+            account.save();
+        } else {
+            errors.push_back(new ResourceNotFoundError());
+        }
+    } else {
+        errors.push_back(new BadParamError());
     }
 
-    Account account = request.getUser();
-    account.addTossAccount(tossedAccount);
-    account.save();
-
-    JsonResponse responseBody;
-    responseBody["message"] = "Dislike successful";
-    sendResult(response, responseBody, HTTP_OK);
+    if (errors.empty()) {
+        JsonResponse responseBody;
+        responseBody["message"] = "Dislike successful";
+        sendResult(response, responseBody, HTTP_OK);
+    } else {
+        sendErrors(response, errors, 400);
+    }
 }
 
 void AccountController::validateAccount(string username, string password, vector<Error *> &errors) {
@@ -246,6 +254,7 @@ bool AccountController::requireAuthentication(string method, string url) {
         || (!method.compare("GET") && !url.compare(getPrefix() + "/interests"))) {
         return false;
     }
+    return true;
 }
 
 AccountController::~AccountController() {

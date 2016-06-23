@@ -69,15 +69,14 @@ void Account::addKeepAccount(const string &keptAccount) {
     //A liked account is always stored in local database because during like we fetch "otherAccount" from SharedServer
     if (otherAccount.fetch()) {
         vector<string> otherKepts = otherAccount.getKeptAccounts();
-        for (std::vector<string>::iterator it = otherKepts.begin(); it != otherKepts.end(); ++it) {
-            if (*it == this->username) {
+        for (unsigned int i = 0; i < otherKepts.size(); i++) {
+            if (this->username == otherKepts[i]) {
                 this->addMatch(keptAccount);
                 otherAccount.addMatch(this->username);
                 otherAccount.save();
                 Chat chat(this->username, keptAccount);
                 chat.save();
                 MatchCount matchCount;
-
                 if (matchCount.fetch()) {
                     matchCount.addMatch();
                     matchCount.save();

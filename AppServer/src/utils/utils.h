@@ -10,7 +10,7 @@ class utils {
 public:
     static string &serializeArray(vector<string> &array, string &result);
     static void deserializeArray(string source, vector<string> &array);
-    static bool findValueInArray(vector<string> &array, string &value);
+    static bool findValueInArray(const vector<string> &array, string &value);
 };
 
 

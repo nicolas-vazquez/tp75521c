@@ -18,9 +18,11 @@ void utils::deserializeArray(string source, vector<string> &array) {
     }
 }
 
-bool utils::findValueInArray(vector<string> &array, string &value) {
-    for (std::vector<string>::iterator it = array.begin(); it != array.end(); ++it) {
-        if (*it == value) {
+bool utils::findValueInArray(const vector<string> &array, string &value) {
+    for (unsigned int i = 0; i < array.size(); i++) {
+        cout << array[i] + ' ' + value << endl;
+        if (array[i] == value) {
+            cout << "es igual" << endl;
             return 1;
         }
     }
