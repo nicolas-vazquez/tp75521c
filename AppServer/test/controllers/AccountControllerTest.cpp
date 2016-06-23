@@ -97,7 +97,6 @@ void AccountControllerTest::likeTest() {
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
     const Value &value = response->get("data", "[]");
     CPPUNIT_ASSERT(value["message"] == "Like successful");
-    CPPUNIT_ASSERT(true);
 }
 
 void AccountControllerTest::dislikeTest() {
