@@ -42,7 +42,7 @@ public:
 
     void addMatch(const string &match);
 
-    void addKeepAccount(const string &keptAccount);
+    bool addKeepAccount(const string &keptAccount);
 
     void addTossAccount(const string &tossedAccount);
 

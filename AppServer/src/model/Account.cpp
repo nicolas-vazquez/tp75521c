@@ -63,7 +63,8 @@ void Account::setPassword(const string &password) {
     this->password = password;
 }
 
-void Account::addKeepAccount(const string &keptAccount) {
+bool Account::addKeepAccount(const string &keptAccount) {
+    bool hasMatch = false;
     this->keptAccounts.push_back(keptAccount);
     Account otherAccount(keptAccount);
     //A liked account is always stored in local database because during like we fetch "otherAccount" from SharedServer
@@ -71,6 +72,7 @@ void Account::addKeepAccount(const string &keptAccount) {
         vector<string> otherKepts = otherAccount.getKeptAccounts();
         for (unsigned int i = 0; i < otherKepts.size(); i++) {
             if (this->username == otherKepts[i]) {
+                hasMatch = true;
                 this->addMatch(keptAccount);
                 otherAccount.addMatch(this->username);
                 otherAccount.save();
@@ -84,6 +86,7 @@ void Account::addKeepAccount(const string &keptAccount) {
             }
         }
     }
+    return hasMatch;
 }
 
 void Account::addTossAccount(const string &tossedAccount) {

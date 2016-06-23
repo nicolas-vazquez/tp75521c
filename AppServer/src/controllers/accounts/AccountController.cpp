@@ -146,13 +146,16 @@ string AccountController::generateToken(const string &username, const string &pa
 void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
+    JsonResponse responseBody;
     Account account = request.getUser();
     string keptAccount = routeParams->at("username");
 
     if (request.getUser().getUsername() != keptAccount && !utils::findValueInArray(account.getKeptAccounts(), keptAccount)) {
         Account otherAccount(keptAccount);
         if (otherAccount.fetch()) {
-            account.addKeepAccount(keptAccount);
+            if (account.addKeepAccount(keptAccount)) {
+                responseBody["match"] = true;
+            }
             account.save();
         } else {
             errors.push_back(new ResourceNotFoundError());
@@ -162,7 +165,6 @@ void AccountController::like(Request &request, JsonResponse &response) {
     }
 
     if (errors.empty()) {
-        JsonResponse responseBody;
         responseBody["message"] = "Like successful";
         sendResult(response, responseBody, HTTP_OK);
     } else {
