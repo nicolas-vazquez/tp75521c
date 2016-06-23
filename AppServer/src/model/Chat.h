@@ -21,13 +21,13 @@ public:
 
     void setUser(const string &sender);
 
-    void update(const string &message);
-
     const Value& getMessages() const;
 
     virtual Value toJSON() override;
 
     virtual ~Chat();
+
+    void update(Value &message);
 
 protected:
 

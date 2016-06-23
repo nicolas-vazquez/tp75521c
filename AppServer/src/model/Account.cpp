@@ -77,6 +77,7 @@ void Account::addKeepAccount(const string &keptAccount) {
                 Chat chat(this->username, keptAccount);
                 chat.save();
                 MatchCount matchCount;
+
                 if (matchCount.fetch()) {
                     matchCount.addMatch();
                     matchCount.save();

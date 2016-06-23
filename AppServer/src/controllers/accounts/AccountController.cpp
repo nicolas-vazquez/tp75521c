@@ -147,6 +147,12 @@ void AccountController::like(Request &request, JsonResponse &response) {
     vector<Error *> errors;
 
     string keptAccount = routeParams->at("username");
+
+    if (request.getUser().getUsername() == keptAccount) {
+        errors.push_back(new BadParamError());
+        sendErrors(response, errors, 400);
+    }
+
     Account otherAccount(keptAccount);
 
     if (!otherAccount.fetch()) {

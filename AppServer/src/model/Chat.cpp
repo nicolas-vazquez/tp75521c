@@ -19,7 +19,15 @@ Value Chat::toJSON() {
 }
 
 void Chat::fromJSON(Value value) {
-    this->messages = value.get("messages", Json::arrayValue);
+
+    this->messages = value.get("messages", "");
+    if (this->messages.isNull()) {
+        Json::Value jsonArray;
+        jsonArray.append(Json::Value::null);
+        jsonArray.clear();
+        this->messages = jsonArray;
+    }
+
 }
 
 void Chat::setUser(const string &sender) {
@@ -30,13 +38,11 @@ const string &Chat::getId() const {
     return this->id;
 }
 
-void Chat::update(const string &message) {
+void Chat::update(Value &value) {
     time_t now = time(0);
-    char* dt = ctime(&now);
-    Value value;
+    char *dt = ctime(&now);
     value["time"] = dt;
     value["sender"] = this->sender;
-    value["message"] = message;
     this->messages.append(value);
 }
 

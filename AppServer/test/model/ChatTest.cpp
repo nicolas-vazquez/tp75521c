@@ -17,7 +17,7 @@ void ChatTest::toJSON() {
 void ChatTest::fromJSON() {
     Chat chat("Gise");
     chat.setUser("pepe");
-    chat.update("Hola Gise");
+    //chat.update("Hola Gise");
     chat.fetch();
     //const vector<string> &messages = chat.getMessages();
 

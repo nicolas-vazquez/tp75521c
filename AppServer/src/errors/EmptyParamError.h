@@ -2,8 +2,8 @@
 // Created by fedefarina on 26/03/16.
 //
 
-#ifndef APPSERVER_BADPARAMERROR_H
-#define APPSERVER_BADPARAMERROR_H
+#ifndef APPSERVER_EMPTYPARAMERROR_H
+#define APPSERVER_EMPTYPARAMERROR_H
 
 
 #include "Error.h"
@@ -22,4 +22,4 @@ public:
 };
 
 
-#endif //APPSERVER_BADPARAMERROR_H
+#endif //APPSERVER_EMPTYPARAMERROR_H

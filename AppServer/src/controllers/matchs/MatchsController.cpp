@@ -114,16 +114,13 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
 
 void MatchsController::update(Request &request, JsonResponse &response) {
     vector<Error *> errors;
-
     Json::Value body = request.getBody();
-    string message = body.get("message", "").asString();
     string sender = request.getUser().getUsername();
     string chatId = routeParams->at("id");
     Chat chat(chatId);
-
     if (chat.fetch()) {
         chat.setUser(sender);
-        chat.update(message);
+        chat.update(body);
         chat.save();
     } else {
         errors.push_back(new ResourceNotFoundError());
@@ -145,7 +142,6 @@ void MatchsController::getMessages(Request &request, JsonResponse &response) {
     Chat chat(routeParams->at("id"));
 
     if (chat.fetch()) {
-
         Value jsonResponse = chat.getMessages();
         responseBody["messages"] = jsonResponse;
         sendResult(response, responseBody, HTTP_OK);

@@ -13,6 +13,7 @@
 #include "../../model/MatchCount.h"
 #include "../../errors/BadJsonError.h"
 #include "../../errors/ServerError.h"
+#include "../../errors/BadParamError.h"
 #include "../../errors/EmptyParamError.h"
 #include "../../errors/ResourceNotFound.h"
 #include "../../errors/UsernameAlreadyInUseError.h"
@@ -39,8 +40,6 @@ public:
 
     string generateToken(const string &username, const string &password) const;
 
-    string encodePassword(const string &password) const;
-
     void setup();
 
     void signup(Request &request, JsonResponse &response);
@@ -54,8 +53,6 @@ public:
     void getInterests(Request &request, JsonResponse &response);
 
     void validateAccount(string username, string password, vector<Error *> &errors);
-
-    void buildLoginResponse(const string &username, const string &password, JsonResponse &responseBody) const;
 
     virtual ~AccountController();
 
