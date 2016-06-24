@@ -15,6 +15,7 @@ class ChatTest : public TestFixture {
 CPPUNIT_TEST_SUITE(ChatTest);
         CPPUNIT_TEST(toJSON);
         CPPUNIT_TEST(fromJSON);
+        CPPUNIT_TEST(validateIds);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -22,6 +23,8 @@ public:
     void toJSON();
 
     void fromJSON();
+
+    void validateIds();
 
     virtual ~ChatTest();
 };
