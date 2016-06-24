@@ -2,6 +2,7 @@
 // Created by federicofarina on 5/9/16.
 //
 
+#include <utils/sha256.h>
 #include "AccessTokenTest.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(AccessTokenTest);
@@ -10,29 +11,30 @@ AccessTokenTest::AccessTokenTest() {
 
 }
 
-
 void AccessTokenTest::setUp() {
-    accessToken.setToken("token");
+    const string &username = "username";
+    const string &password = "password";
+    const string &token = sha256(username + password);
+    accessToken.setToken(token);
     accessToken.setUsername("username");
     accessToken.save();
 }
 
-
 void AccessTokenTest::fromJSON() {
-    const Value &value = accessToken.toJSON();
-
-    //Tests that all fields are serialized in json result
-    CPPUNIT_ASSERT(!value.get("username", "no empty").empty());
+    AccessToken testToken;
+    const string &username = "username";
+    const string &password = "password";
+    const string &token = sha256(username + password);
+    testToken.setToken(token);
+    testToken.fetch();
+    CPPUNIT_ASSERT(testToken.getUsername() == "username");
 }
 
 void AccessTokenTest::toJSON() {
-    AccessToken accessToken;
-    accessToken.setToken("token");
-    CPPUNIT_ASSERT(accessToken.getToken() == "token");
-    accessToken.fetch();
-    CPPUNIT_ASSERT(accessToken.getUsername() == "username");
+    const Value &value = accessToken.toJSON();
+    CPPUNIT_ASSERT(!value.get("token", "no empty").empty());
+    CPPUNIT_ASSERT(!value.get("username", "no empty").empty());
 }
-
 
 void AccessTokenTest::tearDown() {
     accessToken.remove();
@@ -41,10 +43,3 @@ void AccessTokenTest::tearDown() {
 AccessTokenTest::~AccessTokenTest() {
 
 }
-
-
-
-
-
-
-

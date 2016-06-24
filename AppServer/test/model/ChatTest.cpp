@@ -7,38 +7,48 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatTest);
 
+void ChatTest::setUp() {
+    testChat = Chat("nico", "fede");
+    testChat.setUser("nico");
+    Value value;
+    value["message"] = "Este es un mensaje inicial";
+    testChat.update(value);
+    testChat.save();
+}
+
 void ChatTest::toJSON() {
-    Chat testChat2("gii");    
-    testChat2.setUser("nico");
-    Value value2;
-    value2["message"] = "Hola gii";
-    testChat2.update(value2);
-    testChat2.save();
-    const Value &value = testChat2.toJSON();
-    CPPUNIT_ASSERT(!value.get("sender", "no empty").empty());
+    const Value &value = testChat.toJSON();
+    CPPUNIT_ASSERT(!value.get("username", "no empty").empty());
 }
 
 void ChatTest::fromJSON() {
-    Chat testChat("nico", "fede");    
-    Json::Value value;
-    value["message"] = "Holaa";
-    testChat.update(value);
-    testChat.save();
-    testChat.fetch();    
+    testChat.fetch();
+    CPPUNIT_ASSERT(testChat.getId() == "fede+nico");
     const Json::Value &messages = testChat.getMessages();
-    CPPUNIT_ASSERT(messages[0].get("message", "") == "Holaa");
+    CPPUNIT_ASSERT(messages[0].get("sender", "") == "nico");
+    CPPUNIT_ASSERT(messages[0].get("message", "") == "Este es un mensaje inicial");
+}
+
+void ChatTest::update() {
+    testChat.setUser("fede");
+    Value value;
+    value["message"] = "Este es un nuevo mensaje";
+    testChat.update(value);
+    const Json::Value &messages = testChat.getMessages();
+    CPPUNIT_ASSERT(messages[1].get("sender", "") == "fede");
+    CPPUNIT_ASSERT(messages[1].get("message", "") == "Este es un nuevo mensaje");
 }
 
 void ChatTest::validateIds() {
-    Chat testChat("nico", "fede");  
-    Chat testChat3("fede", "nico");    
-    CPPUNIT_ASSERT(testChat.getId() == testChat3.getId());
+    Chat chat1("nico", "fede");
+    Chat chat2("fede", "nico");
+    CPPUNIT_ASSERT(chat1.getId() == chat2.getId());
+}
+
+void ChatTest::tearDown() {
+    testChat.remove();
 }
 
 ChatTest::~ChatTest() {
 
 }
-
-
-
-

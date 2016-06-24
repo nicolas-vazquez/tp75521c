@@ -13,6 +13,8 @@ private:
     Value messages;
 
 public:
+    Chat();
+
     Chat(const string& id);
 
     Chat(const string& u1, const string& u2);

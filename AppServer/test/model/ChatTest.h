@@ -18,13 +18,22 @@ CPPUNIT_TEST_SUITE(ChatTest);
         CPPUNIT_TEST(validateIds);
     CPPUNIT_TEST_SUITE_END();
 
+private:
+    Chat testChat;
+
 public:
 
     void toJSON();
 
     void fromJSON();
 
+    void update();
+
     void validateIds();
+
+    virtual void setUp() override;
+
+    virtual void tearDown() override;;
 
     virtual ~ChatTest();
 };

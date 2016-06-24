@@ -7,60 +7,45 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(MatchCountTest);
 
 MatchCountTest::MatchCountTest() {
-    MatchCount testMatchCount(); 
+
 }
 
 void MatchCountTest::setUp() {
-    
+    testMatchCount.addAccount();
+    testMatchCount.addAccount();
+    testMatchCount.addMatch();
+    testMatchCount.save();
 }
 
 void MatchCountTest::toJSON() {
-    testMatchCount.addMatch();
-    testMatchCount.addAccount();
     const Value &value = testMatchCount.toJSON();
     CPPUNIT_ASSERT(!value.get("matches", "no empty").empty());
     CPPUNIT_ASSERT(!value.get("accounts", "no empty").empty());
 }
 
 void MatchCountTest::fromJSON() {
+    MatchCount matchCount;
+    matchCount.fetch();
+    CPPUNIT_ASSERT(matchCount.getAccounts() == 2);
+    CPPUNIT_ASSERT(matchCount.getMatches() == 1);
+}
+
+void MatchCountTest::totalMatches() {
     testMatchCount.addMatch();
+    int matches = testMatchCount.getMatches();
+    CPPUNIT_ASSERT(matches == 2);
+}
+
+void MatchCountTest::totalAccounts() {
     testMatchCount.addAccount();
-    testMatchCount.fetch();
     int accounts = testMatchCount.getAccounts();
-
-    CPPUNIT_ASSERT(accounts == 1);
-}
-
-void MatchCountTest::testAddGetMatch() {
-   testMatchCount.addMatch();
-   CPPUNIT_ASSERT(testMatchCount.getMatches() == 1);
-}
-
-void MatchCountTest::testAddGetAccount() {
-   testMatchCount.addAccount();
-   CPPUNIT_ASSERT(testMatchCount.getAccounts() == 1);
+    CPPUNIT_ASSERT(accounts == 3);
 }
 
 void MatchCountTest::tearDown() {
+    testMatchCount.remove();
 }
 
 MatchCountTest::~MatchCountTest() {
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

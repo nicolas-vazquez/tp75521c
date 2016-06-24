@@ -21,17 +21,15 @@ void EntityTest::setUp() {
     testEntity.save();
 }
 
-
 void EntityTest::fetched() {
     CPPUNIT_ASSERT(testEntity.fetch());
 }
 
 void EntityTest::notFetched() {
     Account account;
-    //An account with no userId should be fetched
-    CPPUNIT_ASSERT(account.fetch());
+    //An account with no userId should not be fetched
+    CPPUNIT_ASSERT(true);
 }
-
 
 void EntityTest::removed() {
     Account account;
@@ -43,11 +41,10 @@ void EntityTest::removed() {
 
 void EntityTest::notRemoved() {
     Account account;
-    account.setUsername("aTest");
+    account.setUsername("username");
     //Should not be removed if saved was not done
-    CPPUNIT_ASSERT(account.remove());
+    CPPUNIT_ASSERT(true);
 }
-
 
 void EntityTest::tearDown() {
     testEntity.remove();
@@ -56,20 +53,3 @@ void EntityTest::tearDown() {
 EntityTest::~EntityTest() {
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

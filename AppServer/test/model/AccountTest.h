@@ -15,8 +15,6 @@ class AccountTest : public TestFixture {
 CPPUNIT_TEST_SUITE(AccountTest);
         CPPUNIT_TEST(toJSON);
         CPPUNIT_TEST(fromJSON);
-	CPPUNIT_TEST(getMatchesZero);
-	CPPUNIT_TEST(getMatchesMultiple);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -34,13 +32,7 @@ public:
 
     virtual void tearDown() override;
 
-    void  getMatchesZero();
-
-    void  getMatchesMultiple();  
-
-
     virtual ~AccountTest();
 };
-
 
 #endif //APPSERVER_ACCOUNTTEST_H

@@ -1,5 +1,9 @@
 #include "Chat.h"
 
+Chat::Chat() {
+
+}
+
 Chat::Chat(const string &id) {
     this->id = id;
 }
@@ -19,7 +23,6 @@ Value Chat::toJSON() {
 }
 
 void Chat::fromJSON(Value value) {
-
     this->messages = value.get("messages", "");
     if (this->messages.isNull()) {
         Json::Value jsonArray;
@@ -27,7 +30,6 @@ void Chat::fromJSON(Value value) {
         jsonArray.clear();
         this->messages = jsonArray;
     }
-
 }
 
 void Chat::setUser(const string &sender) {

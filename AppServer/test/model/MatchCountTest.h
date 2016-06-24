@@ -14,8 +14,8 @@ class MatchCountTest : public TestFixture {
 CPPUNIT_TEST_SUITE(MatchCountTest);
         CPPUNIT_TEST(toJSON);
         CPPUNIT_TEST(fromJSON);
-        CPPUNIT_TEST(testAddGetMatch);
-        CPPUNIT_TEST(testAddGetAccount);
+        CPPUNIT_TEST(totalMatches);
+        CPPUNIT_TEST(totalAccounts);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -28,9 +28,9 @@ public:
 
     void fromJSON();
 
-    void testAddGetMatch();
+    void totalMatches();
 
-    void testAddGetAccount();
+    void totalAccounts();
 
     virtual void setUp() override;
 
