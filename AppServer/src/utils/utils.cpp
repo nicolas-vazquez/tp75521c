@@ -1,6 +1,6 @@
 #include "utils.h"
 
-string& utils::serializeArray(vector<string> &array, string &result) {
+string &utils::serializeArray(vector<string> &array, string &result) {
     for (unsigned int i = 0; i < array.size(); i++) {
         result.append(array[i] + ",");
     }
@@ -20,9 +20,7 @@ void utils::deserializeArray(string source, vector<string> &array) {
 
 bool utils::findValueInArray(const vector<string> &array, string &value) {
     for (unsigned int i = 0; i < array.size(); i++) {
-        cout << array[i] + ' ' + value << endl;
         if (array[i] == value) {
-            cout << "es igual" << endl;
             return 1;
         }
     }

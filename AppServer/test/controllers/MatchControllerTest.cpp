@@ -92,7 +92,7 @@ void MatchControllerTest::getCandidates() {
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
     int code = response->getCode();
     delete (response);
-    CPPUNIT_ASSERT(code == 400);
+    CPPUNIT_ASSERT(code == 200);
 }
 
 void MatchControllerTest::update() {

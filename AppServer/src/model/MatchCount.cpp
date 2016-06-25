@@ -1,5 +1,6 @@
 #include "MatchCount.h"
 
+
 MatchCount::MatchCount() {
     if (!fetch()) {
         this->matches = 0;
@@ -21,16 +22,13 @@ void MatchCount::fromJSON(Value value) {
 }
 
 string MatchCount::primaryKeyValue() {
-    return "id";
+    return id;
 }
 
 string MatchCount::getName() {
     return "matchCount/";
 }
 
-MatchCount::~MatchCount() {
-
-}
 
 void MatchCount::addMatch() {
     this->matches++;
@@ -47,4 +45,12 @@ int MatchCount::getMatches() const {
 
 int MatchCount::getAccounts() const {
     return accounts;
+}
+
+void MatchCount::setId(const string &id) {
+    MatchCount::id = id;
+}
+
+MatchCount::~MatchCount() {
+
 }

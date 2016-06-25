@@ -11,6 +11,7 @@ MatchCountTest::MatchCountTest() {
 }
 
 void MatchCountTest::setUp() {
+    testMatchCount.setId("testId");
     testMatchCount.addAccount();
     testMatchCount.addAccount();
     testMatchCount.addMatch();
@@ -25,6 +26,7 @@ void MatchCountTest::toJSON() {
 
 void MatchCountTest::fromJSON() {
     MatchCount matchCount;
+    matchCount.setId("testId");
     matchCount.fetch();
     CPPUNIT_ASSERT(matchCount.getAccounts() == 2);
     CPPUNIT_ASSERT(matchCount.getMatches() == 1);

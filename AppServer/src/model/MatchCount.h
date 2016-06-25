@@ -6,10 +6,13 @@
 class MatchCount : public Entity {
 
 private:
+
     int matches;
     int accounts;
+    string id = "id";
 
 public:
+
     MatchCount();
 
     void addMatch();
@@ -19,6 +22,8 @@ public:
     int getMatches() const;
 
     int getAccounts() const;
+
+    void setId(const string &id);
 
     virtual Value toJSON() override;
 
