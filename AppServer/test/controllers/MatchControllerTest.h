@@ -17,7 +17,6 @@ class MatchControllerTest : public TestFixture, BaseControllerTest {
         CPPUNIT_TEST(getCandidates);
         CPPUNIT_TEST(update);
         CPPUNIT_TEST(getMatches);
-        CPPUNIT_TEST(testLog);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -36,8 +35,6 @@ public:
     void getCandidates();
 
     void update();
-
-    void testLog();
 
     virtual ~MatchControllerTest();
 };

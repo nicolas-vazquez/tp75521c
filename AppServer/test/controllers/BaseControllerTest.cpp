@@ -37,7 +37,6 @@ Request BaseControllerTest::makeDummyRequest(string data, string method) const {
     connection.uri = "mock";
     Request request(&connection);
 
-
     Json::Reader reader;
     Value body;
     reader.parse(data, body);
