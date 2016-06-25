@@ -64,7 +64,8 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
     JsonResponse jsonResponse;
 
     if (statusCode == status_codes::OK) {
-        web::json::value responseBody = sharedResponse.extract_json().get();
+        const json::value &sharedResponseBody = sharedResponse.extract_json().get();
+        web::json::value responseBody = sharedResponseBody;
         vector<string> keptAccounts = account.getKeptAccounts();
         vector<string> tossedAccounts = account.getTossedAccounts();
 
@@ -87,7 +88,12 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
                 }
 
                 if (candidate.fetch() && candidate.getMatches().size() <= criteria) {
-                    jsonResponse["profile"] = users.as_array()[index].serialize();
+
+                    const string_t &profile = users.as_array()[index].serialize();
+                    Json::Reader reader;
+                    Value candidateResponse;
+                    reader.parse(profile, candidateResponse);
+                    jsonResponse["profile"] = candidateResponse;
                     found = true;
                 }
             }
