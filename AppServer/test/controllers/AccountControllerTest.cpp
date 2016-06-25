@@ -135,16 +135,13 @@ void AccountControllerTest::dislikeTest() {
 }
 
 void AccountControllerTest::getInterestsTest() {
-    //fixme
-    /*accountController.routeParams->insert(std::pair<string, string>("username", "username"));
-    string data = "{\"username\":\"pepi\"}";
-    Request request = makeDummyRequest(data, "PUT");
+    Request request = makeDummyRequest("GET", "");
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController,
                                                                    &AccountController::getInterests);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
     int code = response->getCode();
-    delete (response);*/
-    CPPUNIT_ASSERT(true);
+    delete (response);
+    CPPUNIT_ASSERT(code == 200);
 }
 
 

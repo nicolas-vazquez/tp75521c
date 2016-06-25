@@ -22,7 +22,7 @@ target_link_libraries(AccountControllerTest mongoose db model controllers utils 
 add_test(NAME "EntityTest" COMMAND EntityTest)
 add_test(NAME "AccountTest" COMMAND AccountTest)
 add_test(NAME "ChatTest" COMMAND ChatTest)
-add_test(NAME "MatchCountTest" COMMAND ChatTest)
+add_test(NAME "MatchCountTest" COMMAND MatchCountTest)
 add_test(NAME "AccessTokenTest" COMMAND AccessTokenTest)
 
 add_test(NAME "MatchControllerTest" COMMAND MatchControllerTest)
