@@ -1,7 +1,11 @@
 #include "MatchCount.h"
 
 MatchCount::MatchCount() {
-
+    if (!fetch()) {
+        this->matches = 0;
+        this->accounts = 0;
+        save();
+    }
 }
 
 Value MatchCount::toJSON() {
@@ -12,12 +16,12 @@ Value MatchCount::toJSON() {
 }
 
 void MatchCount::fromJSON(Value value) {
-    this->matches = value.get("matches", "").asUInt();
-    this->accounts = value.get("accounts", "").asUInt();
+    this->matches = value.get("matches", "").asInt();
+    this->accounts = value.get("accounts", "").asInt();
 }
 
 string MatchCount::primaryKeyValue() {
-    return "";
+    return "id";
 }
 
 string MatchCount::getName() {

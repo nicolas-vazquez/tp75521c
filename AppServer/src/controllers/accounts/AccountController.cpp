@@ -52,6 +52,9 @@ void AccountController::login(Request &request, JsonResponse &response) {
         if (!account.fetch()) {
             account.setPassword(password);
             account.save();
+            MatchCount matchCount;
+            matchCount.addAccount();
+            matchCount.save();
         }
 
         //Generate a new accessToken in every login

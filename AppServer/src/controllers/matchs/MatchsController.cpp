@@ -47,9 +47,9 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
     string_t address = ConnectionUtils::buildConnection();
     http::uri uri = http::uri(address);
 
-    string radius = request.get("radius","5");
-    string latitude = request.get("latitude","0");
-    string longitude = request.get("longitude","0");
+    string radius = request.get("radius", "5");
+    string latitude = request.get("latitude", "0");
+    string longitude = request.get("longitude", "0");
 
     string_t url = U("/users/" + account.getUsername() + "/candidates");
     uri_builder builder = http::uri_builder(uri);
@@ -88,7 +88,9 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
                     criteria = totalMatchs / totalAccounts;
                 }
 
-                if (candidate.fetch() && candidate.getMatches().size() <= criteria) {
+                //Only apply this criteria if we have a reasonable amount of accounts.
+                if (candidate.fetch() &&
+                    (matchCount.getAccounts() <= 100 || candidate.getMatches().size() <= criteria)) {
 
                     const string_t &profile = users.as_array()[index].serialize();
                     Json::Reader reader;
