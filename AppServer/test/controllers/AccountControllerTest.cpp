@@ -83,8 +83,19 @@ void AccountControllerTest::badJsonResponseTest() {
 }
 
 void AccountControllerTest::signupTest() {
-    string data = "{\"username\": \"username1\", \"password\": \"password\", \"name\": \"name\", \"age\": 20, \"gender\":\"M\", \"email\":\"email@email.com\", \"latitude\": \"-34.58\", \"longitude\": \"-58.60\", \"photo_profile\":\"AAA\"}";
-    Request request = makeDummyBodyRequest(data, "POST");
+    time_t now = time(0);
+
+    ostringstream s;
+    s << now;
+    string username(s.str());
+
+    string prefix("{\"username\": \"");
+    prefix.append(username);
+
+    string body = prefix +
+                  "\", \"password\": \"password\", \"name\": \"name\", \"age\": 20, \"gender\":\"M\", \"email\":\"email@email.com\", \"latitude\": \"-34.58\", \"longitude\": \"-58.60\", \"photo_profile\":\"AAA\"}";
+
+    Request request = makeDummyBodyRequest(body, "POST");
 
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::signup);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);

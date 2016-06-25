@@ -13,7 +13,8 @@ using namespace CPPUNIT_NS;
 
 class MatchControllerTest : public TestFixture, BaseControllerTest {
 CPPUNIT_TEST_SUITE(MatchControllerTest);
-        CPPUNIT_TEST(getEmptyMessagesForExistentChat);
+        CPPUNIT_TEST(getMessagesForEmptyExistentChat);
+        CPPUNIT_TEST(getMessagesForExistentChat);
         CPPUNIT_TEST(getUnexistentChatMessages);
         CPPUNIT_TEST(getCandidates);
         CPPUNIT_TEST(update);
@@ -30,7 +31,7 @@ public:
 
     virtual void setUp();
 
-    void getEmptyMessagesForExistentChat();
+    void getMessagesForEmptyExistentChat();
 
     void getUnexistentChatMessages();
 
@@ -45,6 +46,8 @@ public:
     void tearDown();
 
     virtual ~MatchControllerTest();
+
+    void getMessagesForExistentChat();
 };
 
 
