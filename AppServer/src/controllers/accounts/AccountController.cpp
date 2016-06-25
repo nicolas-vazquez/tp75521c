@@ -2,6 +2,7 @@
 // Created by fedefarina on 26/03/16.
 //
 
+#include <regex>
 #include "AccountController.h"
 
 
@@ -60,7 +61,15 @@ void AccountController::login(Request &request, JsonResponse &response) {
         token.save();
 
         responseBody["message"] = "Successful login";
-        responseBody["profile"] = sharedResponse.extract_json().get().serialize();
+
+
+        string_t profile = sharedResponse.extract_json().get().serialize();
+
+        Json::Reader reader;
+        Value sharedResponseBody;
+        reader.parse(profile, sharedResponseBody);
+
+        responseBody["profile"] = sharedResponseBody;
         responseBody["accessToken"] = accessToken;
 
     } else if (statusCode == status_codes::Unauthorized) {
@@ -230,7 +239,13 @@ void AccountController::getInterests(Request &request, JsonResponse &response) {
     status_code statusCode = sharedResponse.status_code();
 
     if (statusCode == status_codes::OK) {
-        jsonResponse["interests"] = sharedResponse.extract_json().get().at("interests").serialize();
+
+        const string_t &interests = sharedResponse.extract_json().get().at("interests").serialize();
+        Json::Reader reader;
+        Value sharedResponseBody;
+        reader.parse(interests, sharedResponseBody);
+
+        jsonResponse["interests"] = sharedResponseBody;
     } else {
         responseFailCode = statusCode;
         errors.push_back(new ServerError());
