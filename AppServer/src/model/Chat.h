@@ -27,9 +27,9 @@ public:
 
     virtual Value toJSON() override;
 
-    virtual ~Chat();
-
     void update(Value &message);
+
+    virtual ~Chat();
 
 protected:
 

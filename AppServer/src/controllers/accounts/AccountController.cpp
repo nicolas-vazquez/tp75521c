@@ -151,7 +151,9 @@ void AccountController::signup(Request &request, JsonResponse &response) {
 }
 
 string AccountController::generateToken(const string &username, const string &password) const {
-    return sha256(username + password);
+    time_t now = time(0);
+    char *dt = ctime(&now);
+    return sha256(username + password + dt);
 }
 
 void AccountController::like(Request &request, JsonResponse &response) {
