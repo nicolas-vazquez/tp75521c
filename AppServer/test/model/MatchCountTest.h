@@ -34,7 +34,7 @@ public:
 
     void totalAccounts();
 
-    virtual void tearDown() override;;
+    virtual void tearDown() override;
 
     virtual ~MatchCountTest();
 };
