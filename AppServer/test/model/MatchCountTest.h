@@ -24,6 +24,8 @@ private:
 public:
     MatchCountTest();
 
+    virtual void setUp() override;
+
     void toJSON();
 
     void fromJSON();
@@ -32,13 +34,9 @@ public:
 
     void totalAccounts();
 
-    virtual void setUp() override;
-
     virtual void tearDown() override;;
 
     virtual ~MatchCountTest();
-
-
 };
 
 

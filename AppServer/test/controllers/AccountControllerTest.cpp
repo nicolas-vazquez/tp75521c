@@ -8,7 +8,6 @@
 CPPUNIT_TEST_SUITE_REGISTRATION(AccountControllerTest);
 
 AccountControllerTest::AccountControllerTest() {
-
 }
 
 void  AccountControllerTest::setUp() {
@@ -21,8 +20,7 @@ void  AccountControllerTest::setUp() {
 
 void AccountControllerTest::loginValidCredentialsTest() {
     string data = "{\"username\":\"fede\",\"password\":\"1234\"}";
-    Request request = makeDummyRequest(data, "POST");
-
+    Request request = makeDummyBodyRequest(data, "POST");
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::login);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
 
@@ -33,8 +31,7 @@ void AccountControllerTest::loginValidCredentialsTest() {
 
 void AccountControllerTest::loginInvalidCredentialsTest() {
     string data = "{\"username\":\"noValidUser\",\"password\":\"anInvalidPassword\"}";
-    Request request = makeDummyRequest(data, "POST");
-
+    Request request = makeDummyBodyRequest(data, "POST");
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::login);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
 
@@ -47,8 +44,7 @@ void AccountControllerTest::loginInvalidCredentialsTest() {
 
 void AccountControllerTest::loginEmptyUsernameTest() {
     string data = "{\"password\":\"aPassword\"}";
-    Request request = makeDummyRequest(data, "POST");
-
+    Request request = makeDummyBodyRequest(data, "POST");
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::login);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
 
@@ -61,8 +57,7 @@ void AccountControllerTest::loginEmptyUsernameTest() {
 
 void AccountControllerTest::loginEmptyPasswordTest() {
     string data = "{\"username\":\"anUsername\"}";
-    Request request = makeDummyRequest(data, "POST");
-
+    Request request = makeDummyBodyRequest(data, "POST");
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::login);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
 
@@ -75,7 +70,7 @@ void AccountControllerTest::loginEmptyPasswordTest() {
 
 void AccountControllerTest::badJsonResponseTest() {
     string data = "invalid body";
-    Request request = makeDummyRequest(data, "POST");
+    Request request = makeDummyBodyRequest(data, "POST");
 
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, NULL);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
@@ -89,7 +84,7 @@ void AccountControllerTest::badJsonResponseTest() {
 
 void AccountControllerTest::signupTest() {
     string data = "{\"username\": \"username1\", \"password\": \"password\", \"name\": \"name\", \"age\": 20, \"gender\":\"M\", \"email\":\"email@email.com\", \"latitude\": \"-34.58\", \"longitude\": \"-58.60\", \"photo_profile\":\"AAA\"}";
-    Request request = makeDummyRequest(data, "POST");
+    Request request = makeDummyBodyRequest(data, "POST");
 
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::signup);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
@@ -104,7 +99,7 @@ void AccountControllerTest::likeTest() {
     accountController.routeParams->insert(std::pair<string, string>("username", "username"));
 
     string data = "{\"username\":\"pepe\"}";
-    Request request = makeDummyRequest(data, "PUT");
+    Request request = makeDummyBodyRequest(data, "PUT");
 
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::like);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
@@ -118,7 +113,7 @@ void AccountControllerTest::dislikeTest() {
     accountController.routeParams->insert(std::pair<string, string>("username", "username"));
 
     string data = "{\"username\":\"pepi\"}";
-    Request request = makeDummyRequest(data, "PUT");
+    Request request = makeDummyBodyRequest(data, "PUT");
 
     RequestHandler<AccountController, JsonResponse> requestHandler(&accountController, &AccountController::dislike);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);

@@ -17,9 +17,14 @@ class BaseControllerTest {
 public:
 
     BaseControllerTest();
+
+    Request makeDummyBodyRequest(string data, string method) const;
+
+    Request buildBasicRequest(string method, string queryString) const;
+
+    Request makeDummyRequest(string method, string queryString) const;
+
     void log();
-    
-    Request makeDummyRequest(string data, string method) const;
 
     virtual ~BaseControllerTest();
 };

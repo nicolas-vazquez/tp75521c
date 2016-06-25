@@ -13,7 +13,6 @@ target_link_libraries(MatchCountTest model db ${LIBS_NAMES})
 add_executable(AccessTokenTest model/AccessTokenTest.cpp main.cpp)
 target_link_libraries(AccessTokenTest model db ${LIBS_NAMES})
 
-
 add_executable(MatchControllerTest controllers/MatchControllerTest.cpp ${MONGOOSE_SOURCES} controllers/BaseControllerTest.cpp main.cpp)
 target_link_libraries(MatchControllerTest mongoose db model controllers utils ${LIBS_NAMES})
 

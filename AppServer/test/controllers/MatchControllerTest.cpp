@@ -10,27 +10,57 @@ MatchControllerTest::MatchControllerTest() {
 
 }
 
-void MatchControllerTest::getMessages() {
-/*    matchsController.routeParams->insert(std::pair<string, string>("id", "username"));
-    string data = "{\"id\": \"2\"}";
-    Request request = makeDummyRequest(data, "GET");*/
-   /* RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getMessages);
+void  MatchControllerTest::setUp() {
+    matchsController.setDebugMode(true);
+    matchsController.setup();
+    testAccount.setUsername("username");
+    testAccount.setPassword("password");
+    testAccount.save();
+}
+
+
+void MatchControllerTest::getUnexistentChatMessages() {
+    matchsController.routeParams->insert(std::pair<string, string>("id", "user1+user2"));
+    Request request = makeDummyRequest("GET", "");
+    RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getMessages);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
     int code = response->getCode();
     delete (response);
-    CPPUNIT_ASSERT(code == 400);*/
-    CPPUNIT_ASSERT(true);
+    CPPUNIT_ASSERT(code == 400);
 }
 
+void MatchControllerTest::getEmptyMessagesForExistentChat() {
+    Chat chat("user1+user2");
+    chat.save();
+
+    matchsController.routeParams->insert(std::pair<string, string>("id", "user1+user2"));
+    Request request = makeDummyRequest("GET", "");
+    RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getMessages);
+    JsonResponse *response = (JsonResponse *) requestHandler.process(request);
+    chat.remove();
+    int code = response->getCode();
+
+    Json::Value jsonArray;
+    jsonArray.append(Json::Value::null);
+    jsonArray.clear();
+
+    const Value &value = response->get("data", "[]");
+    CPPUNIT_ASSERT(value["messages"] == jsonArray);
+
+    delete (response);
+    CPPUNIT_ASSERT(code == 200);
+}
+
+
 void MatchControllerTest::getCandidates() {
-    /*Request request = makeDummyRequest("", "GET");
-    string username = testAccount.getUsername();
-    request.setUsername(username);
+    Request request = makeDummyRequest("GET", "radius=10&longitude=-58.60&latitude=-34.59668");
+    request.setUsername((string &) testAccount.getUsername());
+
     RequestHandler<MatchsController, JsonResponse> requestHandler(&matchsController, &MatchsController::getCandidates);
     JsonResponse *response = (JsonResponse *) requestHandler.process(request);
     int code = response->getCode();
-    delete (response);*/
-    CPPUNIT_ASSERT(true);
+    delete (response);
+    CPPUNIT_ASSERT(code == 400);
 }
 
 void MatchControllerTest::update() {
@@ -55,12 +85,13 @@ void MatchControllerTest::getMatches() {
     CPPUNIT_ASSERT(code == HTTP_OK);
 }
 
-void  MatchControllerTest::setUp() {
-    matchsController.setDebugMode(true);
-    matchsController.setup();
-    testAccount.setUsername("fede");
-    testAccount.setPassword("1234");
-    testAccount.save();
+void  MatchControllerTest::testLog() {
+    log();
+    CPPUNIT_ASSERT(true);
+}
+
+void MatchControllerTest::tearDown() {
+    testAccount.remove();
 }
 
 MatchControllerTest::~MatchControllerTest() {

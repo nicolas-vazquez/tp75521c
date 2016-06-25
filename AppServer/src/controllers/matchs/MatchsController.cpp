@@ -2,6 +2,7 @@
 // Created by fedefarina on 17/04/16.
 //
 
+
 #include "MatchsController.h"
 
 MatchsController::MatchsController() {
@@ -46,9 +47,9 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
     string_t address = ConnectionUtils::buildConnection();
     http::uri uri = http::uri(address);
 
-    string radius = request.get("radius");
-    string latitude = request.get("latitude");
-    string longitude = request.get("longitude");
+    string radius = request.get("radius","5");
+    string latitude = request.get("latitude","0");
+    string longitude = request.get("longitude","0");
 
     string_t url = U("/users/" + account.getUsername() + "/candidates");
     uri_builder builder = http::uri_builder(uri);
@@ -106,7 +107,7 @@ void MatchsController::getCandidates(Request &request, JsonResponse &response) {
         }
 
     } else if (statusCode == status_codes::BadRequest) {
-        errors.push_back(new UnauthorizedError());
+        errors.push_back(new BadParamError());
     } else {
         errors.push_back(new ServerError());
     }

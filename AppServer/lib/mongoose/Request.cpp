@@ -81,7 +81,7 @@ static int mg_get_cookie(const char *cookie_header, const char *var_name,
 
 namespace Mongoose {
     Request::Request(struct mg_connection *connection_) :
-            connection(connection_) {
+    connection(connection_) {
         url = string(connection->uri);
         method = string(connection->request_method);
 
@@ -166,10 +166,13 @@ namespace Mongoose {
             return output;
         }
 
+
         // Looking on the POST data
-        dataField = data.c_str();
-        if (dataField != NULL && readVariable(dataField, key, output)) {
-            return output;
+        if (getMethod() == "POST" || getMethod() == "PUT") {
+            dataField = data.c_str();
+            if (dataField != NULL && readVariable(dataField, key, output)) {
+                return output;
+            }
         }
 
         return fallback;

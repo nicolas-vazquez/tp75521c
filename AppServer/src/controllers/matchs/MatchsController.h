@@ -18,6 +18,7 @@
 #include "../../errors/UnauthorizedError.h"
 #include <utils/ConnectionUtils.h>
 #include <cpprest/http_client.h>
+#include <errors/BadParamError.h>
 #include "utils/utils.h"
 
 using namespace std;
